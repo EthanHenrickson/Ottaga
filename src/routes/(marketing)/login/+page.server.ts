@@ -1,27 +1,14 @@
 /** @type {import('./$types').Actions} */
 
-/**
- * Server-side authentication handlers for login and signup functionality
- * 
- * This module provides form actions for:
- * 1. User Login: Validates credentials and creates session cookies
- * 2. User Signup: Creates new user accounts with secure password hashing
- * 
- * Security features:
- * - Password hashing using Argon2
- * - Secure random string generation for session IDs
- * - Case-insensitive email handling
- * - Cookie-based session management
- */
-
-import { AuthDatabaseService } from '$lib/db/database';
 import { generateRandomString } from '@oslojs/crypto/random';
-import argon2 from 'argon2';
-import type { BaseUserRecord } from '$lib/types';
-import type { Actions } from './$types';
-
-import type { RandomReader } from '@oslojs/crypto/random';
+import { AuthDatabase } from '$lib/db/auth';
+import { UserDatabase } from '$lib/db/user';
 import { fail, redirect } from '@sveltejs/kit';
+import argon2 from 'argon2';
+
+import type { NewUserRecord } from '$lib/types';
+import type { RandomReader } from '@oslojs/crypto/random';
+import type { Actions } from './$types';
 
 // Configure secure random number generation for session IDs
 const random: RandomReader = {
@@ -45,12 +32,12 @@ export const actions = {
 		const email = (<string>data.get('email')).toLowerCase();
 		const password = <string>data.get('password');
 
-		const user = AuthDatabaseService.getUserByEmail(email);
+		const user = UserDatabase.getUserByEmail(email);
 
 		if (user.success) {
 			if (await argon2.verify(user.data.hashedPassword, password)) {
 				const cookieID = generateRandomString(random, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 20);
-				AuthDatabaseService.createCookie(cookieID, user.data.id);
+				AuthDatabase.createCookie(cookieID, user.data.id);
 				cookies.set('sessionID', cookieID, { path: '/' });
 				redirect(302, '/home');
 			}
@@ -71,20 +58,21 @@ export const actions = {
 	 */
 	signup: async ({ request }) => {
 		const data = await request.formData();
+
+		const firstName = <string>data.get('firstName');
 		const email = <string>data.get('email');
 		const password = <string>data.get('password');
-		const passwordHash = await argon2.hash(password, { timeCost: 2 });
-		const firstName = <string>data.get('firstName');
-		const lastName = <string>data.get('lastName');
 
-		const newUserData: BaseUserRecord = {
+		const passwordHash = await argon2.hash(password, { timeCost: 2 });
+		
+		const newUserData: NewUserRecord = {
 			firstName: firstName,
-			lastName: lastName,
 			email: email.toLowerCase(),
-			hashedPassword: passwordHash
+			hashedPassword: passwordHash,
+			createdDate: Date.now()
 		};
 
-		const result = AuthDatabaseService.createUser(newUserData);
+		const result = UserDatabase.createUser(newUserData);
 
 		if (!result.success) {
 			return fail(422, {

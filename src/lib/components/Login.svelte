@@ -1,18 +1,6 @@
 <script lang="ts">
-	/**
-	 * Login/Signup Component
-	 *
-	 * This component provides a dual-purpose form for both user login and account creation.
-	 * It uses SvelteKit's form actions to handle authentication requests server-side.
-	 *
-	 * Features:
-	 * - Toggle between login and signup modes
-	 * - Email validation using regex
-	 * - Form validation with HTML5 attributes
-	 * - Error message display from server responses
-	 */
+    import type { ActionData } from "../../routes/(marketing)/login/$types";
 
-	import type { ActionData } from "$types";
 	let { form }: { form: ActionData } = $props();
 
 	// Regex pattern for email validation
@@ -54,17 +42,6 @@
 					type="text"
 					placeholder="FirstName"
 					name="firstName"
-					max="20"
-					required
-				/>
-			</div>
-			<br />
-			<div class="inputField">
-				<label for="email">Last Name</label>
-				<input
-					type="text"
-					placeholder="LastName"
-					name="lastName"
 					max="20"
 					required
 				/>

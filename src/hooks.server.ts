@@ -1,5 +1,5 @@
 
-import { AuthDatabaseService } from '$lib/db/database';
+import { AuthDatabase } from '$lib/db/auth';
 import { redirect, type Handle } from '@sveltejs/kit';
 
 /**
@@ -26,7 +26,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     }
 
     // Fetch the cookie details from the authentication database
-    const databaseCookie = AuthDatabaseService.getCookie(cookieID);
+    const databaseCookie = AuthDatabase.getCookie(cookieID);
     if (!databaseCookie.success) {
         // Cookie not found in the database - redirect to login
         redirect(302, '/login');
@@ -36,7 +36,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     const cookieValid = databaseCookie.data.expireTime > Date.now();
     if (cookieValid) {
         // Session is valid - refresh the cookie to extend its lifetime
-        AuthDatabaseService.updateCookie(databaseCookie.data.id);
+        AuthDatabase.updateCookie(databaseCookie.data.id);
 
         // Attach user information to the request locals for downstream use
         event.locals.user = {
@@ -47,7 +47,7 @@ export const handle: Handle = async ({ event, resolve }) => {
         return resolve(event);
     } else {
         // Session has expired - remove the invalid cookie
-        AuthDatabaseService.removeCookie(databaseCookie.data.id);
+        AuthDatabase.removeCookie(databaseCookie.data.id);
 
         // Redirect to login for expired sessions
         redirect(302, '/login');

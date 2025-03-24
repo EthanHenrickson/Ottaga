@@ -1,0 +1,57 @@
+<footer>
+	<div class="footer">
+		<div class="column">
+			<h2>Company</h2>
+			<ul>
+				<a href=""><li>Who are we?</li></a>
+				<a href=""><li>Contact</li></a>
+			</ul>
+		</div>
+		<div class="column">
+			<h2>Legal</h2>
+			<ul>
+				<li><a href="/legal/tos">Terms of Service</a></li>
+				<li><a href="/legal/privacy">Privacy Policy</a></li>
+				<li><a href="/legal/cookie">Cookie Policy</a></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+
+<style>
+	footer {
+		display: flex;
+		width: 100%;
+		justify-content: center;
+	}
+
+	.footer {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 20px;
+
+		justify-content: center;
+
+		padding: 0.5rem 0rem;
+	}
+
+	h2 {
+		font-size: 1.3rem;
+		font-weight: 500;
+		margin: 0px;
+	}
+
+	ul {
+		margin: 0px;
+		list-style: none;
+		margin: none;
+		padding: 0;
+	}
+
+	a {
+		color: var(--text-color);
+		text-decoration: none;
+		font-weight: 400;
+		font-size: 0.9rem;
+	}
+</style>

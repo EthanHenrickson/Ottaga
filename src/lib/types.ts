@@ -15,19 +15,21 @@ export type DatabaseDataResponse<T> =
         data?: undefined;
     };
 
-export type BaseUserRecord = {
+export type NewUserRecord = {
     firstName: string;
-    lastName: string;
     email: string;
     hashedPassword: string;
+    createdDate: number;
 };
 
 export type UserRecord = {
-    id: number;
+    id: string;
     firstName: string;
-    lastName: string;
     email: string;
     hashedPassword: string;
+    createdDate: number
+    details: string;
+    deleted: 0 | 1
 }
 
 export type cookie = {
@@ -35,3 +37,8 @@ export type cookie = {
     userID: number;
     expireTime: number;
 };
+
+export type Message = {
+    role: "user" | "assistant" | "system",
+    content: string
+}

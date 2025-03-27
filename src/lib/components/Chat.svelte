@@ -1,64 +1,60 @@
 <script lang="ts">
 	import type { Message } from '$lib/types';
+
 	import { marked } from 'marked';
 	import DownArrow from '$lib/icons/downArrow.svelte';
 
-	/**
-	 * Chat component that handles user interaction with the AI assistant
-	 * Manages message state, loading states, and API communication
-	 */
+	//Take in the chatID for this chat session.
+	let { chatID }: {chatID: string} = $props()
 
-	let container: HTMLElement;
-
-	/** Current message input from the user */
-	let messageInput = $state('');
-
-	/** Loading state to indicate when API request is in progress */
+	// Loading state to indicate when API request is in progress
 	let isLoading = $state(false);
 
-	/** Boolean representing if a user is scrolled to the bottom of the chat window*/
-	let chatContainerAtBottom: Boolean = $state(true);
+	// Current message input from the user
+	let messageInput = $state('');
 
-	/** Array of chat messages between user and assistant */
-	let userMessages: Message[] = $state([
+	// Array of chat messages between user and assistant
+	let messageArray: Message[] = $state([
 		{
 			role: 'assistant',
 			content: 'How can I help you today?'
 		}
 	]);
 
+	// HTML Element containing the chat messages
+	let chatMessageContainer: HTMLElement;
+
+		// Boolean representing if a user is scrolled to the bottom of the chat window
+	let isChatScrolledToBottom: Boolean = $state(true);
+
+	//This function scrolls the chat 
 	function scrollToBottom() {
-		container.scrollTo({
-			top: container.scrollHeight,
+		chatMessageContainer.scrollTo({
+			top: chatMessageContainer.scrollHeight,
 			behavior: 'smooth'
 		});
 	}
 
-	$effect(() => {
-		userMessages;
-		scrollToBottom();
-	});
-
 	/**
 	 * Handles form submission for sending messages
-	 * @param {Event} e - Form submit event
-	 * @returns {Promise<void>}
 	 */
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
+
 		// Don't process empty messages
 		if (!messageInput.trim()) return;
 
+
 		isLoading = true;
+
 		// Add user message to chat history
-		userMessages.push({ role: 'user', content: messageInput });
-		messageInput = '';
+		messageArray.push({ role: 'user', content: messageInput });
 
 		try {
 			// Send messages to API endpoint
-			const response = await fetch('/api/chat', {
+			const response = await fetch('/api/llm', {
 				method: 'POST',
-				body: JSON.stringify({ messages: userMessages }),
+				body: JSON.stringify({ chatID: chatID, messageInput: messageInput }),
 				headers: {
 					'Content-Type': 'application/json'
 				}
@@ -66,39 +62,45 @@
 
 			if (response.ok) {
 				// Update chat history with assistant's response
-				userMessages = await response.json();
+				let responseData = await response.json();
+				messageArray.push(responseData.data)
 			} else {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
+
 		} catch (error) {
 			// Add error message to chat if request fails
-			userMessages.push({
+			messageArray.push({
 				role: 'assistant',
 				content: 'Sorry, there was an error processing your request.'
 			});
+			
 		} finally {
 			isLoading = false;
+			messageInput = '';
 		}
 	}
 
 	async function handleScroll() {
-		chatContainerAtBottom =
-			Math.abs(container.scrollHeight - container.scrollTop - container.clientHeight) < 100;
+		isChatScrolledToBottom =
+			Math.abs(chatMessageContainer.scrollHeight - chatMessageContainer.scrollTop - chatMessageContainer.clientHeight) < 100;
 	}
 </script>
 
 <div class="chat-container">
-	<div class="messages" bind:this={container} onscroll={handleScroll}>
-		{#each userMessages as message}
+	<div class="messages" bind:this={chatMessageContainer} onscroll={handleScroll}>
+		{#each messageArray as message}
 			<div class="message {message.role}">
 				<strong>{message.role === 'user' ? 'You' : 'Alanda'}:</strong>
 				{@html marked.parse(message.content)}
 			</div>
 		{/each}
+		
 		{#if isLoading}
 			<div class="loading">Loading...</div>
 		{/if}
 	</div>
+
 	<form onsubmit={handleSubmit} class="input-form">
 		<input
 			type="text"
@@ -106,9 +108,10 @@
 			placeholder="Type your message..."
 			disabled={isLoading}
 		/>
+
 		<button class="sendButton" type="submit" disabled={isLoading}>Send</button>
 
-		{#if !chatContainerAtBottom}
+		{#if !isChatScrolledToBottom}
 			<div class="bottomScroll"><button class="downButton" type="button" onclick={scrollToBottom}><DownArrow /></button></div>
 		{/if}
 	</form>

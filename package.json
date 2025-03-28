@@ -26,8 +26,8 @@
 		"argon2": "^0.41.1",
 		"better-sqlite3": "^11.8.1",
 		"marked": "^15.0.7",
+		"openai": "^4.90.0",
 		"posthog-js": "^1.232.6",
-		"together-ai": "^0.13.0",
 		"uuid": "^11.1.0"
 	}
 }

@@ -1,18 +1,18 @@
 import type { Message } from "$lib/types";
 import { TOGETHER_API_KEY } from '$env/static/private';
-import Together from "together-ai";
+import OpenAI from "openai";
 
 import { MentalHealthAssistant, MaliciousMessageAssistant } from '../../../llmConfig'
 
 class LLMClient {
-    private client: Together;
+    private client: OpenAI;
     private systemPrompt: string;
     private model: string;
     private temperature: number;
     private maxTokens: number;
 
-    constructor(model: string, systemPrompt: string, temperature: number = .8, maxTokens: number = 4000) {
-        this.client = new Together({
+    constructor(model: string, systemPrompt: string, temperature: number = .8, maxTokens: number = 8000) {
+        this.client = new OpenAI({
             baseURL: 'https://api.together.xyz/v1',
             apiKey: TOGETHER_API_KEY,
         })

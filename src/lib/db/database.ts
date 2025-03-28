@@ -1,10 +1,9 @@
 import Database from 'better-sqlite3';
 /**
  * Base class for database services providing a singleton database connection
- * @remarks
  * Ensures a single database instance is used across all service instances
  */
-export class BaseDatabase {
+export abstract class BaseDatabase {
     /** The database connection instance */
     protected db: Database.Database;
     /** Singleton database instance */

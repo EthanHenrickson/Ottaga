@@ -16,16 +16,17 @@ export const POST: RequestHandler = async ({ request }) => {
         content: data.messageInput
     }
 
-    //Retrieve all previous 
-    const previousMessages = ChatDatabase.getChatMessages(chatID)
+    //Get the system message
+    const systemMessage = await Llama3_70.GenerateSystemPrompt()
+    allConversationMessages.push(systemMessage)
 
-    //If previous messages were found add them to the conversation
+    //Retrieve all previous messages and add them too the conversation message
+    const previousMessages = ChatDatabase.getChatMessages(chatID)
     if (previousMessages.success == true) {
         const messageData = previousMessages.data
-        allConversationMessages = [...messageData]
+        allConversationMessages = [...allConversationMessages, ...messageData]
     }
-
-    //Add new message
+    
     allConversationMessages.push(newMessage)
 
     try {

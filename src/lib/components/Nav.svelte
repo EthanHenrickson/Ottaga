@@ -9,11 +9,6 @@
 
 <header>
 	<div class="logo">Alanda</div>
-	<button class="hamburger" class:open={isOpen} on:click={toggleMenu} aria-label="Menu">
-		<span class="bar"></span>
-		<span class="bar"></span>
-		<span class="bar"></span>
-	</button>
 	<nav class="mainNav" class:open={isOpen}>
 		<div class="nav-links">
 			<a href="/" class:active={page.url.pathname === '/'} on:click={toggleMenu}>Home</a>
@@ -33,14 +28,17 @@
 		justify-content: space-between;
 		align-items: center;
 		border-bottom: 1px solid var(--hover-bg);
+
 		position: fixed;
 		top: 0;
 		left: 0;
 		right: 0;
+
 		backdrop-filter: blur(6px);
 		z-index: 100;
 		max-width: 1500px;
 		padding: 10px 10%;
+		background-color: rgba(255, 255, 255, 0.068);
 	}
 
 	.logo {
@@ -70,39 +68,6 @@
 		text-decoration-color: var(--AccentColorPrimary);
 	}
 
-	.hamburger {
-		display: none;
-		flex-direction: column;
-		justify-content: space-around;
-		width: 30px;
-		height: 30px;
-		background: transparent;
-		border: none;
-		cursor: pointer;
-		padding: 0;
-		z-index: 101;
-	}
-
-	.bar {
-		width: 30px;
-		height: 2px;
-		background-color: var(--text-color);
-		transition: all 0.3s ease-in-out;
-		border-radius: 2px;
-	}
-
-	.hamburger.open .bar:nth-child(1) {
-		transform: translateY(10px) rotate(45deg);
-	}
-
-	.hamburger.open .bar:nth-child(2) {
-		opacity: 0;
-	}
-
-	.hamburger.open .bar:nth-child(3) {
-		transform: translateY(-10px) rotate(-45deg);
-	}
-
 	.nav-links {
 		display: flex;
 		flex-direction: row;
@@ -116,10 +81,6 @@
 	@media (max-width: 760px) {
 		header {
 			padding: 10px 5%;
-		}
-
-		.hamburger {
-			display: flex;
 		}
 
 		.mainNav {

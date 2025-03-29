@@ -25,8 +25,6 @@
 	}
 
 	main {
-		padding-top: 3rem;
-		max-width: 1200px;
 		margin-left: auto;
 		margin-right: auto;
 		min-height: 90vh;
@@ -34,6 +32,5 @@
 
 	.website {
 		min-height: 100vh;
-		padding: 0 1rem;
 	}
 </style>

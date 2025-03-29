@@ -1,37 +1,37 @@
 <script lang="ts">
-	import type { Message } from '$lib/types';
+	import type { Message } from "$lib/types";
 
-	import { marked } from 'marked';
-	import DownArrow from '$lib/icons/downArrow.svelte';
+	import { marked } from "marked";
+	import DownArrow from "$lib/icons/downArrow.svelte";
 
-	//Take in the chatID for this chat session.
-	let { chatID }: {chatID: string} = $props()
+	// Take in the chatID for this chat session.
+	let { chatID }: { chatID: string } = $props();
 
 	// Loading state to indicate when API request is in progress
 	let isLoading = $state(false);
 
 	// Current message input from the user
-	let messageInput = $state('');
+	let messageInput = $state("");
 
 	// Array of chat messages between user and assistant
 	let messageArray: Message[] = $state([
 		{
-			role: 'assistant',
-			content: 'How can I help you today?'
-		}
+			role: "assistant",
+			content: "How can I help you today?",
+		},
 	]);
 
 	// HTML Element containing the chat messages
 	let chatMessageContainer: HTMLElement;
 
-		// Boolean representing if a user is scrolled to the bottom of the chat window
+	// Boolean representing if a user is scrolled to the bottom of the chat window
 	let isChatScrolledToBottom: Boolean = $state(true);
 
-	//This function scrolls the chat 
+	//This function scrolls the chat
 	function scrollToBottom() {
 		chatMessageContainer.scrollTo({
 			top: chatMessageContainer.scrollHeight,
-			behavior: 'smooth'
+			behavior: "smooth",
 		});
 	}
 
@@ -44,58 +44,66 @@
 		// Don't process empty messages
 		if (!messageInput.trim()) return;
 
-
 		isLoading = true;
 
 		// Add user message to chat history
-		messageArray.push({ role: 'user', content: messageInput });
+		messageArray.push({ role: "user", content: messageInput });
 
 		try {
 			// Send messages to API endpoint
-			const response = await fetch('/api/llm', {
-				method: 'POST',
-				body: JSON.stringify({ chatID: chatID, messageInput: messageInput }),
+			const response = await fetch("/api/llm", {
+				method: "POST",
+				body: JSON.stringify({
+					chatID: chatID,
+					messageInput: messageInput,
+				}),
 				headers: {
-					'Content-Type': 'application/json'
-				}
+					"Content-Type": "application/json",
+				},
 			});
 
 			if (response.ok) {
 				// Update chat history with assistant's response
 				let responseData = await response.json();
-				messageArray.push(responseData.data)
+				messageArray.push(responseData.data);
 			} else {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
-
 		} catch (error) {
 			// Add error message to chat if request fails
 			messageArray.push({
-				role: 'assistant',
-				content: 'Sorry, there was an error processing your request.'
+				role: "assistant",
+				content: "Sorry, there was an error processing your request.",
 			});
-			
 		} finally {
 			isLoading = false;
-			messageInput = '';
+			messageInput = "";
 		}
 	}
 
 	async function handleScroll() {
 		isChatScrolledToBottom =
-			Math.abs(chatMessageContainer.scrollHeight - chatMessageContainer.scrollTop - chatMessageContainer.clientHeight) < 100;
+			Math.abs(
+				chatMessageContainer.scrollHeight -
+					chatMessageContainer.scrollTop -
+					chatMessageContainer.clientHeight,
+			) < 100;
 	}
 </script>
 
 <div class="chat-container">
-	<div class="messages" bind:this={chatMessageContainer} onscroll={handleScroll}>
+	<div
+		class="messages"
+		bind:this={chatMessageContainer}
+		onscroll={handleScroll}
+	>
 		{#each messageArray as message}
 			<div class="message {message.role}">
-				<strong>{message.role === 'user' ? 'You' : 'Alanda'}:</strong>
+				<strong>{message.role === "user" ? "You" : "Alanda"}:</strong>
 				{@html marked.parse(message.content)}
 			</div>
 		{/each}
-		
+
 		{#if isLoading}
 			<div class="loading">Loading...</div>
 		{/if}
@@ -104,9 +112,9 @@
 	<form onsubmit={handleSubmit} class="input-form">
 		<input
 			type="text"
-			bind:value={messageInput}
-			placeholder="Type your message..."
-			disabled={isLoading}
+				bind:value={messageInput}
+				placeholder="Type your message..."
+				disabled={isLoading}
 		/>
 
 		<button class="sendButton" type="submit" disabled={isLoading}>Send</button>
@@ -173,7 +181,7 @@
 	}
 
 	.sendButton {
-		padding: 8px 16px;
+		padding: 10px 20px;
 		background-color: #007bff;
 		color: white;
 		border: none;

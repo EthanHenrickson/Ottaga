@@ -99,7 +99,7 @@
 	>
 		{#each messageArray as message}
 			<div class="message {message.role}">
-				<strong>{message.role === "user" ? "You" : "Alanda"}:</strong>
+				<strong>{message.role === "user" ? "You" : "Ottaga"}:</strong>
 				{@html marked.parse(message.content)}
 			</div>
 		{/each}
@@ -112,15 +112,23 @@
 	<form onsubmit={handleSubmit} class="input-form">
 		<input
 			type="text"
-				bind:value={messageInput}
-				placeholder="Type your message..."
-				disabled={isLoading}
+			bind:value={messageInput}
+			placeholder="Type your message..."
+			disabled={isLoading}
 		/>
 
-		<button class="sendButton" type="submit" disabled={isLoading}>Send</button>
+		<button class="sendButton" type="submit" disabled={isLoading}
+			>Send</button
+		>
 
 		{#if !isChatScrolledToBottom}
-			<div class="bottomScroll"><button class="downButton" type="button" onclick={scrollToBottom}><DownArrow /></button></div>
+			<div class="bottomScroll">
+				<button
+					class="downButton"
+					type="button"
+					onclick={scrollToBottom}><DownArrow /></button
+				>
+			</div>
 		{/if}
 	</form>
 </div>

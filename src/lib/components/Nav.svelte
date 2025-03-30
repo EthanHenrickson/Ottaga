@@ -1,5 +1,5 @@
 <script>
-	import { page } from '$app/state';
+	import { page } from "$app/state";
 	let isOpen = false;
 
 	function toggleMenu() {
@@ -8,13 +8,23 @@
 </script>
 
 <header>
-	<div class="logo">Alanda</div>
+	<div class="logo">Ottaga</div>
 	<nav class="mainNav" class:open={isOpen}>
 		<div class="nav-links">
-			<a href="/" class:active={page.url.pathname === '/'} on:click={toggleMenu}>Home</a>
-			<a href="/chat" class:active={page.url.pathname === '/chat'} on:click={toggleMenu}>Chat</a>
-			<a href="/login" class:active={page.url.pathname === '/login'} on:click={toggleMenu}
-				>Account</a
+			<a
+				href="/"
+				class:active={page.url.pathname === "/"}
+				on:click={toggleMenu}>Home</a
+			>
+			<a
+				href="/chat"
+				class:active={page.url.pathname === "/chat"}
+				on:click={toggleMenu}>Chat</a
+			>
+			<a
+				href="/login"
+				class:active={page.url.pathname === "/login"}
+				on:click={toggleMenu}>Account</a
 			>
 		</div>
 	</nav>

@@ -13,35 +13,29 @@
         dataJsonKeys[0] as keyof typeof dataJson;
 </script>
 
-<div class="content">
-    <h2>How Alanda Can Help</h2>
-    <div class="informationBox">
-        <div class="keyBlock">
-            {#each dataJsonKeys as key}
-                <button
-                    class="bar"
-                    class:active={selectedKey == key}
-                    onclick={() => (selectedKey = key as keyof typeof dataJson)}
-                >
-                    <p>{key}</p>
-                </button>
-            {/each}
-        </div>
-        <div class="valueBlock">
-            {dataJson[selectedKey]}
-        </div>
+<h2>How Ottaga Can Help</h2>
+<div class="informationBox">
+    <div class="keyBlock">
+        {#each dataJsonKeys as key}
+            <button
+                class="bar"
+                class:active={selectedKey == key}
+                onclick={() => (selectedKey = key as keyof typeof dataJson)}
+            >
+                <p>{key}</p>
+            </button>
+        {/each}
+    </div>
+    <div class="valueBlock">
+        {dataJson[selectedKey]}
     </div>
 </div>
 
 <style>
-    .content {
-        display: flex;
-        flex-direction: column;
-    }
-
     .informationBox {
         display: flex;
         flex-direction: row;
+        max-width: 1200px;
     }
 
     .keyBlock {
@@ -52,6 +46,7 @@
 
     .valueBlock {
         padding: 1rem;
+        width: 60%;
     }
 
     button {

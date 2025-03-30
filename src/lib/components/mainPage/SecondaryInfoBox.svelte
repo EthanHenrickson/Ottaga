@@ -3,7 +3,7 @@
     <div class="feature">
         <h3>Always Available</h3>
         <p>
-            Alanda is always here to listen and support you, any time of day or
+            Ottaga is always here to listen and support you, any time of day or
             night
         </p>
     </div>
@@ -22,7 +22,7 @@
 <style>
     h2 {
         font-size: 2.5rem;
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
         font-weight: 400;
     }
 
@@ -31,13 +31,16 @@
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 2rem;
         margin: 2rem 0;
+        width: 100%;
+        max-width: 900px;
     }
 
     .feature {
         padding: 1.5rem;
         border-radius: 1rem;
-        background: var(--background-color);
+        background-color: white;
         box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.5);
+        text-align: center;
     }
 
     .feature h3 {

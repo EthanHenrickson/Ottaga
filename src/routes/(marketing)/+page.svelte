@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Footer from "$lib/components/Footer.svelte";
-	import InformationSelectBox from "$lib/components/mainPage/InformationSelectBox.svelte";
 	import MainHeadingBox from "$lib/components/mainPage/MainHeadingBox.svelte";
 	import SecondaryInfoBox from "$lib/components/mainPage/SecondaryInfoBox.svelte";
+	import InformationSelectBox from "$lib/components/mainPage/InformationSelectBox.svelte";
+	import Footer from "$lib/components/mainPage/Footer.svelte";
 </script>
 
 <div class="content">
@@ -12,31 +12,58 @@
 	<div class="secondaryHeadingBlock">
 		<SecondaryInfoBox />
 	</div>
-
-	<InformationSelectBox />
+	<div class="thirdHeadingBlock">
+		<InformationSelectBox />
+	</div>
+	<div class="footer">
+		<Footer />
+	</div>
 </div>
-<Footer />
 
 <style>
 	.mainHeadingBlock {
-		height: 65vh;
+		height: 75vh;
 
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		flex-direction: column;
 
-		padding-bottom: 10vh;
-		background: linear-gradient(to bottom right, white, rgb(228, 240, 250));
+		background: linear-gradient(to top, rgba(255, 255, 255, 0), rgba(210, 235, 250, 0.8));
 
-		width: 100%;
+		width: 94%;
 		padding-left: 3%;
 		padding-right: 3%;
 	}
 
 	.secondaryHeadingBlock {
-		margin: 4rem auto;
-		text-align: center;
-		max-width: 900px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+
+		height: 60vh;
+
+		width: 94%;
+		padding-left: 3%;
+		padding-right: 3%;
+	}
+
+	.thirdHeadingBlock {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+
+		height: 60vh;
+
+		width: 94%;
+		padding-left: 3%;
+		padding-right: 3%;
+	}
+
+	.footer {
+		margin: 3rem auto;
+		margin-top: 5rem;
 	}
 </style>

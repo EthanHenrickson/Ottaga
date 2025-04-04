@@ -56,10 +56,13 @@
 		flex-direction: column;
 
 		height: 60vh;
+		margin-left: auto;
+		margin-right: auto;
 
 		width: 94%;
 		padding-left: 3%;
 		padding-right: 3%;
+		max-width: 900px;
 	}
 
 	.footer {

@@ -29,7 +29,11 @@
 		justify-content: center;
 		flex-direction: column;
 
-		background: linear-gradient(to top, rgba(255, 255, 255, 0), rgba(210, 235, 250, 0.8));
+		background: linear-gradient(
+			to top,
+			rgba(255, 255, 255, 0),
+			rgba(210, 235, 250, 0.8)
+		);
 
 		width: 94%;
 		padding-left: 3%;

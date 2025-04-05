@@ -1,15 +1,19 @@
 import type { Message } from "$lib/types";
 import { TOGETHER_API_KEY } from '$env/static/private';
-import { MentalHealthAssistant, MaliciousMessageAssistant } from '../../../llmConfig'
+import { MentalHealthAssistant, MaliciousMessageAssistant } from '../../../llm.config'
 
 import OpenAI from "openai";
+
+abstract class LLMClient {
+
+}
 
 /**
  * A client for interacting with language learning models through the OpenAI API.
  * This class provides functionality to generate system prompts and send messages
  * to the LLM using OpenAI's chat completions API.
  */
-class LLMClient {
+class MainLLM implements LLMClient {
     private client: OpenAI;
     private systemPrompt: string;
     private model: string;
@@ -27,9 +31,9 @@ class LLMClient {
         this.client = new OpenAI({
             baseURL: 'https://api.together.xyz/v1',
             apiKey: TOGETHER_API_KEY,
-        })
+        }),
 
-        this.model = model,
+            this.model = model,
             this.systemPrompt = systemPrompt,
             this.temperature = temperature,
             this.maxTokens = maxTokens
@@ -86,7 +90,63 @@ class LLMClient {
     }
 }
 
+class LLMMaliciousMessageChecker implements LLMClient {
+    private client: OpenAI;
+    private systemPrompt: Message;
+    private model: string;
+    private temperature: number;
+    private maxTokens: number;
+
+    /**
+     * Creates a new LLMClient instance.
+     * @param model - The identifier of the LLM model to use
+     * @param systemPrompt - The system prompt to provide context to the model
+     * @param temperature - Controls randomness in the model's responses (0-1)
+     * @param maxTokens - Maximum number of tokens in the model's response
+     */
+    constructor(model: string, systemPrompt: string, temperature: number = .1, maxTokens: number = 40) {
+        this.client = new OpenAI({
+            baseURL: 'https://api.together.xyz/v1',
+            apiKey: TOGETHER_API_KEY,
+        }),
+
+            this.model = model,
+            this.systemPrompt = { role: "assistant", content: systemPrompt },
+            this.temperature = temperature,
+            this.maxTokens = maxTokens
+    }
+
+    /**
+     * Sends a message to the LLM and returns the model's response to a message being malicious or not.
+     * @param message - Message to check for malicious content
+     * @returns A Promise resolving to a boolean
+     * @throws Error if the model's response is undefined
+     */
+    async CheckMessage(message: Message): Promise<boolean> {
+        let messagesToSend = [this.systemPrompt, message]
+
+        let response = await this.client.chat.completions.create({
+            model: this.model,
+            temperature: this.temperature,
+            max_tokens: this.maxTokens,
+            messages: messagesToSend,
+        })
+
+        let checkResponse = response.choices[0].message.content
+
+        if (checkResponse === null) {
+            throw Error("Issue with LLMClient")
+        } else {
+            if (checkResponse.toLowerCase() === "yes") {
+                return true
+            } else {
+                return false
+            }
+        }
+    }
+}
+
 /** Instance of LLMClient configured for mental health assistance using Llama 70B model */
-export let Llama3_70 = new LLMClient(MentalHealthAssistant.model, MentalHealthAssistant.systemPrompt, MentalHealthAssistant.temperature, MentalHealthAssistant.maxTokens)
+export let OttagaLLM = new MainLLM(MentalHealthAssistant.model, MentalHealthAssistant.systemPrompt, MentalHealthAssistant.temperature, MentalHealthAssistant.maxTokens)
 /** Instance of LLMClient configured for malicious message detection using Llama 11B model */
-export let Llama3_11 = new LLMClient(MaliciousMessageAssistant.model, MentalHealthAssistant.systemPrompt, MaliciousMessageAssistant.temperature, MaliciousMessageAssistant.maxTokens)
+export let MaliciousMessageLLM = new LLMMaliciousMessageChecker(MaliciousMessageAssistant.model, MaliciousMessageAssistant.systemPrompt, MaliciousMessageAssistant.temperature, MaliciousMessageAssistant.maxTokens)

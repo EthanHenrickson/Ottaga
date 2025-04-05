@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { ActionData } from "../../routes/(marketing)/login/$types";
+	import type { ActionData } from "../../routes/(marketing)/login/$types";
 
 	let { form }: { form: ActionData } = $props();
 
@@ -17,30 +17,32 @@
 	);
 
 	// Toggle between login and signup modes
-	function toggleMode() {
+	function toggleAccountMode() {
 		mode = mode === "Login" ? "SignUp" : "Login";
 	}
 </script>
 
 <div class="login">
 	<div class="head">
-		<div class="header">
+		<div class="loginMode">
 			{mode === "Login" ? "Login" : "Create Account"}
 		</div>
-		<button class="question" onclick={toggleMode}>
-			{mode === "Login"
-				? "Don't have an account?"
-				: "Already have an account?"}
-			<span style="color: yellow;">Click Here</span>
+		<button class="accountMode" onclick={toggleAccountMode}>
+			<span>
+				{mode === "Login"
+					? "Don't have an account?"
+					: "Already have an account?"}
+			</span>
+			<span class="clickHere">Click Here</span>
 		</button>
 	</div>
 	<form action={formMode} method="post">
 		{#if mode === "SignUp"}
-			<div class="inputField">
+			<div class="inputSection">
 				<label for="firstname">First Name</label>
 				<input
 					type="text"
-					placeholder="FirstName"
+					placeholder="Joe"
 					name="firstName"
 					max="20"
 					required
@@ -48,7 +50,7 @@
 			</div>
 		{/if}
 		<br />
-		<div class="inputField">
+		<div class="inputSection">
 			<label for="email">Email</label>
 			<input
 				type="email"
@@ -59,7 +61,7 @@
 			/>
 		</div>
 		<br />
-		<div class="inputField">
+		<div class="inputSection">
 			<label for="email">Password</label>
 			<input
 				type="password"
@@ -68,7 +70,7 @@
 				required
 			/>
 		</div>
-		<button type="submit" class="signin"
+		<button type="submit" class="submitButton"
 			>{mode === "Login" ? "Login" : "Create"}</button
 		>
 		{#if form?.error}
@@ -78,67 +80,74 @@
 </div>
 
 <style>
-	.error {
-		color: rgb(248, 131, 131);
+	.login {
+		display: flex;
+		flex-direction: column;
+		padding: 4rem;
+
+		background-color: var(--MessageBackground-Assistant);
+		border-radius: 1rem;
+		filter: drop-shadow(rgb(54, 54, 54) 0.2rem 0.2rem 0.5rem);
 	}
 
 	.head {
-		margin: 2rem 5rem 1rem 5rem;
 		color: black;
+		font-size: 1.2rem;
 	}
 
-	.header {
+	.loginMode {
 		font-size: 2rem;
 	}
 
-	.question {
+	.accountMode {
 		font-size: 0.9rem;
 		border: none;
 		outline: none;
 		background-color: transparent;
-		color: rgb(88, 88, 88);
+		color: rgb(0, 0, 0);
 		cursor: pointer;
 	}
 
-	.signin {
+	.submitButton {
 		font-size: 1.2rem;
 		margin-top: 1rem;
 		padding: 1rem 2rem;
-		background-color: var(--main-hover);
+		background-color: var(--AccentColorPrimary);
 		border: 2px solid transparent;
 		cursor: pointer;
 		border-radius: 0.5rem;
 		transition: all 0.25s;
 	}
 
-	.signin:hover {
-		transition: all 0.25s;
-		border: 2px solid yellow;
+	.error {
+		color: rgb(248, 131, 131);
 	}
 
-	.login {
-		background-color: rgb(162, 227, 143);
-		border-radius: 1rem;
-		filter: drop-shadow(rgb(88, 88, 88) 0.2rem 0.2rem 1rem);
-	}
-
-	form {
-		padding: 5rem;
-		padding-top: 1.5rem;
+	.clickHere {
+		text-decoration: underline;
+		text-decoration-thickness: 2px;
+		text-decoration-color: var(--AccentColorPrimary);
 	}
 
 	input {
+		display: flex;
+		flex-direction: column;
+
 		padding: 0.75rem;
-		width: 18vw;
 		outline: none;
 		border: 3px solid transparent;
 		border-radius: 0.5rem;
 		font-size: 1rem;
+		width: 300px;
 	}
 
-	.inputField {
-		display: flex;
-		flex-direction: column;
-		font-size: 1.1rem;
+	@media only screen and (max-width: 500px) {
+		input {
+			width: 250px;
+		}
+
+		.login {
+			padding: 2rem;
+		}
 	}
 </style>

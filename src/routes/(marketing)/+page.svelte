@@ -70,7 +70,33 @@
 	}
 
 	.footer {
-		margin: 3rem auto;
-		margin-top: 5rem;
+		padding: 3rem;
+		padding-top: 5rem;
+
+		background: linear-gradient(
+			to bottom,
+			rgba(255, 255, 255, 0),
+			rgba(210, 235, 250, 0.6),
+			rgba(210, 235, 250, 0.8)
+		);
+	}
+
+	@media (max-width: 600px) {
+		.mainHeadingBlock {
+			height: auto;
+		}
+
+		.secondaryHeadingBlock {
+			height: auto;
+			margin: 2rem 0px;
+		}
+
+		.thirdHeadingBlock {
+			height: auto;
+		}
+
+		.footer {
+			height: auto;
+		}
 	}
 </style>

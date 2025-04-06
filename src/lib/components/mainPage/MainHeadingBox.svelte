@@ -15,7 +15,7 @@
     .header {
         display: flex;
         justify-content: center;
-        margin: 1rem 0rem;
+        margin: 2rem 0rem;
     }
 
     .highlightYou {
@@ -39,8 +39,9 @@
     }
 
     .getStarted {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
         max-width: 800px;
         gap: 2rem;
     }
@@ -49,6 +50,8 @@
         font-size: 1.4rem;
         font-weight: 300;
         text-align: right;
+        max-width: 350px;
+        text-align: center;
     }
 
     .right {
@@ -71,5 +74,20 @@
 
     a:hover {
         filter: drop-shadow(rgb(119, 130, 137) 0.2rem 0.3rem 4px);
+    }
+
+    @media (max-width: 600px) {
+        .getStarted {
+            align-items: center;
+            justify-content: center;
+        }
+
+        .left {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+        }
     }
 </style>

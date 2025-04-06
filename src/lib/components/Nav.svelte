@@ -1,41 +1,72 @@
-<script>
+<script lang="ts">
 	import { page } from "$app/state";
-	let isOpen = false;
+	import Menu from "$lib/icons/menu.svelte";
+	import Close from "$lib/icons/close.svelte";
+
+	let isMobile = $state(false);
+	let isOpen = $state(false);
+
+	let windowWidth: number = $state(0);
+	$effect(() => {
+		//Check if we are under 600px and should be in mobile mode
+		isMobile = windowWidth < 600;
+
+		//Close menu if we aren't in mobile mode
+		if (!isMobile) {
+			isOpen = false;
+		}
+	});
+
+	$inspect(windowWidth)	
 
 	function toggleMenu() {
 		isOpen = !isOpen;
 	}
 </script>
 
+<svelte:window bind:innerWidth={windowWidth} />
+
 <header>
-	<div class="logo">Ottaga</div>
-	<nav class="mainNav" class:open={isOpen}>
-		<div class="nav-links">
-			<a
-				href="/"
-				class:active={page.url.pathname === "/"}
-				on:click={toggleMenu}>Home</a
-			>
-			<a
-				href="/chat"
-				class:active={page.url.pathname === "/chat"}
-				on:click={toggleMenu}>Chat</a
-			>
-			<a
-				href="/login"
-				class:active={page.url.pathname === "/login"}
-				on:click={toggleMenu}>Account</a
-			>
-		</div>
-	</nav>
+	<div class="header">
+		<a class="logo" href="/">Ottaga</a>
+
+		<span class="gap"></span>
+
+		{#if isMobile}
+			{#if isOpen}
+				<Close buttonToggle={toggleMenu} />
+			{:else}
+				<Menu buttonToggle={toggleMenu} />
+			{/if}
+		{/if}
+
+		<nav class="mainNav" class:open={isOpen}>
+			<div class="nav-links">
+				<a
+					href="/"
+					class:active={page.url.pathname === "/"}
+					onclick={toggleMenu}>Home</a
+				>
+				<a
+					href="/chat"
+					class:active={page.url.pathname === "/chat"}
+					onclick={toggleMenu}>Chat</a
+				>
+				<a
+					href="/login"
+					class:active={page.url.pathname === "/login"}
+					onclick={toggleMenu}>Account</a
+				>
+			</div>
+		</nav>
+	</div>
 </header>
 
 <style>
-	header {
+	.header {
 		height: var(--header-height);
 		padding: 0 2rem;
 		display: flex;
-		justify-content: space-between;
 		align-items: center;
 		border-bottom: 1px solid var(--hover-bg);
 
@@ -47,7 +78,7 @@
 		backdrop-filter: blur(6px);
 		z-index: 100;
 		max-width: 1500px;
-		padding: 10px 10%;
+		padding: 10px 2rem;
 		background-color: rgba(255, 255, 255, 0.068);
 	}
 
@@ -56,6 +87,9 @@
 		font-weight: 400;
 		color: var(--primary-color);
 		z-index: 101;
+		padding: 0.25rem;
+
+		text-decoration: none;
 	}
 
 	.mainNav {
@@ -88,9 +122,13 @@
 		gap: 2rem;
 	}
 
-	@media (max-width: 760px) {
-		header {
-			padding: 10px 5%;
+	.gap {
+		flex-grow: 2;
+	}
+
+	@media (max-width: 600px) {
+		.header {
+			padding: 10px 1rem;
 		}
 
 		.mainNav {

@@ -111,7 +111,7 @@ class LLMMaliciousMessageChecker implements LLMClient {
         }),
 
             this.model = model,
-            this.systemPrompt = { role: "assistant", content: systemPrompt },
+            this.systemPrompt = { role: "system", content: systemPrompt },
             this.temperature = temperature,
             this.maxTokens = maxTokens
     }
@@ -134,13 +134,15 @@ class LLMMaliciousMessageChecker implements LLMClient {
 
         let checkResponse = response.choices[0].message.content
 
+        console.log(checkResponse)
+
         if (checkResponse === null) {
             throw Error("Issue with LLMClient")
         } else {
-            if (checkResponse.toLowerCase() === "yes") {
-                return true
-            } else {
+            if (checkResponse.toLowerCase() === "no") {
                 return false
+            } else {
+                return true
             }
         }
     }

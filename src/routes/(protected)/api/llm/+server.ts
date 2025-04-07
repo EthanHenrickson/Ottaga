@@ -28,14 +28,14 @@ export const POST: RequestHandler = async ({ request }) => {
     allConversationMessages.push(newMessage)
 
     try {
-        ChatDatabase.addChatMessage(chatID, newMessage)
         
         let isMalicious = await MaliciousMessageLLM.CheckMessage(newMessage)
         if (isMalicious) {
             return json({ success: true, message: "Data received", data: { role: "assistant", content: "Please don't manipulate the LLM" } }, { status: 200 })
         }
-
+        
         let OttagaResponse = await OttagaLLM.Send(allConversationMessages)
+        ChatDatabase.addChatMessage(chatID, newMessage)
         ChatDatabase.addChatMessage(chatID, OttagaResponse)
         return json({ success: true, message: "Data received", data: OttagaResponse }, { status: 200 })
 

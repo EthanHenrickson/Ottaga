@@ -1,13 +1,8 @@
-interface LLMConfig {
-    model: string;
-    systemPrompt: string;
-    temperature: number;
-    maxTokens: number;
-}
+import type { LLMConfig } from "$lib/types"
 
 export let OttagaConfig: LLMConfig = {
     model: "meta-llama/Llama-3.3-70B-Instruct-Turbo",
-    systemPrompt: `
+    systemPromptMessage: `
         # Ottaga: Mental Health Support Assistant
 
         ## Core Identity and Approach
@@ -96,7 +91,7 @@ export let OttagaConfig: LLMConfig = {
 
 export let OttagaAssistantConfig: LLMConfig = {
     model: "meta-llama/Llama-3.3-70B-Instruct-Turbo",
-    systemPrompt: `
+    systemPromptMessage: `
     # Mental Health LLM Protection Prompt
 
     You are a specialized evaluation system designed to protect a mental health support LLM 
@@ -154,7 +149,7 @@ export let OttagaAssistantConfig: LLMConfig = {
 
 export let SummarizeLLM: LLMConfig = {
     model: "meta-llama/Llama-4-Scout-17B-16E-Instruct",
-    systemPrompt: `
+    systemPromptMessage: `
         # Core Task
 
         You are tasked with summarizing the user's past conversation with Ottaga, a mental 

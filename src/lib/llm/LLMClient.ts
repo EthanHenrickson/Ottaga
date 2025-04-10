@@ -1,11 +1,54 @@
-import type { Message } from "$lib/types";
 import { TOGETHER_API_KEY } from '$env/static/private';
 import { OttagaConfig, OttagaAssistantConfig } from '../../../llm.config'
-
 import OpenAI from "openai";
 
-abstract class LLMClient {
+import type { LLMConfig, Message } from "$lib/types";
 
+class BaseLLMClient {
+    private baseClient: OpenAI;
+    private baseSystemPrompt: string;
+    private baseModel: string;
+    private baseTemperature: number;
+    private baseMaxTokens: number;
+
+    /**
+     * Creates a new LLMClient instance.
+     * @param LLMConfig - The LLM config 
+     */
+    constructor(LLMConfig: LLMConfig) {
+        this.baseClient = new OpenAI({
+            baseURL: 'https://api.together.xyz/v1',
+            apiKey: TOGETHER_API_KEY,
+        }),
+
+        this.baseSystemPrompt = LLMConfig.systemPromptMessage,
+        this.baseModel = LLMConfig.model,
+        this.baseTemperature = LLMConfig.temperature,
+        this.baseMaxTokens = LLMConfig.maxTokens
+    }
+
+    async CheckUserMessage(message: Message): Promise<boolean> {
+        let messagesToSend = [{role: "system", content: this.baseSystemPrompt} as Message, message]
+
+        let response = await this.baseClient.chat.completions.create({
+            model: this.baseModel,
+            temperature: this.baseTemperature,
+            max_tokens: this.baseMaxTokens,
+            messages: messagesToSend,
+        })
+
+        let checkResponse = response.choices[0].message.content
+
+        if (checkResponse === null) {
+            throw Error("Ottaga - No message was received from check user message")
+        } else {
+            if (checkResponse.toLowerCase() === "no") {
+                return false
+            } else {
+                return true
+            }
+        }
+    }
 }
 
 /**
@@ -13,7 +56,7 @@ abstract class LLMClient {
  * This class provides functionality to generate system prompts and send messages
  * to the LLM using OpenAI's chat completions API.
  */
-class OttagaLLM implements LLMClient {
+class OttagaLLM extends BaseLLMClient {
     private client: OpenAI;
     private systemPromptMessage: string;
     private model: string;
@@ -22,21 +65,21 @@ class OttagaLLM implements LLMClient {
 
     /**
      * Creates a new LLMClient instance.
-     * @param model - The identifier of the LLM model to use
-     * @param systemPrompt - The system prompt to provide context to the model
-     * @param temperature - Controls randomness in the model's responses (0-1)
-     * @param maxTokens - Maximum number of tokens in the model's response
+     * @param OttagaConfig - The LLM config that will be used for Ottaga
+     * @param BaseConfig - The LLM config that the base class uses. The base class checks message for being malicious. 
      */
-    constructor(model: string, systemPromptMessage: string, temperature: number = .8, maxTokens: number = 8000) {
+    constructor(OttagaConfig: LLMConfig, BaseConfig: LLMConfig) {
+        super(BaseConfig)
+
         this.client = new OpenAI({
             baseURL: 'https://api.together.xyz/v1',
             apiKey: TOGETHER_API_KEY,
         }),
 
-            this.model = model,
-            this.systemPromptMessage = systemPromptMessage,
-            this.temperature = temperature,
-            this.maxTokens = maxTokens
+        this.model = OttagaConfig.model,
+        this.systemPromptMessage = OttagaConfig.systemPromptMessage,
+        this.temperature = OttagaConfig.temperature,
+        this.maxTokens = OttagaConfig.maxTokens
     }
 
     /**
@@ -46,7 +89,7 @@ class OttagaLLM implements LLMClient {
      */
     async AppendSessionSummariesTooSystemPrompt(pastUserSessionSummaries: string[] = []): Promise<Message> {
         let returnPrompt = `
-            ${this.systemPrompt} \n
+            ${this.systemPromptMessage} \n
             Here is a summary of the max last ${pastUserSessionSummaries.length} sessions. \n`
 
         pastUserSessionSummaries.forEach((summary, index) => {
@@ -75,7 +118,13 @@ class OttagaLLM implements LLMClient {
      * @returns A Promise resolving to the model's response as a Message
      * @throws Error if the model's response is undefined
      */
-    async Send(messages: Message[]): Promise<Message> {
+    async Send(pastMessages: Message[], newMessage: Message): Promise<{result: boolean, data: Message}> {
+
+        if(await this.CheckUserMessage(newMessage)){
+            return {result: false, data: {role: "assistant", content: "Please don't manipulate the LLM"}}
+        }
+
+        let messages = [this.systemPrompt, ...pastMessages, newMessage]
 
         let response = await this.client.chat.completions.create({
             model: this.model,
@@ -93,69 +142,9 @@ class OttagaLLM implements LLMClient {
             content: response.choices[0].message.content || ""
         }
 
-        return responseMessage
-    }
-}
-
-class OttagaAssistantLLM implements LLMClient {
-    private client: OpenAI;
-    private systemPrompt: Message;
-    private model: string;
-    private temperature: number;
-    private maxTokens: number;
-
-    /**
-     * Creates a new LLMClient instance.
-     * @param model - The identifier of the LLM model to use
-     * @param systemPrompt - The system prompt to provide context to the model
-     * @param temperature - Controls randomness in the model's responses (0-1)
-     * @param maxTokens - Maximum number of tokens in the model's response
-     */
-    constructor(model: string, systemPrompt: string, temperature: number = .1, maxTokens: number = 40) {
-        this.client = new OpenAI({
-            baseURL: 'https://api.together.xyz/v1',
-            apiKey: TOGETHER_API_KEY,
-        }),
-
-            this.model = model,
-            this.systemPrompt = { role: "system", content: systemPrompt },
-            this.temperature = temperature,
-            this.maxTokens = maxTokens
-    }
-
-    /**
-     * Sends a message to the LLM and returns the model's response to a message being malicious or not.
-     * @param message - Message to check for malicious content
-     * @returns A Promise resolving to a boolean
-     * @throws Error if the model's response is undefined
-     */
-    async CheckMessage(message: Message): Promise<boolean> {
-        let messagesToSend = [this.systemPrompt, message]
-
-        let response = await this.client.chat.completions.create({
-            model: this.model,
-            temperature: this.temperature,
-            max_tokens: this.maxTokens,
-            messages: messagesToSend,
-        })
-
-        let checkResponse = response.choices[0].message.content
-
-        console.log(checkResponse)
-
-        if (checkResponse === null) {
-            throw Error("Issue with LLMClient")
-        } else {
-            if (checkResponse.toLowerCase() === "no") {
-                return false
-            } else {
-                return true
-            }
-        }
+        return {result: true, data: responseMessage}
     }
 }
 
 /** Instance of LLMClient configured for mental health assistance using Llama 70B model */
-export let Ottaga = new OttagaLLM(OttagaConfig.model, OttagaConfig.systemPrompt, OttagaConfig.temperature, OttagaConfig.maxTokens)
-/** Instance of LLMClient configured for malicious message detection using Llama 11B model */
-export let OttagaAssistant = new OttagaAssistantLLM(OttagaAssistantConfig.model, OttagaAssistantConfig.systemPrompt, OttagaAssistantConfig.temperature, OttagaAssistantConfig.maxTokens)
+export let Ottaga = new OttagaLLM(OttagaConfig, OttagaAssistantConfig)

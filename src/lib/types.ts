@@ -42,3 +42,10 @@ export type Message = {
     role: "user" | "assistant" | "system",
     content: string
 }
+
+export type LLMConfig = {
+    model: string;
+    systemPromptMessage: string;
+    temperature: number;
+    maxTokens: number;
+}

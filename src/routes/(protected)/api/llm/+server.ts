@@ -1,5 +1,5 @@
 import { ChatDatabase } from '$lib/db/chat';
-import { MaliciousMessageLLM, OttagaLLM } from '$lib/llm/LLMClient';
+import { OttagaAssistant, Ottaga } from '$lib/llm/LLMClient';
 import { json, type RequestHandler } from '@sveltejs/kit';
 
 import type { Message } from '$lib/types';
@@ -16,8 +16,7 @@ export const POST: RequestHandler = async ({ request }) => {
     }
 
     //Get the system message
-    const systemMessage = await OttagaLLM.GenerateSystemPrompt()
-    allConversationMessages.push(systemMessage)
+    allConversationMessages.push(Ottaga.systemPrompt)
 
     //Retrieve all previous messages and add them too the conversation message
     const previousMessages = ChatDatabase.getChatMessages(chatID)
@@ -28,13 +27,13 @@ export const POST: RequestHandler = async ({ request }) => {
     allConversationMessages.push(newMessage)
 
     try {
-        
-        let isMalicious = await MaliciousMessageLLM.CheckMessage(newMessage)
+
+        let isMalicious = await OttagaAssistant.CheckMessage(newMessage)
         if (isMalicious) {
             return json({ success: true, message: "Data received", data: { role: "assistant", content: "Please don't manipulate the LLM" } }, { status: 200 })
         }
-        
-        let OttagaResponse = await OttagaLLM.Send(allConversationMessages)
+
+        let OttagaResponse = await Ottaga.Send(allConversationMessages)
         ChatDatabase.addChatMessage(chatID, newMessage)
         ChatDatabase.addChatMessage(chatID, OttagaResponse)
         return json({ success: true, message: "Data received", data: OttagaResponse }, { status: 200 })

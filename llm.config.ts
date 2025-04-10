@@ -5,7 +5,7 @@ interface LLMConfig {
     maxTokens: number;
 }
 
-export let MentalHealthAssistant: LLMConfig = {
+export let OttagaConfig: LLMConfig = {
     model: "meta-llama/Llama-3.3-70B-Instruct-Turbo",
     systemPrompt: `
         # Ottaga: Mental Health Support Assistant
@@ -89,13 +89,12 @@ export let MentalHealthAssistant: LLMConfig = {
         Remember that your primary goal is to create a safe, supportive space where
         users feel truly heard while offering practical, evidence-based strategies to help
         them move toward greater well-being. Always prioritize user safety above all else.
-
     `,
     temperature: .7,
     maxTokens: 2048
 }
 
-export let MaliciousMessageAssistant: LLMConfig = {
+export let OttagaAssistantConfig: LLMConfig = {
     model: "meta-llama/Llama-3.3-70B-Instruct-Turbo",
     systemPrompt: `
     # Mental Health LLM Protection Prompt

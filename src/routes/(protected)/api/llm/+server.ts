@@ -1,5 +1,5 @@
 import { ChatDatabase } from '$lib/db/chat';
-import { Ottaga } from '$lib/llm/LLMClient';
+import { Ottaga } from '$lib/llm/Ottaga';
 import { json, type RequestHandler } from '@sveltejs/kit';
 
 import type { Message } from '$lib/types';
@@ -17,14 +17,14 @@ export const POST: RequestHandler = async ({ request }) => {
 
     //Retrieve all previous messages and add them too the conversation message
     const databaseResponse = ChatDatabase.getChatMessages(chatID)
-    if(databaseResponse.success){
+    if (databaseResponse.success) {
         previousMessages = [...databaseResponse.data]
     }
 
     try {
-        let OttagaResponse = await Ottaga.Send(previousMessages, newMessage)
+        let OttagaResponse = await Ottaga.SendMessage(previousMessages, newMessage)
 
-        if(OttagaResponse.result === true) {
+        if (OttagaResponse.messageWasMalicious === false) {
             ChatDatabase.addChatMessage(chatID, newMessage)
             ChatDatabase.addChatMessage(chatID, OttagaResponse.data)
         }

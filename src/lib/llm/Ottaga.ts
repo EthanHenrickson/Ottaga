@@ -21,14 +21,14 @@ class BaseLLMClient {
             apiKey: TOGETHER_API_KEY,
         }),
 
-        this.baseSystemPrompt = LLMConfig.systemPromptMessage,
-        this.baseModel = LLMConfig.model,
-        this.baseTemperature = LLMConfig.temperature,
-        this.baseMaxTokens = LLMConfig.maxTokens
+            this.baseSystemPrompt = LLMConfig.systemPromptMessage,
+            this.baseModel = LLMConfig.model,
+            this.baseTemperature = LLMConfig.temperature,
+            this.baseMaxTokens = LLMConfig.maxTokens
     }
 
-    async CheckUserMessage(message: Message): Promise<boolean> {
-        let messagesToSend = [{role: "system", content: this.baseSystemPrompt} as Message, message]
+    protected async isMessageMalicious(message: Message): Promise<boolean> {
+        let messagesToSend = [{ role: "system", content: this.baseSystemPrompt } as Message, message]
 
         let response = await this.baseClient.chat.completions.create({
             model: this.baseModel,
@@ -39,14 +39,10 @@ class BaseLLMClient {
 
         let checkResponse = response.choices[0].message.content
 
-        if (checkResponse === null) {
-            throw Error("Ottaga - No message was received from check user message")
+        if (checkResponse?.toLowerCase() === "no") {
+            return false
         } else {
-            if (checkResponse.toLowerCase() === "no") {
-                return false
-            } else {
-                return true
-            }
+            return true
         }
     }
 }
@@ -58,7 +54,7 @@ class BaseLLMClient {
  */
 class OttagaLLM extends BaseLLMClient {
     private client: OpenAI;
-    private systemPromptMessage: string;
+    private systemPrompt: string;
     private model: string;
     private temperature: number;
     private maxTokens: number;
@@ -76,10 +72,10 @@ class OttagaLLM extends BaseLLMClient {
             apiKey: TOGETHER_API_KEY,
         }),
 
-        this.model = OttagaConfig.model,
-        this.systemPromptMessage = OttagaConfig.systemPromptMessage,
-        this.temperature = OttagaConfig.temperature,
-        this.maxTokens = OttagaConfig.maxTokens
+            this.model = OttagaConfig.model,
+            this.systemPrompt = OttagaConfig.systemPromptMessage,
+            this.temperature = OttagaConfig.temperature,
+            this.maxTokens = OttagaConfig.maxTokens
     }
 
     /**
@@ -87,16 +83,13 @@ class OttagaLLM extends BaseLLMClient {
      * @param pastUserSessionSummaries - Array of previous session summaries to include in the prompt
      * @returns A Message object containing the generated system prompt
      */
-    async AppendSessionSummariesTooSystemPrompt(pastUserSessionSummaries: string[] = []): Promise<Message> {
+    private async AppendSessionSummariesTooSystemPrompt(pastUserSessionSummaries: string[] = []): Promise<Message> {
         let returnPrompt = `
-            ${this.systemPromptMessage} \n
+            ${this.systemPrompt} \n
             Here is a summary of the max last ${pastUserSessionSummaries.length} sessions. \n`
 
         pastUserSessionSummaries.forEach((summary, index) => {
-            returnPrompt += `
-                <session ${index + 1}> \n
-                    ${summary} \n
-                </session ${index + 1}>`
+            returnPrompt += `<session ${index + 1}> ${summary} </session ${index + 1}>`
         })
 
         return {
@@ -105,10 +98,10 @@ class OttagaLLM extends BaseLLMClient {
         }
     }
 
-    get systemPrompt(): Message {
+    private get SystemPromptMessage(): Message {
         return {
             role: "system",
-            content: this.systemPromptMessage
+            content: this.systemPrompt
         }
     }
 
@@ -118,31 +111,42 @@ class OttagaLLM extends BaseLLMClient {
      * @returns A Promise resolving to the model's response as a Message
      * @throws Error if the model's response is undefined
      */
-    async Send(pastMessages: Message[], newMessage: Message): Promise<{result: boolean, data: Message}> {
+    async SendMessage(pastMessages: Message[], newMessage: Message, pastUserSessionSummaries?: string[]): Promise<{ messageWasMalicious: boolean, data: Message }> {
+        const isUserMessageMalicious = await this.isMessageMalicious(newMessage)
+        const systemPrompt = pastUserSessionSummaries ? await this.AppendSessionSummariesTooSystemPrompt(pastUserSessionSummaries) : this.SystemPromptMessage
+        const messages = [systemPrompt, ...pastMessages, newMessage]
 
-        if(await this.CheckUserMessage(newMessage)){
-            return {result: false, data: {role: "assistant", content: "Please don't manipulate the LLM"}}
+        //Default message
+        const responseMessage: Message = {
+            role: "assistant",
+            content: ""
         }
 
-        let messages = [this.systemPrompt, ...pastMessages, newMessage]
+        if (isUserMessageMalicious) {
+            //Set response message 
+            responseMessage.content = "Please don't manipulate the LLM"
 
-        let response = await this.client.chat.completions.create({
-            model: this.model,
-            temperature: this.temperature,
-            max_tokens: this.maxTokens,
-            messages: messages,
-        })
+            return {
+                messageWasMalicious: true,
+                data: responseMessage
+            }
+        } else {
+            //Get LLM response message
+            let chatResponse = await this.client.chat.completions.create({
+                model: this.model,
+                temperature: this.temperature,
+                max_tokens: this.maxTokens,
+                messages: messages,
+            });
 
-        if (response.choices[0].message === undefined) {
-            throw Error("Ottaga - No message was received")
+            //Set response message 
+            responseMessage.content = chatResponse.choices[0].message.content || ""
+
+            return {
+                messageWasMalicious: false,
+                data: responseMessage
+            }
         }
-
-        let responseMessage: Message = {
-            role: response.choices[0].message.role,
-            content: response.choices[0].message.content || ""
-        }
-
-        return {result: true, data: responseMessage}
     }
 }
 

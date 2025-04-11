@@ -66,6 +66,7 @@ class ChatDB extends BaseDatabase {
     getChatMessages(chatID: string, rowLimit = 20): DatabaseDataResponse<Message[]> {
         const query = this.db.prepare(`SELECT * FROM message WHERE FK_chatID = ? ORDER BY createdDate DESC LIMIT ?`)
         const result = query.all(chatID, rowLimit) as Message[]
+        
         //Reverse array so that the array[0] is the oldest message first
         result.reverse()
 

@@ -45,7 +45,7 @@ export type Message = {
 
 export type LLMConfig = {
     model: string;
-    systemPromptMessage: string;
+    systemPrompt: string;
     temperature: number;
     maxTokens: number;
 }

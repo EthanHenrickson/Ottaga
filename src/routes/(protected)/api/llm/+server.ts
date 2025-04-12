@@ -3,6 +3,7 @@ import { Ottaga } from '$lib/llm/Ottaga';
 import { json, type RequestHandler } from '@sveltejs/kit';
 
 import type { Message } from '$lib/types';
+import Analytics from '$lib/utility/ServerAnalytics';
 
 export const POST: RequestHandler = async ({ request }) => {
     let previousMessages: Message[] = []
@@ -23,6 +24,8 @@ export const POST: RequestHandler = async ({ request }) => {
 
     try {
         let OttagaResponse = await Ottaga.SendMessage(previousMessages, newMessage)
+
+        Analytics.capture({distinctId: "Anon", event: "Api Called"})
 
         ChatDatabase.addChatMessage(chatID, newMessage)
         ChatDatabase.addChatMessage(chatID, OttagaResponse.data)

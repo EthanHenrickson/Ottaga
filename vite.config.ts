@@ -4,6 +4,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
 	plugins: [sveltekit()],
 	test: {
-		maxConcurrency: 5
+		maxConcurrency: 5,
+		testTimeout: 10000
 	}
 });

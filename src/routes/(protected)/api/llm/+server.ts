@@ -24,10 +24,9 @@ export const POST: RequestHandler = async ({ request }) => {
     try {
         let OttagaResponse = await Ottaga.SendMessage(previousMessages, newMessage)
 
-        if (OttagaResponse.messageWasMalicious === false) {
-            ChatDatabase.addChatMessage(chatID, newMessage)
-            ChatDatabase.addChatMessage(chatID, OttagaResponse.data)
-        }
+        ChatDatabase.addChatMessage(chatID, newMessage)
+        ChatDatabase.addChatMessage(chatID, OttagaResponse.data)
+        
         return json({ success: true, message: "Data received", data: OttagaResponse.data }, { status: 200 })
 
     } catch (error) {

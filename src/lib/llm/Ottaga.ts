@@ -1,11 +1,9 @@
-import { TOGETHER_API_KEY } from '$env/static/private';
-import { OttagaConfig, OttagaAssistantConfig } from '../../../llm.config'
-import OpenAI from "openai";
+import { OttagaConfig } from '../../../llm.config'
+import { BaseLLM } from './LLMBase';
+import { LLMHelper } from './LLMHelper';
+import { ChatDatabase } from '$lib/db/chat';
 
 import type { LLMConfig, Message } from "$lib/types";
-import { BaseLLM } from './LLM';
-import { Helper } from './HelperLLM';
-import { ChatDatabase } from '$lib/db/chat';
 
 /**
  * A client for interacting with language learning models through the OpenAI API.
@@ -16,15 +14,18 @@ class OttagaLLM extends BaseLLM {
 
     /**
      * Creates a new LLMClient instance.
-     * @param OttagaConfig - The LLM config that will be used for Ottaga
+     * @param config - The LLM config that will be used for Ottaga
      */
-    constructor(OttagaConfig: LLMConfig,) {
-        super(OttagaConfig)
+    constructor(config: LLMConfig) {
+        super(config)
     }
 
-
     /**
-     * Creates a chat in Database, generates system prompt, and then saves it oo database
+     * Creates a new chat session in the database.
+     * Generates a system prompt and saves it to the database.
+     * @param userInfo - Optional user information including ID and past session summaries
+     * @returns The ID of the newly created chat session
+     * @throws Error if chat creation fails
      */
     CreateChat(userInfo?: { userID: string, pastSessionSummaries?: string[] }): string {
         //Create a chat with userID if provided
@@ -63,9 +64,9 @@ class OttagaLLM extends BaseLLM {
             })
 
             returnMessage.content = newPrompt
-            
+
         } else {
-            //User basic system prompt
+            //Use basic system prompt
             returnMessage.content = this.SystemPrompt
         }
 
@@ -74,12 +75,13 @@ class OttagaLLM extends BaseLLM {
 
     /**
      * Sends a series of messages to the LLM and returns the model's response.
-     * @param messages - Array of Message objects representing the conversation
-     * @returns A Promise resolving to the model's response as a Message
+     * @param pastMessages - Array of previous Message objects in the conversation
+     * @param newMessage - The new message to be processed
+     * @returns A Promise resolving to an object containing the model's response as a Message
      * @throws Error if the model's response is undefined
      */
-    async SendMessage(pastMessages: Message[], newMessage: Message): Promise<{ messageWasMalicious: boolean, data: Message }> {
-        const isUserMessageMalicious = await Helper.isMessageMalicious(newMessage)
+    async SendMessage(pastMessages: Message[], newMessage: Message): Promise<{ data: Message }> {
+        const userMessage = await LLMHelper.CheckUserMessage(newMessage)
         const messages = [...pastMessages, newMessage]
 
         //Default message
@@ -88,12 +90,11 @@ class OttagaLLM extends BaseLLM {
             content: ""
         }
 
-        if (isUserMessageMalicious) {
+        if (userMessage.isMalicious) {
             //Set response message 
-            responseMessage.content = "Please don't manipulate the LLM"
+            responseMessage.content = userMessage.messageResponse
 
             return {
-                messageWasMalicious: true,
                 data: responseMessage
             }
         } else {
@@ -109,12 +110,14 @@ class OttagaLLM extends BaseLLM {
             responseMessage.content = chatResponse.choices[0].message.content || ""
 
             return {
-                messageWasMalicious: false,
                 data: responseMessage
             }
         }
     }
 }
 
-/** Instance of LLMClient configured for mental health assistance using Llama 70B model */
+/** 
+ * Instance of OttagaLLM configured for mental health assistance.
+ * Uses the configuration specified in OttagaConfig.
+ */
 export let Ottaga = new OttagaLLM(OttagaConfig)

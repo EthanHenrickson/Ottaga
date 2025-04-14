@@ -4,8 +4,8 @@
 			<div class="column">
 				<h2>Company</h2>
 				<ul>
-					<a href=""><li>Who are we?</li></a>
-					<a href=""><li>Contact</li></a>
+					<li><a href="/">Who are we?</a></li>
+					<li><a href="/">Contact</a></li>
 				</ul>
 			</div>
 			<div class="column">
@@ -63,6 +63,5 @@
 	}
 
 	.tagLine {
-
 	}
 </style>

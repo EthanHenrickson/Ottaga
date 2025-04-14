@@ -25,6 +25,7 @@
 	},
 	"dependencies": {
 		"@oslojs/crypto": "^1.0.1",
+		"@sveltejs/adapter-node": "^5.2.12",
 		"argon2": "^0.41.1",
 		"better-sqlite3": "^11.8.1",
 		"marked": "^15.0.7",

@@ -1,31 +1,38 @@
 <footer>
 	<div class="footer">
-		<div class="column">
-			<h2>Company</h2>
-			<ul>
-				<a href=""><li>Who are we?</li></a>
-				<a href=""><li>Contact</li></a>
-			</ul>
+		<div class="content">
+			<div class="column">
+				<h2>Company</h2>
+				<ul>
+					<a href=""><li>Who are we?</li></a>
+					<a href=""><li>Contact</li></a>
+				</ul>
+			</div>
+			<div class="column">
+				<h2>Legal</h2>
+				<ul>
+					<li><a href="/legal/tos">Terms of Service</a></li>
+					<li><a href="/legal/privacy">Privacy Policy</a></li>
+					<li><a href="/legal/cookie">Cookie Policy</a></li>
+				</ul>
+			</div>
 		</div>
-		<div class="column">
-			<h2>Legal</h2>
-			<ul>
-				<li><a href="/legal/tos">Terms of Service</a></li>
-				<li><a href="/legal/privacy">Privacy Policy</a></li>
-				<li><a href="/legal/cookie">Cookie Policy</a></li>
-			</ul>
+		<div class="tagLine">
+			<p>Ottaga - Your safe space to talk</p>
 		</div>
 	</div>
 </footer>
 
 <style>
-	footer {
+	.footer {
 		display: flex;
-		width: 100%;
+		flex-direction: column;
 		justify-content: center;
+		align-items: center;
+		width: 100%;
 	}
 
-	.footer {
+	.content {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 20px;
@@ -53,5 +60,9 @@
 		text-decoration: none;
 		font-weight: 400;
 		font-size: 0.9rem;
+	}
+
+	.tagLine {
+
 	}
 </style>

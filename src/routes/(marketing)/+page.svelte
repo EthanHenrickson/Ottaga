@@ -22,8 +22,6 @@
 
 <style>
 	.mainHeadingBlock {
-		height: 75vh;
-
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -32,7 +30,7 @@
 		background: linear-gradient(
 			to top,
 			rgba(255, 255, 255, 0),
-			rgba(210, 235, 250, 0.8)
+			rgba(188, 223, 245, 0.8)
 		);
 
 		width: 94%;

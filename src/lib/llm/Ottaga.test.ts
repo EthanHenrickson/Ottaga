@@ -1,0 +1,155 @@
+import { describe, expect, it, vi, beforeEach } from 'vitest';
+import { Ottaga } from './Ottaga';
+import { ChatDatabase } from '$lib/db/chat';
+import { LLMHelper } from './LLMHelper';
+import type { Message } from '$lib/types';
+
+// Mock ChatDatabase
+vi.mock('$lib/db/chat', () => ({
+    ChatDatabase: {
+        createChat: vi.fn(),
+        addChatMessage: vi.fn(),
+    }
+}));
+
+// Mock LLMHelper
+vi.mock('./LLMHelper', () => ({
+    LLMHelper: {
+        CheckUserMessage: vi.fn()
+    }
+}));
+
+// Mock OpenAI client
+const mockCreate = vi.fn();
+const mockClient = {
+    chat: {
+        completions: {
+            create: mockCreate
+        }
+    }
+};
+
+describe('OttagaLLM', () => {
+    beforeEach(() => {
+        // Reset all mocks
+        vi.clearAllMocks();
+        
+        // Mock the client
+        // @ts-ignore - Replace the client with our mock
+        Ottaga.Client = mockClient;
+    });
+
+    describe('CreateChat', () => {
+        it('should create a chat without user info', () => {
+            vi.mocked(ChatDatabase.createChat).mockReturnValue({
+                success: true,
+                message: 'Chat created successfully',
+                data: 'test-chat-id'
+            });
+
+            const chatId = Ottaga.CreateChat();
+
+            expect(ChatDatabase.createChat).toHaveBeenCalledWith(undefined);
+            expect(ChatDatabase.addChatMessage).toHaveBeenCalledOnce();
+            expect(chatId).toBe('test-chat-id');
+        });
+
+        it('should create a chat with user info and past sessions', () => {
+            vi.mocked(ChatDatabase.createChat).mockReturnValue({
+                success: true,
+                message: 'Chat created successfully',
+                data: 'test-chat-id'
+            });
+
+            const userInfo = {
+                userID: 'test-user',
+                pastSessionSummaries: ['Past session 1', 'Past session 2']
+            };
+
+            const chatId = Ottaga.CreateChat(userInfo);
+
+            expect(ChatDatabase.createChat).toHaveBeenCalledWith('test-user');
+            expect(ChatDatabase.addChatMessage).toHaveBeenCalledWith(
+                'test-chat-id',
+                expect.objectContaining({
+                    role: 'system',
+                    content: expect.stringContaining('Past session 1')
+                })
+            );
+            expect(chatId).toBe('test-chat-id');
+        });
+
+        it('should throw error when chat creation fails', () => {
+            vi.mocked(ChatDatabase.createChat).mockReturnValue({
+                success: false,
+                message: 'Failed to create chat'
+            });
+
+            expect(() => Ottaga.CreateChat()).toThrow('Failed to create Chat for Ottaga');
+        });
+    });
+
+    describe('SendMessage', () => {
+        const pastMessages: Message[] = [
+            { role: 'system', content: 'Test system prompt' },
+            { role: 'user', content: 'Hello' }
+        ];
+        const newMessage: Message = { role: 'user', content: 'How are you?' };
+
+        it('should handle non-malicious messages', async () => {
+            // Mock LLMHelper to return non-malicious
+            vi.mocked(LLMHelper.CheckUserMessage).mockResolvedValue({ isMalicious: false });
+
+            // Mock OpenAI response
+            mockCreate.mockResolvedValue({
+                choices: [{ message: { content: 'I am doing well!' } }]
+            });
+
+            const response = await Ottaga.SendMessage(pastMessages, newMessage);
+
+            expect(LLMHelper.CheckUserMessage).toHaveBeenCalledWith(newMessage);
+            expect(mockCreate).toHaveBeenCalledOnce();
+            expect(response).toEqual({
+                data: {
+                    role: 'assistant',
+                    content: 'I am doing well!'
+                }
+            });
+        });
+
+        it('should handle malicious messages', async () => {
+            // Mock LLMHelper to return malicious
+            vi.mocked(LLMHelper.CheckUserMessage).mockResolvedValue({
+                isMalicious: true,
+                messageResponse: 'This message was flagged as inappropriate'
+            });
+
+            const response = await Ottaga.SendMessage(pastMessages, newMessage);
+
+            expect(LLMHelper.CheckUserMessage).toHaveBeenCalledWith(newMessage);
+            expect(mockCreate).not.toHaveBeenCalled();
+            expect(response).toEqual({
+                data: {
+                    role: 'assistant',
+                    content: 'This message was flagged as inappropriate'
+                }
+            });
+        });
+
+        it('should handle empty LLM response', async () => {
+            vi.mocked(LLMHelper.CheckUserMessage).mockResolvedValue({ isMalicious: false });
+            mockCreate.mockResolvedValue({
+                choices: [{ message: { content: '' } }]
+            });
+
+            const response = await Ottaga.SendMessage(pastMessages, newMessage);
+
+            expect(response).toEqual({
+                data: {
+                    role: 'assistant',
+                    content: ''
+                }
+            });
+        });
+    });
+});

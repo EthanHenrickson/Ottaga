@@ -22,7 +22,7 @@
 		--MessageBackground-Assistant: #f5f5f5;
 		--MessageBackground-User: #e3f2fd;
 
-		--AccentColorPrimary: #98d7ff;
+		--AccentColorPrimary: #2485c1;
 		--AccentColorSecondary: #e6f6fe;
 
 		--Orange400: rgb(255, 175, 65);

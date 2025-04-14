@@ -1,21 +1,24 @@
-<div class="header">
-    <h1>We care about <span class="highlightYou">you</span>.</h1>
-</div>
-<div class="getStarted">
-    <div class="left">
-        We know how it feels to be in a bad place mentally, thats why we provide
-        a mental health companion to help completely free of charge.
+<div class="content">
+    <div class="header">
+        <h1>We care about <span class="highlightYou">you</span>.</h1>
     </div>
-    <div class="right">
-        <a href="/chat">Start a conversation > </a>
+    <div class="messaging">
+        <p>Your digital mental health companion - always here, always free.</p>
+    </div>
+    <div class="getStarted">
+        <a href="/chat" class="conversationButton">Start a conversation</a>
+        <a href="/learn" class="learnButton">Learn More</a>
     </div>
 </div>
 
 <style>
-    .header {
+    .content {
         display: flex;
-        justify-content: center;
-        margin: 2rem 0rem;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        margin: 10rem 0rem;
+        margin-top: 14rem;
     }
 
     .highlightYou {
@@ -33,41 +36,49 @@
         transform: translateY(-8px);
     }
 
-    h1 {
+    .header h1 {
         font-size: 6rem;
         font-weight: 400;
+        margin: 0rem;
+        text-align: center;
+    }
+
+    .messaging {
+        display: block;
+        max-width: 500px;
+    }
+
+    .messaging p {
+        margin: 0px;
+        font-weight: 300;
+        font-size: 1.7rem;
+        text-align: center;
     }
 
     .getStarted {
         display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        max-width: 800px;
-        gap: 2rem;
-    }
-
-    .left {
-        font-size: 1.4rem;
-        font-weight: 300;
-        text-align: right;
-        max-width: 350px;
-        text-align: center;
-    }
-
-    .right {
-        display: flex;
         align-items: center;
         justify-content: center;
+        flex-flow: row wrap;
+        gap: 1rem;
     }
 
-    a { 
+    .conversationButton {
+        background-color: var(--AccentColorPrimary);
+        color: white;
+    }
+
+    .learnButton {
+        background-color: white;
+        color: black;
+    }
+
+    a {
         text-decoration: none;
-        color: var(--text-color);
         padding: 1rem 2rem;
         border-radius: 0.75rem;
         font-size: 1.2rem;
         font-weight: 500;
-        background-color: var(--AccentColorPrimary);
         filter: drop-shadow(rgb(130, 130, 130) 0.4rem 0.5rem 8px);
         transition: all 0.25s;
     }
@@ -77,17 +88,30 @@
     }
 
     @media (max-width: 600px) {
+        .content {
+            margin: 6rem 0rem;
+            margin-top: 10rem;
+
+        }
+
         .getStarted {
             align-items: center;
             justify-content: center;
         }
 
-        .left {
-            text-align: center;
-        }
-
-        h1 {
+        .header h1 {
             font-size: 3rem;
         }
+
+            .highlightYou::before {
+        content: "You";
+        text-decoration: underline;
+        text-decoration-color: var(--AccentColorPrimary);
+        text-decoration-thickness: 2px;
+        position: absolute;
+        color: transparent;
+        z-index: -1;
+        transform: translateY(-5px);
+    }
     }
 </style>

@@ -98,7 +98,7 @@ describe('OttagaLLM', () => {
 
         it('should handle non-malicious messages', async () => {
             // Mock LLMHelper to return non-malicious
-            vi.mocked(LLMHelper.CheckUserMessage).mockResolvedValue({ isMalicious: false });
+            vi.mocked(LLMHelper.CheckUserMessage).mockResolvedValue({ isMalicious: false, messageResponse: "" });
 
             // Mock OpenAI response
             mockCreate.mockResolvedValue({
@@ -137,7 +137,7 @@ describe('OttagaLLM', () => {
         });
 
         it('should handle empty LLM response', async () => {
-            vi.mocked(LLMHelper.CheckUserMessage).mockResolvedValue({ isMalicious: false });
+            vi.mocked(LLMHelper.CheckUserMessage).mockResolvedValue({ isMalicious: false, messageResponse: "" });
             mockCreate.mockResolvedValue({
                 choices: [{ message: { content: '' } }]
             });

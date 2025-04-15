@@ -1,6 +1,8 @@
-import type { Message, LLMConfig } from "$lib/types";
+import type { Message, LLMConfig, MaliciousLLMResponse } from "$lib/types";
+import { passive } from "svelte/legacy";
 import { OttagaAssistantConfig } from "../../../llm.config";
 import { BaseLLM } from "./LLMBase";
+import Analytics from "$lib/utility/ServerAnalytics";
 
 class HelperLLM extends BaseLLM {
 
@@ -18,9 +20,10 @@ class HelperLLM extends BaseLLM {
      * @param message - The message to be checked for malicious content
      * @returns Object indicating if message is malicious and optional response message
      */
-    async CheckUserMessage(message: Message): Promise<{ isMalicious: true, messageResponse: string } | { isMalicious: false }> {
+    async CheckUserMessage(message: Message): Promise<MaliciousLLMResponse> {
         const systemPrompt: Message = { role: "system", content: this.SystemPrompt }
         const messagesToSend = [systemPrompt, message]
+        let returnResponse: MaliciousLLMResponse = { isMalicious: true, messageResponse: "Sorry that message couldn't be parsed. Please try again." }
 
         let response = await this.Client.chat.completions.create({
             model: this.Model,
@@ -29,13 +32,20 @@ class HelperLLM extends BaseLLM {
             messages: messagesToSend,
         })
 
-        let checkResponse = response.choices[0].message.content || ""
+        let LLMResponse = response.choices[0].message.content || ""
 
-        if (checkResponse.toLowerCase() === "no") {
-            return { isMalicious: false }
-        } else {
-            return { isMalicious: true, messageResponse: checkResponse }
+        try {
+            let ParseLLMResponse: any = JSON.parse(LLMResponse)
+
+            if (typeof ParseLLMResponse.isMalicious === "boolean" && typeof ParseLLMResponse.messageResponse === "string") {
+                returnResponse = ParseLLMResponse
+            }
+        } catch {
+            console.log("Failed to parse json output - ", LLMResponse)
+            Analytics.captureException("Failed to parse LLM response in Malicious message checker", "Anon", {message: message} )
         }
+
+        return returnResponse
     }
 }
 

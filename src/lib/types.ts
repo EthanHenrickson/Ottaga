@@ -49,3 +49,8 @@ export type LLMConfig = {
     temperature: number;
     maxTokens: number;
 }
+
+export type MaliciousLLMResponse = {
+    isMalicious: boolean,
+    messageResponse: string
+}

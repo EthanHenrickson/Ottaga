@@ -77,8 +77,7 @@
 
 		backdrop-filter: blur(6px);
 		z-index: 100;
-		max-width: 1500px;
-		padding: 10px 2rem;
+		padding: 10px 4rem;
 		background-color: rgba(255, 255, 255, 0.068);
 	}
 

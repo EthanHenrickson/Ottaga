@@ -1,9 +1,20 @@
+/**
+ * Tests for Ottaga's core LLM functionality
+ * 
+ * Verifies the main assistant's ability to:
+ * - Create and manage chat sessions
+ * - Handle message sending with proper safety checks
+ * - Generate appropriate system prompts
+ */
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { Ottaga } from './Ottaga';
 import { ChatDatabase } from '$lib/db/chat';
 import { LLMHelper } from './LLMHelper';
 import type { Message } from '$lib/types';
 
+/**
+ * Mock database and helper services for isolated testing
+ */
 // Mock ChatDatabase
 vi.mock('$lib/db/chat', () => ({
     ChatDatabase: {
@@ -29,6 +40,9 @@ const mockClient = {
     }
 };
 
+/**
+ * Main test suite for Ottaga LLM functionality
+ */
 describe('OttagaLLM', () => {
     beforeEach(() => {
         // Reset all mocks
@@ -39,6 +53,9 @@ describe('OttagaLLM', () => {
         Ottaga.Client = mockClient;
     });
 
+    /**
+     * Tests for chat session creation functionality
+     */
     describe('CreateChat', () => {
         it('should create a chat without user info', () => {
             vi.mocked(ChatDatabase.createChat).mockReturnValue({
@@ -89,6 +106,9 @@ describe('OttagaLLM', () => {
         });
     });
 
+    /**
+     * Tests for message sending and safety handling
+     */
     describe('SendMessage', () => {
         const pastMessages: Message[] = [
             { role: 'system', content: 'Test system prompt' },

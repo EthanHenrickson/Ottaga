@@ -48,6 +48,8 @@
 
 		// Add user message to chat history
 		messageArray.push({ role: "user", content: messageInput });
+		await handleScroll();
+		scrollToBottom();
 
 		try {
 			// Send messages to API endpoint
@@ -63,9 +65,15 @@
 			});
 
 			if (response.ok) {
+				//save temp variable so we can check it after a message is added and scroll the user to the bottom
+				let tempIsChatOnBottom = isChatScrolledToBottom;
 				// Update chat history with assistant's response
 				let responseData = await response.json();
 				messageArray.push(responseData.data);
+				if (tempIsChatOnBottom == true) {
+					await handleScroll();
+					scrollToBottom();
+				}
 			} else {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
@@ -87,7 +95,7 @@
 				chatMessageContainer.scrollHeight -
 					chatMessageContainer.scrollTop -
 					chatMessageContainer.clientHeight,
-			) < 100;
+			) < 200;
 	}
 </script>
 
@@ -190,7 +198,7 @@
 
 	.sendButton {
 		padding: 10px 20px;
-		background-color: #007bff;
+		background-color: var(--AccentColorPrimary);
 		color: white;
 		border: none;
 		border-radius: 4px;

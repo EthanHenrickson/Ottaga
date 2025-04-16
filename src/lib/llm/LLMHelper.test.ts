@@ -1,3 +1,9 @@
+/**
+ * Tests for LLMHelper's message moderation functionality
+ * 
+ * Verifies the LLMHelper's ability to detect and handle potentially
+ * malicious user messages before they reach the main assistant.
+ */
 import { LLMHelper } from "./LLMHelper";
 import { GoodPrompts, MaliciousPrompts } from "./TestPrompts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -12,6 +18,9 @@ const mockClient = {
     }
 };
 
+/**
+ * Tests error handling scenarios in message checking
+ */
 describe("Check user message - error", () => {
     beforeEach(() => {
         // Reset all mocks
@@ -47,6 +56,9 @@ describe("Check user message - error", () => {
     })
 })
 
+/**
+ * Tests detection of known malicious prompts
+ */
 describe.concurrent("Check Ottaga Malicious Messages", () => {
     MaliciousPrompts.forEach((prompt) => {
         it(prompt.content, async () => {
@@ -60,6 +72,9 @@ describe.concurrent("Check Ottaga Malicious Messages", () => {
     })
 })
 
+/**
+ * Tests that legitimate messages are not flagged as malicious
+ */
 describe.concurrent("Check Ottaga Good Messages", () => {
     GoodPrompts.forEach((prompt) => {
         it(prompt.content, async () => {
@@ -68,4 +83,3 @@ describe.concurrent("Check Ottaga Good Messages", () => {
         })
     })
 })
-

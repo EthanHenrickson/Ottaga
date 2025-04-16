@@ -1,9 +1,15 @@
 import type { Message, LLMConfig, MaliciousLLMResponse } from "$lib/types";
-import { passive } from "svelte/legacy";
 import { OttagaAssistantConfig } from "../../../llm.config";
 import { BaseLLM } from "./LLMBase";
 import Analytics from "$lib/utility/ServerAnalytics";
 
+/**
+ * Specialized LLM implementation for handling moderation and safety checks
+ * 
+ * Extends BaseLLM to provide additional functionality for detecting and handling
+ * potentially malicious user messages before they reach the main assistant.
+ * @extends BaseLLM
+ */
 class HelperLLM extends BaseLLM {
 
     /**
@@ -17,8 +23,12 @@ class HelperLLM extends BaseLLM {
     /**
      * Checks if a user message is attempting to manipulate the LLM.
      * Sends the message to a moderation model to evaluate for malicious intent.
-     * @param message - The message to be checked for malicious content
-     * @returns Object indicating if message is malicious and optional response message
+     * 
+     * @param {Message} message - The message to check, containing role and content
+     * @returns {Promise<MaliciousLLMResponse>} Object containing:
+     *   - isMalicious: boolean indicating if message was flagged
+     *   - messageResponse: string response to send if malicious (optional)
+     * @throws May throw errors from the underlying LLM API call
      */
     async CheckUserMessage(message: Message): Promise<MaliciousLLMResponse> {
         const systemPrompt: Message = { role: "system", content: this.SystemPrompt }

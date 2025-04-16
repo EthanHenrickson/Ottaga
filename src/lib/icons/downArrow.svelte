@@ -14,7 +14,7 @@
     svg {
         width: 50px;
         height: auto;
-        background-color: #98d7ff;
+        background-color: var(--AccentColorPrimary);
         border-radius: 50%;
     }
 </style>

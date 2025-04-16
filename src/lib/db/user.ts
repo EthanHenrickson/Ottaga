@@ -2,6 +2,10 @@ import type { NewUserRecord, DatabaseResponse, DatabaseDataResponse, UserRecord 
 import { v4 } from "uuid";
 import { BaseDatabase } from "./database";
 
+/**
+ * Service for handling user-related database operations
+ * @extends BaseDatabase
+ */
 class UserDB extends BaseDatabase {
     constructor() {
         super()

@@ -39,6 +39,12 @@ class ChatDB extends BaseDatabase {
         }
     }
 
+    /**
+     * Add a new message to a chat session
+     * @param {string} chatID - The ID of the chat session
+     * @param {Message} message - The message object containing role and content
+     * @returns {DatabaseResponse} Response indicating success or failure of message addition
+     */
     addChatMessage(chatID: string, message: Message): DatabaseResponse {
         const uuid = v4()
 
@@ -63,6 +69,12 @@ class ChatDB extends BaseDatabase {
         }
     }
 
+    /**
+     * Retrieve messages from a chat session
+     * @param {string} chatID - The ID of the chat session
+     * @param {number} rowLimit - Maximum number of messages to retrieve (default: 20)
+     * @returns {DatabaseDataResponse<Message[]>} Array of messages if successful
+     */
     getChatMessages(chatID: string, rowLimit = 20): DatabaseDataResponse<Message[]> {
         const query = this.db.prepare(`SELECT * FROM message WHERE FK_chatID = ? ORDER BY createdDate DESC LIMIT ?`)
         const result = query.all(chatID, rowLimit) as Message[]

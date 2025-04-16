@@ -17,8 +17,13 @@
         flex-direction: column;
         align-items: center;
         gap: 2rem;
-        margin: 10rem 0rem;
-        margin-top: 14rem;
+        padding: 10rem 0rem;
+        padding-top: 14rem;
+        background: linear-gradient(
+			to top,
+			rgba(255, 255, 255, 0),
+			rgba(188, 223, 245, 0.8)
+		);
     }
 
     .highlightYou {
@@ -89,9 +94,8 @@
 
     @media (max-width: 600px) {
         .content {
-            margin: 6rem 0rem;
-            margin-top: 10rem;
-
+            padding: 6rem 0rem;
+            padding-top: 14rem;
         }
 
         .getStarted {

@@ -16,30 +16,40 @@
         dataJsonKeys[0] as keyof typeof dataJson;
 </script>
 
-<h2>How Ottaga Can Help</h2>
-<div class="informationBox">
-    <div class="keyBlock">
-        {#each dataJsonKeys as key}
-            <button
-                class:active={selectedKey == key}
-                onclick={() => (selectedKey = key as keyof typeof dataJson)}
-            >
-                {key}
-            </button>
-        {/each}
-    </div>
-    <div class="valueBlock">
-        {dataJson[selectedKey]}
+<div class="content">
+    <h2>How Ottaga Can Help</h2>
+    <div class="informationBox">
+        <div class="keyBlock">
+            {#each dataJsonKeys as key}
+                <button
+                    class:active={selectedKey == key}
+                    onclick={() => (selectedKey = key as keyof typeof dataJson)}
+                >
+                    {key}
+                </button>
+            {/each}
+        </div>
+        <div class="valueBlock">
+            {dataJson[selectedKey]}
+        </div>
     </div>
 </div>
 
 <style>
+    .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        padding: 4rem 0rem;
+    }
+
     .informationBox {
         display: flex;
         flex-direction: row;
-        max-width: 1200px;
-        width: 100%;
+        max-width: 900px;
         align-items: center;
+        margin: 0px 1rem;
     }
 
     h2 {

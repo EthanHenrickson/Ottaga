@@ -30,6 +30,14 @@
 		justify-content: center;
 		align-items: center;
 		width: 100%;
+
+		background: linear-gradient(
+			to bottom,
+			rgba(255, 255, 255, 0),
+			rgba(210, 235, 250, 0.6),
+			rgba(210, 235, 250, 0.8)
+		);
+		padding: 2rem 0rem;
 	}
 
 	.content {

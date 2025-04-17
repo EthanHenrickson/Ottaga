@@ -11,13 +11,13 @@
 	let isLoading = $state(false);
 
 	// Current message input from the user
-	let messageInput = $state("");
+	let messageInput = $state("")
 
 	// Array of chat messages between user and assistant
 	let messageArray: Message[] = $state([
 		{
 			role: "assistant",
-			content: "How can I help you today?",
+			content: "How are you feeling today?",
 		},
 	]);
 
@@ -35,9 +35,7 @@
 		});
 	}
 
-	/**
-	 * Handles form submission for sending messages
-	 */
+	//Handles form submission for sending messages
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
 
@@ -47,8 +45,8 @@
 		isLoading = true;
 
 		// Add user message to chat history
-		messageArray.push({ role: "user", content: messageInput });
-		await handleScroll();
+		messageArray.push({role:"user", content: messageInput});
+		await CheckUserAtBottomOfChat();
 		scrollToBottom();
 
 		try {
@@ -67,11 +65,13 @@
 			if (response.ok) {
 				//save temp variable so we can check it after a message is added and scroll the user to the bottom
 				let tempIsChatOnBottom = isChatScrolledToBottom;
+
 				// Update chat history with assistant's response
 				let responseData = await response.json();
 				messageArray.push(responseData.data);
+
 				if (tempIsChatOnBottom == true) {
-					await handleScroll();
+					await CheckUserAtBottomOfChat();
 					scrollToBottom();
 				}
 			} else {
@@ -89,13 +89,17 @@
 		}
 	}
 
-	async function handleScroll() {
-		isChatScrolledToBottom =
-			Math.abs(
-				chatMessageContainer.scrollHeight -
-					chatMessageContainer.scrollTop -
-					chatMessageContainer.clientHeight,
-			) < 200;
+	//Checks to see if the user is scrolled to the bottom of the chat window
+	async function CheckUserAtBottomOfChat() {
+		//Get chat window height elements
+		const TotalHeight = chatMessageContainer.scrollHeight;
+		const PixelsScrolled = chatMessageContainer.scrollTop;
+		const DisplayHeight = chatMessageContainer.clientHeight;
+
+		//Total number of pixels from being scrolled to bottom of chat window
+		const PixelsFromBottom = TotalHeight - PixelsScrolled - DisplayHeight;
+
+		isChatScrolledToBottom = Math.abs(PixelsFromBottom) < 200;
 	}
 </script>
 
@@ -103,7 +107,7 @@
 	<div
 		class="messages"
 		bind:this={chatMessageContainer}
-		onscroll={handleScroll}
+		onscroll={CheckUserAtBottomOfChat}
 	>
 		{#each messageArray as message}
 			<div class="message {message.role}">
@@ -163,7 +167,7 @@
 
 	.messages {
 		flex-grow: 1;
-		overflow-y: auto;
+		overflow: scroll;
 		padding: 1rem;
 	}
 

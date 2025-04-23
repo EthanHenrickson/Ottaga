@@ -25,7 +25,7 @@ export const POST: RequestHandler = async ({ request }) => {
     try {
         let OttagaResponse = await Ottaga.SendMessage(previousMessages, newMessage)
 
-        Analytics.capture({distinctId: "Anon", event: "Api Called"})
+        Analytics.capture({distinctId: "Anon", event: "api/llm called"})
 
         ChatDatabase.addChatMessage(chatID, newMessage)
         ChatDatabase.addChatMessage(chatID, OttagaResponse.data)
@@ -33,7 +33,10 @@ export const POST: RequestHandler = async ({ request }) => {
         return json({ success: true, message: "Data received", data: OttagaResponse.data }, { status: 200 })
 
     } catch (error) {
+
+        Analytics.captureException({ error: "Failed to get Ottaga response", additionalProperties: {errorMessage: error}})
         console.error(error);
+        
         return json({ success: false, message: `LLM API Server Error - ${error}` }, { status: 500 });
     }
 };

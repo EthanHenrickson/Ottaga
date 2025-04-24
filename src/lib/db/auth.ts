@@ -1,4 +1,5 @@
 import type { DatabaseResponse, DatabaseDataResponse, cookie } from "$lib/types";
+import { v7 } from "uuid";
 import { BaseDatabase } from "./database";
 
 /**
@@ -12,21 +13,23 @@ class AuthDB extends BaseDatabase {
 
     /**
      * Create a new authentication cookie for a user
-     * @param {string} cookieID - The unique identifier for the cookie
      * @param {number} userID - The ID of the user the cookie belongs to
-     * @returns {DatabaseResponse} Response indicating success or failure of cookie creation
+     * @returns {DatabaseDataResponse<string>} Response indicating success or failure with cookie uuid returned
      */
-    async createCookie(cookieID: string, userID: string): Promise<DatabaseResponse> {
+    async createCookie(userID: string): Promise<DatabaseDataResponse<string>> {
+        const uuid = v7()
+
         const futureExpireTime = new Date();
         futureExpireTime.setTime(futureExpireTime.getTime() + (30 * 60 * 1000));
 
-        const query = this.db.insertInto("cookie").values({ id: cookieID, FK_userID: userID, expireTime: futureExpireTime });
+        const query = this.db.insertInto("cookie").values({ id: uuid, FK_userID: userID, expireTime: futureExpireTime });
         const result = await query.executeTakeFirst()
 
         if (result.numInsertedOrUpdatedRows == BigInt(1)) {
             return {
                 success: true,
-                message: 'Successful cookie creation'
+                message: 'Successful cookie creation',
+                data: uuid
             };
 
         } else {

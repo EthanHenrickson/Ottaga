@@ -58,7 +58,7 @@ describe('OttagaLLM', () => {
      */
     describe('CreateChat', () => {
         it('should create a chat without user info', () => {
-            vi.mocked(ChatDatabase.createChat).mockReturnValue({
+            vi.mocked(ChatDatabase.createChat).mockResolvedValue({
                 success: true,
                 message: 'Chat created successfully',
                 data: 'test-chat-id'
@@ -72,7 +72,7 @@ describe('OttagaLLM', () => {
         });
 
         it('should create a chat with user info and past sessions', () => {
-            vi.mocked(ChatDatabase.createChat).mockReturnValue({
+            vi.mocked(ChatDatabase.createChat).mockResolvedValue({
                 success: true,
                 message: 'Chat created successfully',
                 data: 'test-chat-id'
@@ -97,7 +97,7 @@ describe('OttagaLLM', () => {
         });
 
         it('should throw error when chat creation fails', () => {
-            vi.mocked(ChatDatabase.createChat).mockReturnValue({
+            vi.mocked(ChatDatabase.createChat).mockResolvedValue({
                 success: false,
                 message: 'Failed to create chat'
             });

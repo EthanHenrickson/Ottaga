@@ -16,14 +16,14 @@ class AuthDB extends BaseDatabase {
      * @param {number} userID - The ID of the user the cookie belongs to
      * @returns {DatabaseResponse} Response indicating success or failure of cookie creation
      */
-    createCookie(cookieID: string, userID: string): DatabaseResponse {
-        const query = this.db.prepare('Insert into cookie (id, FK_userID, expireTime) values (@id, @userID, @expireTime)');
-        const result = query.run({
-            id: cookieID,
-            userID: userID,
-            expireTime: Date.now() + 60 * 60 * 1000 // Cookie expires in 1 hour
-        });
-        if (result.changes == 1) {
+    async createCookie(cookieID: string, userID: string): Promise<DatabaseResponse> {
+        const futureExpireTime = new Date();
+        futureExpireTime.setTime(futureExpireTime.getTime() + (30 * 60 * 1000));
+
+        const query = this.db.insertInto("cookie").values({ id: cookieID, FK_userID: userID, expireTime: futureExpireTime });
+        const result = await query.executeTakeFirst()
+
+        if (result.numInsertedOrUpdatedRows == BigInt(1)) {
             return {
                 success: true,
                 message: 'Successful cookie creation'
@@ -44,10 +44,11 @@ class AuthDB extends BaseDatabase {
      * @param {string} id - The unique identifier of the cookie to remove
      * @returns {DatabaseResponse} Response indicating success or failure of cookie deletion
      */
-    removeCookie(id: string): DatabaseResponse {
-        const query = this.db.prepare('DELETE FROM cookie WHERE id = ?');
-        const result = query.run(id);
-        if (result.changes == 1) {
+    async removeCookie(id: string): Promise<DatabaseResponse> {
+        const query = this.db.deleteFrom("cookie").where("id", "=", id)
+        const result = await query.executeTakeFirst();
+
+        if (result.numDeletedRows == BigInt(1)) {
             return {
                 success: true,
                 message: 'Successful cookie deletion'
@@ -68,9 +69,10 @@ class AuthDB extends BaseDatabase {
      * @param {string} userID - The ID of the cookie to retrieve
      * @returns {DatabaseDataResponse<cookie>} The cookie record if found
      */
-    getCookie(userID: string): DatabaseDataResponse<cookie> {
-        const query = this.db.prepare('Select * from cookie WHERE id = ?');
-        const result = <cookie | null>query.get(userID);
+    async getCookie(userID: string): Promise<DatabaseDataResponse<cookie>> {
+        const query = this.db.selectFrom("cookie").selectAll().where("id", "=", userID )
+        const result = <cookie | undefined> await query.executeTakeFirst()
+
         if (result) {
             return {
                 success: true,
@@ -93,10 +95,14 @@ class AuthDB extends BaseDatabase {
      * @param {string} cookieID - The unique identifier of the cookie to update
      * @returns {DatabaseResponse} Response indicating success or failure of cookie update
      */
-    updateCookie(cookieID: string): DatabaseResponse {
-        const query = this.db.prepare('Update cookie SET expireTime = ? WHERE id = ?');
-        const result = query.run(Date.now() + 1000 * 30 * 60, cookieID);
-        if (result.changes == 1) {
+    async updateCookie(cookieID: string): Promise<DatabaseResponse> {
+        const futureExpireTime = new Date();
+        futureExpireTime.setTime(futureExpireTime.getTime() + (30 * 60 * 1000));
+
+        const query = this.db.updateTable("cookie").set({expireTime: futureExpireTime}).where("id", "=", cookieID)
+        const result = await query.executeTakeFirst()
+
+        if (result.numUpdatedRows == BigInt(1)) {
             return {
                 success: true,
                 message: 'Updated cookie successfully'

@@ -13,20 +13,21 @@ import { redirect, type Handle } from '@sveltejs/kit';
  *
  */
 export const handle: Handle = async ({ event, resolve }) => {
-    // Skip authentication for auth routes or non-home routes
-    if (event.url.pathname.startsWith('/api/auth') || !event.url.pathname.startsWith('/home')) {
+    // Skip authentication for auth routes or non-dashboard routes
+    if (event.url.pathname.startsWith('/api/auth') || !event.url.pathname.startsWith('/dashboard')) {
         return resolve(event);
     }
 
     // Retrieve the session cookie from the browser
     const cookieID = event.cookies.get('sessionID');
+
     if (!cookieID) {
         // No session cookie found - redirect to login
         redirect(302, '/login');
     }
 
     // Fetch the cookie details from the authentication database
-    const databaseCookie = AuthDatabase.getCookie(cookieID);
+    const databaseCookie = await AuthDatabase.getCookie(cookieID);
     if (!databaseCookie.success) {
         // Cookie not found in the database - redirect to login
         redirect(302, '/login');
@@ -36,7 +37,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     const cookieValid = databaseCookie.data.expireTime > Date.now();
     if (cookieValid) {
         // Session is valid - refresh the cookie to extend its lifetime
-        AuthDatabase.updateCookie(databaseCookie.data.id);
+        await AuthDatabase.updateCookie(databaseCookie.data.id);
 
         // Attach user information to the request locals for downstream use
         event.locals.user = {
@@ -47,7 +48,7 @@ export const handle: Handle = async ({ event, resolve }) => {
         return resolve(event);
     } else {
         // Session has expired - remove the invalid cookie
-        AuthDatabase.removeCookie(databaseCookie.data.id);
+        await AuthDatabase.removeCookie(databaseCookie.data.id);
 
         // Redirect to login for expired sessions
         redirect(302, '/login');

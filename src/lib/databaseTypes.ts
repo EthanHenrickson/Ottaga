@@ -22,7 +22,7 @@ export interface ChatTable {
     FK_userID: string | null
     title: string | null
     description: string | null
-    created_at: ColumnType<number, never, never>
+    created_at: ColumnType<Date, never, never>
     modifiable: Generated<boolean>
     deleted: Generated<boolean>
 }
@@ -39,7 +39,7 @@ export interface MessageTable {
     FK_chatID: string
     role: role
     content: string
-    created_at: ColumnType<number, never, never>
+    created_at: ColumnType<Date, never, never>
     deleted: Generated<boolean>
 }
 
@@ -52,7 +52,7 @@ export type MessageUpdate = Updateable<MessageTable>
 export interface CookieTable {
     id: string
     FK_userID: string
-    expireTime: number
+    expireTime: Date
 }
 
 export type Cookie = Selectable<CookieTable>
@@ -66,7 +66,7 @@ export interface UserTable {
     name: string | null
     email: string
     hashedPassword: string
-    created_at: ColumnType<number, never, never>
+    created_at: ColumnType<Date, never, never>
     deleted: Generated<boolean>
 }
 

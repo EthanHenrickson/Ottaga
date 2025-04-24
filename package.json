@@ -14,6 +14,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
 	"devDependencies": {
+		"@faker-js/faker": "^9.7.0",
 		"@sveltejs/adapter-auto": "^4.0.0",
 		"@sveltejs/kit": "^2.16.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
@@ -28,7 +29,6 @@
 		"@oslojs/crypto": "^1.0.1",
 		"@sveltejs/adapter-node": "^5.2.12",
 		"argon2": "^0.41.1",
-		"better-sqlite3": "^11.8.1",
 		"kysely": "^0.28.1",
 		"marked": "^15.0.7",
 		"openai": "^4.90.0",

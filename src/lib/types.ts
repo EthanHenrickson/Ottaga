@@ -16,7 +16,7 @@ export type DatabaseDataResponse<T> =
     };
 
 export type NewUserRecord = {
-    firstName: string;
+    name: string;
     email: string;
     hashedPassword: string;
     createdDate: number;
@@ -27,9 +27,9 @@ export type UserRecord = {
     firstName: string;
     email: string;
     hashedPassword: string;
-    createdDate: number
+    createdDate: number;
     details: string;
-    deleted: 0 | 1
+    deleted: boolean
 }
 
 export type cookie = {

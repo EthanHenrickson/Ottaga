@@ -16,20 +16,21 @@ class UserDB extends BaseDatabase {
      * @param {NewUserRecord} user - The user record to create
      * @returns {DatabaseResponse} Response indicating success or failure of user creation
      */
-    createUser(user: NewUserRecord): DatabaseResponse {
-        const existingUser = this.getUserByEmail(user.email);
+    async createUser(user: NewUserRecord): Promise<DatabaseResponse> {
+        const existingUser = await this.getUserByEmail(user.email);
         if (existingUser.success) {
             return {
                 success: false,
                 message: 'Email already in use'
             };
         }
-        const query = this.db.prepare('Insert into user (id, firstName, email, hashedPassword, createdDate, details, deleted) VALUES (@id, @firstName, @email, @hashedPassword, @createdDate, @details, @deleted)');
 
         const uuid = v4()
-        const result = query.run({ id: uuid, firstName: user.firstName, email: user.email, hashedPassword: user.hashedPassword, createdDate: user.createdDate, details: "", deleted: 0 });
 
-        if (result.changes == 1) {
+        const query = this.db.insertInto("user").values({id: uuid, name: user.name, email: user.email, hashedPassword: user.hashedPassword})
+        const result = await query.executeTakeFirst()
+
+        if (result.numInsertedOrUpdatedRows == BigInt(1)) {
             return {
                 success: true,
                 message: 'User was created successfully'
@@ -50,9 +51,9 @@ class UserDB extends BaseDatabase {
      * @param {string} email - The email address to search for
      * @returns {DatabaseDataResponse<UserRecord>} The user record if found
      */
-    getUserByEmail(email: string): DatabaseDataResponse<UserRecord> {
-        const query = this.db.prepare('Select * from user WHERE email = ?');
-        const result = <UserRecord | null>query.get(email);
+    async getUserByEmail(email: string): Promise<DatabaseDataResponse<UserRecord>> {
+        const query = this.db.selectFrom("user").selectAll().where("email", "=", email)
+        const result = <UserRecord | undefined> await query.executeTakeFirst();
         if (result) {
             return {
                 success: true,

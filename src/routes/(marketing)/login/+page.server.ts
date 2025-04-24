@@ -1,6 +1,4 @@
 /** @type {import('./$types').Actions} */
-
-import { generateRandomString } from '@oslojs/crypto/random';
 import { AuthDatabase } from '$lib/db/auth';
 import { UserDatabase } from '$lib/db/user';
 import { fail, redirect } from '@sveltejs/kit';
@@ -9,13 +7,7 @@ import argon2 from 'argon2';
 import type { NewUserRecord } from '$lib/types';
 import type { RandomReader } from '@oslojs/crypto/random';
 import type { Actions } from './$types';
-
-// Configure secure random number generation for session IDs
-const random: RandomReader = {
-	read(bytes: Uint8Array): void {
-		crypto.getRandomValues(bytes);
-	}
-};
+import { v7 } from 'uuid';
 
 export const actions = {
 	/**
@@ -32,14 +24,15 @@ export const actions = {
 		const email = (<string>data.get('email')).toLowerCase();
 		const password = <string>data.get('password');
 
-		const user = UserDatabase.getUserByEmail(email);
+		const user = await UserDatabase.getUserByEmail(email);
 
 		if (user.success) {
 			if (await argon2.verify(user.data.hashedPassword, password)) {
-				const cookieID = generateRandomString(random, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 20);
-				AuthDatabase.createCookie(cookieID, user.data.id);
+				const cookieID = v7();
+
+				await AuthDatabase.createCookie(cookieID, user.data.id);
 				cookies.set('sessionID', cookieID, { path: '/' });
-				redirect(302, '/home');
+				redirect(302, '/dashboard');
 			}
 		}
 
@@ -66,13 +59,13 @@ export const actions = {
 		const passwordHash = await argon2.hash(password, { timeCost: 2 });
 		
 		const newUserData: NewUserRecord = {
-			firstName: firstName,
+			name: firstName,
 			email: email.toLowerCase(),
 			hashedPassword: passwordHash,
 			createdDate: Date.now()
 		};
 
-		const result = UserDatabase.createUser(newUserData);
+		const result = await UserDatabase.createUser(newUserData);
 
 		if (!result.success) {
 			return fail(422, {

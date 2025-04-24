@@ -17,8 +17,6 @@
 		}
 	});
 
-	$inspect(windowWidth)	
-
 	function toggleMenu() {
 		isOpen = !isOpen;
 	}

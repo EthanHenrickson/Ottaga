@@ -38,12 +38,13 @@
 	</div>
 	<form action={formMode} method="post">
 		{#if mode === "SignUp"}
+			<br />
 			<div class="inputSection">
-				<label for="firstname">First Name</label>
+				<label for="name">Nickname</label>
 				<input
 					type="text"
 					placeholder="Joe"
-					name="firstName"
+					name="name"
 					max="20"
 					required
 				/>
@@ -113,6 +114,7 @@
 		margin-top: 1rem;
 		padding: 1rem 2rem;
 		background-color: var(--AccentColorPrimary);
+		color: white;
 		border: 2px solid transparent;
 		cursor: pointer;
 		border-radius: 0.5rem;

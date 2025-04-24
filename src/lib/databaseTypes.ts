@@ -6,22 +6,25 @@ import type {
     Selectable,
     Updateable,
 } from 'kysely'
+import type { role } from './types'
 
 //Overall database design
 export interface Database {
     chat: ChatTable
     cookie: CookieTable
+    message: MessageTable
+    user: UserTable
 }
 
 //Chat table used to manage chats
 export interface ChatTable {
-    id: ColumnType<string, string, never>
+    id: string
     FK_userID: string | null
     title: string | null
     description: string | null
-    createdDate: ColumnType<number, number | undefined, never>
-    modifiable: Generated<number>
-    deleted: Generated<number>
+    created_at: ColumnType<number, never, never>
+    modifiable: Generated<boolean>
+    deleted: Generated<boolean>
 }
 
 export type Chat = Selectable<ChatTable>
@@ -32,12 +35,12 @@ export type ChatUpdate = Updateable<ChatTable>
 
 //Message table used to manage chats
 export interface MessageTable {
-    id: ColumnType<Generated<number>, never, never>
+    id: string
     FK_chatID: string
-    role: string
+    role: role
     content: string
-    createdDate: ColumnType<number, number, never>
-    deleted: Generated<number>
+    created_at: ColumnType<number, never, never>
+    deleted: Generated<boolean>
 }
 
 export type Message = Selectable<MessageTable>
@@ -63,9 +66,8 @@ export interface UserTable {
     name: string | null
     email: string
     hashedPassword: string
-    details: string | null
-    createdDate: ColumnType<number, number, never>
-    deleted: Generated<number>
+    created_at: ColumnType<number, never, never>
+    deleted: Generated<boolean>
 }
 
 export type User = Selectable<UserTable>

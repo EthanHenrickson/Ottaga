@@ -1,5 +1,5 @@
 import type { DatabaseDataResponse, DatabaseResponse, Message } from "$lib/types";
-import { v4 } from "uuid";
+import { v4, v7 } from "uuid";
 import { BaseDatabase } from "./database";
 
 class ChatDB extends BaseDatabase {
@@ -12,20 +12,13 @@ class ChatDB extends BaseDatabase {
      * @param {string} userID - The ID of the user
      * @returns {DatabaseDataResponse<string>} The string of the created chat uuid
      */
-    createChat(userID: string | null = null): DatabaseDataResponse<string> {
+    async createChat(userID: string | null = null): Promise<DatabaseDataResponse<string>> {
         const uuid = v4()
 
-        const query = this.db.prepare(`Insert into chat (id, FK_userID, title, description, createdDate, modifiable) values (@id, @FK_userID, @title, @description, @createdDate, @modifiable)`)
-        const result = query.run({
-            id: uuid,
-            FK_userID: userID,
-            title: "",
-            description: "",
-            createdDate: Date.now(),
-            modifiable: 1,
-        })
+        const query = this.db.insertInto("chat").values({ id: uuid, FK_userID: userID })
+        const result = await query.executeTakeFirst()
 
-        if (result.changes === 1) {
+        if (result.numInsertedOrUpdatedRows == BigInt(1)) {
             return {
                 success: true,
                 message: "Chat created successfully",
@@ -45,18 +38,13 @@ class ChatDB extends BaseDatabase {
      * @param {Message} message - The message object containing role and content
      * @returns {DatabaseResponse} Response indicating success or failure of message addition
      */
-    addChatMessage(chatID: string, message: Message): DatabaseResponse {
-        const uuid = v4()
+    async addChatMessage(chatID: string, message: Message): Promise<DatabaseResponse> {
+        const uuid = v7()
 
-        const query = this.db.prepare(`INSERT into MESSAGE (FK_chatID, role, content, createdDate) values (@FK_chatID, @role, @content, @createdDate)`)
-        const result = query.run({
-            FK_chatID: chatID,
-            role: message.role,
-            content: message.content,
-            createdDate: Date.now()
-        })
+        const query = this.db.insertInto("message").values({ id:uuid, FK_chatID: chatID, role: message.role, content: message.content })
+        const result = await query.executeTakeFirst()
 
-        if (result.changes === 1) {
+        if (result.numInsertedOrUpdatedRows == BigInt(1)) {
             return {
                 success: true,
                 message: "Added message to the database"
@@ -75,10 +63,10 @@ class ChatDB extends BaseDatabase {
      * @param {number} rowLimit - Maximum number of messages to retrieve (default: 20)
      * @returns {DatabaseDataResponse<Message[]>} Array of messages if successful
      */
-    getChatMessages(chatID: string, rowLimit = 20): DatabaseDataResponse<Message[]> {
-        const query = this.db.prepare(`SELECT * FROM message WHERE FK_chatID = ? ORDER BY createdDate DESC LIMIT ?`)
-        const result = query.all(chatID, rowLimit) as Message[]
-        
+    async getChatMessages(chatID: string, rowLimit = 20): Promise<DatabaseDataResponse<Message[]>> {
+        const query = this.db.selectFrom("message").selectAll().where("FK_chatID", "=", chatID).orderBy('created_at', 'desc').limit(rowLimit)
+        const result = await query.execute()
+
         //Reverse array so that the array[0] is the oldest message first
         result.reverse()
 

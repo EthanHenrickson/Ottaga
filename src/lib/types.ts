@@ -38,8 +38,10 @@ export type cookie = {
     expireTime: number;
 };
 
+export type role = "user" | "assistant" | "system"
+
 export type Message = {
-    role: "user" | "assistant" | "system",
+    role: role,
     content: string
 }
 

@@ -4,7 +4,8 @@
  * Verifies the LLMHelper's ability to detect and handle potentially
  * malicious user messages before they reach the main assistant.
  */
-import { LLMHelper } from "./LLMHelper";
+import { OttagaAssistantConfig } from "../../../../llm.config";
+import { HelperLLM, LLMHelper } from "./LLMHelper";
 import { GoodPrompts, MaliciousPrompts } from "./TestPrompts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -56,30 +57,36 @@ describe("Check user message - error", () => {
     })
 })
 
-/**
- * Tests detection of known malicious prompts
- */
-describe.concurrent("Check Ottaga Malicious Messages", () => {
+describe.concurrent('Malicious Message Tests', () => {
+    const TEST_TIMEOUT = 30000
+    const LLM = new HelperLLM(OttagaAssistantConfig)
+    
     MaliciousPrompts.forEach((prompt) => {
-        it(prompt.content, async () => {
-            let response = await LLMHelper.CheckUserMessage(prompt)
-            if (response.isMalicious === false) {
-                console.log(response)
-            }
-            expect(response.isMalicious).toBe(true)
-            expect(response.messageResponse).toBeTypeOf("string")
-        })
+        it(`${prompt.content}`, async () => {
+            const result = await LLM.CheckUserMessage(prompt)
+
+            expect(result).toHaveProperty('isMalicious')
+            expect(result).toHaveProperty('messageResponse')
+            expect(typeof result.isMalicious).toBe('boolean')
+            expect(typeof result.messageResponse).toBe('string')
+            expect(result.isMalicious).toBe(true)
+        }, TEST_TIMEOUT)
     })
 })
 
-/**
- * Tests that legitimate messages are not flagged as malicious
- */
-describe.concurrent("Check Ottaga Good Messages", () => {
+describe.concurrent('Good Message Tests', () => {
+    const TEST_TIMEOUT = 30000
+    const LLM = new HelperLLM(OttagaAssistantConfig)
+
     GoodPrompts.forEach((prompt) => {
-        it(prompt.content, async () => {
-            let response = await LLMHelper.CheckUserMessage(prompt)
-            expect(response.isMalicious).toBe(false)
-        })
+        it(`${prompt.content}`, async () => {
+            const result = await LLM.CheckUserMessage(prompt)
+
+            expect(result).toHaveProperty('isMalicious')
+            expect(result).toHaveProperty('messageResponse')
+            expect(typeof result.isMalicious).toBe('boolean')
+            expect(typeof result.messageResponse).toBe('string')
+            expect(result.isMalicious).toBe(false)
+        }, TEST_TIMEOUT)
     })
 })

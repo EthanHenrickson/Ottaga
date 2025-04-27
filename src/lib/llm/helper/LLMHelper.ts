@@ -10,7 +10,7 @@ import Analytics from "$lib/utility/ServerAnalytics";
  * potentially malicious user messages before they reach the main assistant.
  * @extends BaseLLM
  */
-class HelperLLM extends BaseLLM {
+export class HelperLLM extends BaseLLM {
 
     /**
      * Creates a new HelperLLM instance.

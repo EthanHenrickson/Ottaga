@@ -34,7 +34,7 @@ class OttagaLLM extends BaseLLM {
         if (newChat.success) {
             //Generate system prompt
             const systemMessage = this.GenerateSystemPrompt(userInfo?.pastSessionSummaries)
-            ChatDatabase.addChatMessage(newChat.data, systemMessage)
+            await ChatDatabase.addChatMessage(newChat.data, systemMessage)
 
             //Return chatID
             return newChat.data

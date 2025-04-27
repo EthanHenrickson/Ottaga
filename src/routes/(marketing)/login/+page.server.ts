@@ -5,9 +5,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import argon2 from 'argon2';
 
 import type { NewUserRecord } from '$lib/types';
-import type { RandomReader } from '@oslojs/crypto/random';
 import type { Actions } from './$types';
-import { v7 } from 'uuid';
 import Analytics from '$lib/utility/ServerAnalytics';
 
 export const actions = {

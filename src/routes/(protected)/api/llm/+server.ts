@@ -1,5 +1,5 @@
 import { ChatDatabase } from '$lib/db/chat';
-import { Ottaga } from '$lib/llm/Ottaga';
+import { Ottaga } from '$lib/llm/ottaga/Ottaga';
 import { json, type RequestHandler } from '@sveltejs/kit';
 
 import type { Message } from '$lib/types';
@@ -25,18 +25,18 @@ export const POST: RequestHandler = async ({ request }) => {
     try {
         let OttagaResponse = await Ottaga.SendMessage(previousMessages, newMessage)
 
-        Analytics.capture({distinctId: "Anon", event: "api/llm called"})
+        Analytics.capture({ distinctId: "Anon", event: "api/llm called" })
 
         ChatDatabase.addChatMessage(chatID, newMessage)
         ChatDatabase.addChatMessage(chatID, OttagaResponse.data)
-        
+
         return json({ success: true, message: "Data received", data: OttagaResponse.data }, { status: 200 })
 
     } catch (error) {
 
-        Analytics.captureException({ error: "Failed to get Ottaga response", additionalProperties: {errorMessage: error}})
+        Analytics.captureException({ error: "Failed to get Ottaga response", additionalProperties: { errorMessage: error } })
         console.error(error);
-        
+
         return json({ success: false, message: `LLM API Server Error - ${error}` }, { status: 500 });
     }
 };

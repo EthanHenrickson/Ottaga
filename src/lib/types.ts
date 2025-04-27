@@ -24,7 +24,7 @@ export type NewUserRecord = {
 
 export type UserRecord = {
     id: string;
-    firstName: string;
+    name: string;
     email: string;
     hashedPassword: string;
     createdDate: number;

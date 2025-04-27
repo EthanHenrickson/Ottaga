@@ -42,6 +42,7 @@
 			<div class="inputSection">
 				<label for="name">Nickname</label>
 				<input
+					id="name"
 					type="text"
 					placeholder="Joe"
 					name="name"
@@ -54,6 +55,7 @@
 		<div class="inputSection">
 			<label for="email">Email</label>
 			<input
+				id="email"
 				type="email"
 				placeholder="Example@gmail.com"
 				name="email"
@@ -63,8 +65,9 @@
 		</div>
 		<br />
 		<div class="inputSection">
-			<label for="email">Password</label>
+			<label for="password">Password</label>
 			<input
+				id="password"
 				type="password"
 				placeholder="ABC123"
 				name="password"

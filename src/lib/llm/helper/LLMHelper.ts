@@ -1,6 +1,6 @@
 import type { Message, LLMConfig, MaliciousLLMResponse } from "$lib/types";
-import { OttagaAssistantConfig } from "../../../llm.config";
-import { BaseLLM } from "./LLMBase";
+import { OttagaAssistantConfig } from "../../../../llm.config";
+import { BaseLLM } from "../LLMBase";
 import Analytics from "$lib/utility/ServerAnalytics";
 
 /**

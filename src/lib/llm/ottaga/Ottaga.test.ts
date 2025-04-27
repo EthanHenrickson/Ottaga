@@ -9,7 +9,7 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { Ottaga } from './Ottaga';
 import { ChatDatabase } from '$lib/db/chat';
-import { LLMHelper } from './LLMHelper';
+import { LLMHelper } from '../helper/LLMHelper';
 import type { Message } from '$lib/types';
 
 /**
@@ -47,7 +47,7 @@ describe('OttagaLLM', () => {
     beforeEach(() => {
         // Reset all mocks
         vi.clearAllMocks();
-        
+
         // Mock the client
         // @ts-ignore - Replace the client with our mock
         Ottaga.Client = mockClient;

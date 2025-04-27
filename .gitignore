@@ -26,3 +26,9 @@ vite.config.ts.timestamp-*
 mydb.sqlite-shm
 mydb.sqlite-wal
 package-lock.json
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

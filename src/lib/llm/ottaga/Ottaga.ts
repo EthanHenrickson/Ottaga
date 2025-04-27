@@ -1,6 +1,6 @@
-import { OttagaConfig } from '../../../llm.config'
-import { BaseLLM } from './LLMBase';
-import { LLMHelper } from './LLMHelper';
+import { OttagaConfig } from '../../../../llm.config'
+import { BaseLLM } from '../LLMBase';
+import { LLMHelper } from '../helper/LLMHelper'; 
 import { ChatDatabase } from '$lib/db/chat';
 
 import type { LLMConfig, Message } from "$lib/types";

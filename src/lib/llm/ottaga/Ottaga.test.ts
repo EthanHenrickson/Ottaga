@@ -61,21 +61,21 @@ describe('OttagaLLM', () => {
             vi.mocked(ChatDatabase.createChat).mockResolvedValue({
                 success: true,
                 message: 'Chat created successfully',
-                data: 'test-chat-id'
+                data: {uuid: 'test-chat-id'}
             });
 
-            const chatId = await Ottaga.CreateChat();
+            const OttagaResponse = await Ottaga.CreateChat();
 
             expect(ChatDatabase.createChat).toHaveBeenCalledWith(undefined);
             expect(ChatDatabase.addChatMessage).toHaveBeenCalledOnce();
-            expect(chatId).toBe('test-chat-id');
+            expect(OttagaResponse.chatID).toBe('test-chat-id');
         });
 
         it('should create a chat with user info and past sessions', async () => {
             vi.mocked(ChatDatabase.createChat).mockResolvedValue({
                 success: true,
                 message: 'Chat created successfully',
-                data: 'test-chat-id'
+                data: {uuid: 'test-chat-id'}
             });
 
             const userInfo = {
@@ -83,7 +83,7 @@ describe('OttagaLLM', () => {
                 pastSessionSummaries: ['Past session 1', 'Past session 2']
             };
 
-            const chatId = await Ottaga.CreateChat(userInfo);
+            const OttagaResponse = await Ottaga.CreateChat(userInfo);
 
             expect(ChatDatabase.createChat).toHaveBeenCalledWith('test-user');
             expect(ChatDatabase.addChatMessage).toHaveBeenCalledWith(
@@ -93,7 +93,7 @@ describe('OttagaLLM', () => {
                     content: expect.stringContaining('Past session 1')
                 })
             );
-            expect(chatId).toBe('test-chat-id');
+            expect(OttagaResponse.chatID).toBe('test-chat-id');
         });
 
         it('should throw error when chat creation fails', async () => {
@@ -101,7 +101,7 @@ describe('OttagaLLM', () => {
                 success: false,
                 message: 'Failed to create chat'
             });
-            expect((async () => { await Ottaga.CreateChat()})()).rejects.toThrow('Failed to create Chat for Ottaga');
+            await expect((async () => { await Ottaga.CreateChat()})()).rejects.toThrow('Failed to create Chat for Ottaga');
         });
     });
 

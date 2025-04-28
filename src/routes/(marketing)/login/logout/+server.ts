@@ -6,8 +6,8 @@ import type { RequestHandler } from './$types';
 export const GET: RequestHandler = async ({ cookies }) => {
 	const cookieID = cookies.get('sessionID') || ''
 
-	await AuthDatabase.removeCookie(cookieID);
-	
+	await AuthDatabase.deleteByID(cookieID);
+
 	cookies.delete('sessionID', { path: '/' });
 	redirect(302, '/');
 };

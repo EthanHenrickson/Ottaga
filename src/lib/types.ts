@@ -15,33 +15,42 @@ export type DatabaseDataResponse<T> =
         data?: undefined;
     };
 
-export type NewUserRecord = {
-    name: string;
+export type NewUserTableRecord = {
+    name?: string;
     email: string;
     hashedPassword: string;
-    createdDate: number;
 };
 
-export type UserRecord = {
+export type UserTableRecord = {
     id: string;
     name: string;
     email: string;
     hashedPassword: string;
-    createdDate: number;
+    created_at: Date;
     details: string;
     deleted: boolean
 }
 
-export type cookie = {
+export type ChatTableRecord = {
+    id: string
+    FK_userID?: string 
+    title?: string 
+    description?: string 
+    created_at: Date
+    modifiable: boolean
+    deleted: boolean
+}
+
+export type CookieTableRecord = {
     id: string;
     userID: number;
     expireTime: number;
 };
 
-export type role = "user" | "assistant" | "system"
+export type Role = "user" | "assistant" | "system"
 
 export type Message = {
-    role: role,
+    role: Role,
     content: string
 }
 

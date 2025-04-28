@@ -27,17 +27,17 @@ class OttagaLLM extends BaseLLM {
      * @returns The ID of the newly created chat session
      * @throws Error if chat creation fails
      */
-    async CreateChat(userInfo?: { userID: string, pastSessionSummaries?: string[] }): Promise<string> {
+    async CreateChat(userInfo?: { userID: string, pastSessionSummaries?: string[] }): Promise<{chatID: string}> {
         //Create a chat with userID if provided
         let newChat = await ChatDatabase.createChat(userInfo?.userID)
 
         if (newChat.success) {
             //Generate system prompt
             const systemMessage = this.GenerateSystemPrompt(userInfo?.pastSessionSummaries)
-            await ChatDatabase.addChatMessage(newChat.data, systemMessage)
+            await ChatDatabase.addChatMessage(newChat.data.uuid, systemMessage)
 
             //Return chatID
-            return newChat.data
+            return {chatID: newChat.data.uuid}
         } else {
             throw Error("Failed to create Chat for Ottaga")
         }

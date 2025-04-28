@@ -17,9 +17,9 @@ export const POST: RequestHandler = async ({ request }) => {
     }
 
     //Retrieve all previous messages and add them too the conversation
-    const databaseResponse = await ChatDatabase.getChatMessages(chatID)
+    const databaseResponse = await ChatDatabase.getChatMessagesByID(chatID)
     if (databaseResponse.success) {
-        previousMessages = [...databaseResponse.data]
+        previousMessages = [...databaseResponse.data.messages]
     }
 
     try {

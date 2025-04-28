@@ -6,7 +6,7 @@ import type {
     Selectable,
     Updateable,
 } from 'kysely'
-import type { role } from './types'
+import type { Role } from './types'
 
 //Overall database design
 export interface Database {
@@ -37,7 +37,7 @@ export type ChatUpdate = Updateable<ChatTable>
 export interface MessageTable {
     id: string
     FK_chatID: string
-    role: role
+    role: Role
     content: string
     created_at: ColumnType<Date, never, never>
     deleted: Generated<boolean>

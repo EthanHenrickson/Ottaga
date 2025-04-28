@@ -3,9 +3,9 @@ import { Ottaga } from "$lib/llm/ottaga/Ottaga";
 
 export const load: PageServerLoad = async () => {
     //Create a new chat save the chat id
-    let chatID = await Ottaga.CreateChat()
+    let OttagaResponse = await Ottaga.CreateChat()
 
     return {
-        chatID: chatID
+        chatID: OttagaResponse.chatID
     }
 };

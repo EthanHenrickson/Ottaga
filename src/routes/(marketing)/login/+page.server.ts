@@ -4,7 +4,7 @@ import { UserDatabase } from '$lib/db/user';
 import { fail, redirect } from '@sveltejs/kit';
 import argon2 from 'argon2';
 
-import type { NewUserRecord } from '$lib/types';
+import type { NewUserTableRecord } from '$lib/types';
 import type { Actions } from './$types';
 import Analytics from '$lib/utility/ServerAnalytics';
 
@@ -23,13 +23,13 @@ export const actions = {
 		const email = (<string>data.get('email')).toLowerCase();
 		const password = <string>data.get('password');
 
-		const user = await UserDatabase.getUserByEmail(email);
+		const user = await UserDatabase.getByEmail(email);
 
 		if (user.success) {
-			if (await argon2.verify(user.data.hashedPassword, password)) {
-				const cookieResponse = await AuthDatabase.createCookie(user.data.id);
+			if (await argon2.verify(user.data.userRecord.hashedPassword, password)) {
+				const cookieResponse = await AuthDatabase.createCookie(user.data.userRecord.id);
 
-				if(cookieResponse.success){
+				if (cookieResponse.success) {
 					const cookieID = cookieResponse.data
 					cookies.set('sessionID', cookieID, { path: '/' });
 					redirect(302, '/dashboard');
@@ -61,12 +61,11 @@ export const actions = {
 		const password = <string>data.get('password');
 
 		const passwordHash = await argon2.hash(password, { timeCost: 2 });
-		
-		const newUserData: NewUserRecord = {
+
+		const newUserData: NewUserTableRecord = {
 			name: name,
 			email: email.toLowerCase(),
 			hashedPassword: passwordHash,
-			createdDate: Date.now()
 		};
 
 		const result = await UserDatabase.createUser(newUserData);

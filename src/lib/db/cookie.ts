@@ -6,7 +6,7 @@ import { BaseDatabase } from "./database";
  * Service for handling user authentication and cookie management
  * @extends BaseDatabaseService
  */
-class AuthDB extends BaseDatabase {
+class CookieDB extends BaseDatabase {
     constructor() {
         super();
     }
@@ -122,4 +122,4 @@ class AuthDB extends BaseDatabase {
     }
 }
 
-export const AuthDatabase = new AuthDB()
+export const CookieDatabase = new CookieDB()

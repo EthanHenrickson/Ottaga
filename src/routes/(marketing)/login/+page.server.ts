@@ -1,5 +1,5 @@
 /** @type {import('./$types').Actions} */
-import { AuthDatabase } from '$lib/db/auth';
+import { CookieDatabase } from '$lib/db/cookie';
 import { UserDatabase } from '$lib/db/user';
 import { fail, redirect } from '@sveltejs/kit';
 import argon2 from 'argon2';
@@ -27,7 +27,7 @@ export const actions = {
 
 		if (user.success) {
 			if (await argon2.verify(user.data.userRecord.hashedPassword, password)) {
-				const cookieResponse = await AuthDatabase.createCookie(user.data.userRecord.id);
+				const cookieResponse = await CookieDatabase.createCookie(user.data.userRecord.id);
 
 				if (cookieResponse.success) {
 					const cookieID = cookieResponse.data

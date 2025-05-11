@@ -52,7 +52,7 @@ export class HelperLLM extends BaseLLM {
             }
         } catch {
             console.log("Failed to parse json output - ", LLMResponse)
-            Analytics.captureException("Failed to parse LLM response in Malicious message checker", "Anon", {message: message} )
+            Analytics.captureException("Failed to parse LLM response in Malicious message checker", "Anon", { message: message })
         }
 
         return returnResponse

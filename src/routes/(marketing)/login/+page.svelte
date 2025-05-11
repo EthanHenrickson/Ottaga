@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Login from '../../../lib/components/Login.svelte';
+    import Login from '../../../lib/components/marketing/login/Login.svelte';
     import type { ActionData } from './$types';
 
 	//This is needed because sveltekit passes errors back into the page. We then pass this to the login component too display them.

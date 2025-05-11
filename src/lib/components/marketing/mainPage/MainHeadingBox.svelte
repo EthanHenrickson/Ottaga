@@ -84,12 +84,12 @@
         border-radius: 0.75rem;
         font-size: 1.2rem;
         font-weight: 500;
-        filter: drop-shadow(rgb(130, 130, 130) 0.4rem 0.5rem 8px);
+        filter: drop-shadow(rgb(151, 151, 151) 0.4rem 0.5rem 7px);
         transition: all 0.25s;
     }
 
     a:hover {
-        filter: drop-shadow(rgb(119, 130, 137) 0.2rem 0.3rem 4px);
+        filter: drop-shadow(rgb(139, 139, 139) 0.2rem 0.3rem 5px);
     }
 
     @media (max-width: 600px) {

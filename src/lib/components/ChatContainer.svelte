@@ -7,11 +7,14 @@
 	// Take in the chatID for this chat session.
 	let { chatID }: { chatID: string } = $props();
 
+	// HTML Element containing the chat messages
+	let chatMessageContainer: HTMLElement;
+
 	// Loading state to indicate when API request is in progress
 	let isLoading = $state(false);
 
 	// Current message input from the user
-	let messageInput = $state("")
+	let userMessageInput = $state("");
 
 	// Array of chat messages between user and assistant
 	let messageArray: Message[] = $state([
@@ -21,10 +24,7 @@
 		},
 	]);
 
-	// HTML Element containing the chat messages
-	let chatMessageContainer: HTMLElement;
-
-	// Boolean representing if a user is scrolled to the bottom of the chat window
+	//Representing if a user is scrolled to the bottom of the chat window
 	let isChatScrolledToBottom: Boolean = $state(true);
 
 	//This function scrolls the chat
@@ -40,12 +40,12 @@
 		e.preventDefault();
 
 		// Don't process empty messages
-		if (!messageInput.trim()) return;
+		if (!userMessageInput.trim()) return;
 
 		isLoading = true;
 
 		// Add user message to chat history
-		messageArray.push({role:"user", content: messageInput});
+		messageArray.push({ role: "user", content: userMessageInput });
 		await CheckUserAtBottomOfChat();
 		scrollToBottom();
 
@@ -55,7 +55,7 @@
 				method: "POST",
 				body: JSON.stringify({
 					chatID: chatID,
-					messageInput: messageInput,
+					messageInput: userMessageInput,
 				}),
 				headers: {
 					"Content-Type": "application/json",
@@ -85,7 +85,7 @@
 			});
 		} finally {
 			isLoading = false;
-			messageInput = "";
+			userMessageInput = "";
 		}
 	}
 
@@ -124,7 +124,7 @@
 	<form onsubmit={handleSubmit} class="input-form">
 		<input
 			type="text"
-			bind:value={messageInput}
+			bind:value={userMessageInput}
 			placeholder="Type your message..."
 			disabled={isLoading}
 		/>

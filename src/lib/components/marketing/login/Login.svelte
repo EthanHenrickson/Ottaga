@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ActionData } from "../../routes/(marketing)/login/$types";
+	import type { ActionData } from "../../../../routes/(marketing)/login/$types";
 
 	let { form }: { form: ActionData } = $props();
 

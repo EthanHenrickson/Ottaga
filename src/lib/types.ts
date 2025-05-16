@@ -33,9 +33,9 @@ export type UserTableRecord = {
 
 export type ChatTableRecord = {
     id: string
-    FK_userID?: string 
-    title?: string 
-    description?: string 
+    FK_userID?: string
+    title?: string
+    description?: string
     created_at: Date
     modifiable: boolean
     deleted: boolean
@@ -55,6 +55,8 @@ export type Message = {
 }
 
 export type LLMConfig = {
+    baseUrl: string;
+    apiKey: string;
     model: string;
     systemPrompt: string;
     temperature: number;
@@ -64,4 +66,18 @@ export type LLMConfig = {
 export type MaliciousLLMResponse = {
     isMalicious: boolean,
     messageResponse: string
+}
+
+export type CompletionResponse<T> = {
+    success: boolean,
+    data: T
+} | {
+    success: false,
+}
+
+export type StreamingResponse<T> = {
+    success: boolean,
+    data: T
+} | {
+    success: false,
 }

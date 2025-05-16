@@ -3,20 +3,16 @@
 
 	import { marked } from "marked";
 	import DownArrow from "$lib/icons/downArrow.svelte";
+	import { DecodeSSEandParseContent } from "$lib/utility/SSEHelper";
 
-	// Take in the chatID for this chat session.
+	// Props: chatID is used to identify the current chat session
 	let { chatID }: { chatID: string } = $props();
 
-	// HTML Element containing the chat messages
+	// References the HTML element containing the chat messages
 	let chatMessageContainer: HTMLElement;
 
-	// Loading state to indicate when API request is in progress
 	let isLoading = $state(false);
-
-	// Current message input from the user
-	let userMessageInput = $state("");
-
-	// Array of chat messages between user and assistant
+	let userMessageInput = $state(""); //References new user message input
 	let messageArray: Message[] = $state([
 		{
 			role: "assistant",
@@ -27,7 +23,7 @@
 	//Representing if a user is scrolled to the bottom of the chat window
 	let isChatScrolledToBottom: Boolean = $state(true);
 
-	//This function scrolls the chat
+	// Function to scroll to the bottom of the chat container
 	function scrollToBottom() {
 		chatMessageContainer.scrollTo({
 			top: chatMessageContainer.scrollHeight,
@@ -35,23 +31,23 @@
 		});
 	}
 
-	//Handles form submission for sending messages
+	// Handles form submission, sends message to backend and processes streaming response
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
 
-		// Don't process empty messages
+		// Skip empty messages
 		if (!userMessageInput.trim()) return;
 
+		// Set loading state and append message to chat
 		isLoading = true;
-
-		// Add user message to chat history
 		messageArray.push({ role: "user", content: userMessageInput });
+
 		await CheckUserAtBottomOfChat();
 		scrollToBottom();
 
 		try {
-			// Send messages to API endpoint
-			const response = await fetch("/api/llm", {
+			// Send messages to LLM API endpoint
+			const response: Response = await fetch("/api/llm", {
 				method: "POST",
 				body: JSON.stringify({
 					chatID: chatID,
@@ -62,22 +58,49 @@
 				},
 			});
 
-			if (response.ok) {
-				//save temp variable so we can check it after a message is added and scroll the user to the bottom
-				let tempIsChatOnBottom = isChatScrolledToBottom;
+			const reader = response.body?.getReader();
 
-				// Update chat history with assistant's response
-				let responseData = await response.json();
-				messageArray.push(responseData.data);
+			if (reader) {
+				messageArray.push({ role: "assistant", content: "" });
 
-				if (tempIsChatOnBottom == true) {
-					await CheckUserAtBottomOfChat();
-					scrollToBottom();
+				// Process the stream
+				let breakLoops = false;
+				while (true) {
+					const { done, value } = await reader.read();
+
+					if (done) break;
+
+					const decodeResultDataArray = DecodeSSEandParseContent(
+						value,
+						{ stripDataField: true, parseJson: true },
+					) as { content: string }[];
+
+					//Loop through SSE blocks and append chunks to messages
+					for (let dataBlock of decodeResultDataArray) {
+						if (dataBlock.content == "[DONE]") {
+							breakLoops = true;
+							break;
+						} else {
+							messageArray[messageArray.length - 1].content +=
+								dataBlock.content;
+						}
+					}
+
+					// Scroll to bottom if user is at the bottom
+					let tempIsChatOnBottom = isChatScrolledToBottom;
+
+					if (tempIsChatOnBottom == true) {
+						await CheckUserAtBottomOfChat();
+						scrollToBottom();
+					}
+
+					if (breakLoops) {
+						break;
+					}
 				}
-			} else {
-				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 		} catch (error) {
+			console.log(error);
 			// Add error message to chat if request fails
 			messageArray.push({
 				role: "assistant",
@@ -98,7 +121,6 @@
 
 		//Total number of pixels from being scrolled to bottom of chat window
 		const PixelsFromBottom = TotalHeight - PixelsScrolled - DisplayHeight;
-
 		isChatScrolledToBottom = Math.abs(PixelsFromBottom) < 200;
 	}
 </script>

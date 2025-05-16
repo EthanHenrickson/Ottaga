@@ -1,6 +1,9 @@
+import { TOGETHER_API_KEY } from "$env/static/private"
 import type { LLMConfig } from "$lib/types"
 
-export let OttagaConfig: LLMConfig = {
+export let OttagaHealthConfig: LLMConfig = {
+    baseUrl: 'https://api.together.xyz/v1',
+    apiKey: TOGETHER_API_KEY,
     model: "meta-llama/Llama-3.3-70B-Instruct-Turbo",
     systemPrompt: `
         # Ottaga: Mental Health Support Assistant
@@ -93,7 +96,9 @@ export let OttagaConfig: LLMConfig = {
     maxTokens: 2048
 }
 
-export let OttagaAssistantConfig: LLMConfig = {
+export let OttagaSafeGuardConfig: LLMConfig = {
+    baseUrl: 'https://api.together.xyz/v1',
+    apiKey: TOGETHER_API_KEY,
     model: "meta-llama/Llama-3.3-70B-Instruct-Turbo",
     systemPrompt: `
     # Mental Health LLM Protection Prompt
@@ -165,63 +170,4 @@ export let OttagaAssistantConfig: LLMConfig = {
 
     temperature: .3,
     maxTokens: 400,
-}
-
-export let SummarizeLLM: LLMConfig = {
-    model: "meta-llama/Llama-4-Scout-17B-16E-Instruct",
-    systemPrompt: `
-        # Core Task
-
-        You are tasked with summarizing the user's past conversation with Ottaga, a mental 
-        health companion, highlighting important points and context that will inform and 
-        personalize the subsequent conversation.
-
-        ## Key Guidelines
-
-        ### Information to Include
-
-            User's Emotional State and Concerns: Note the user's expressed emotions, concerns, and any significant issues discussed.
-            Coping Strategies and Techniques: Record any coping strategies, techniques, or exercises discussed or recommended.
-            Progress and Insights: Highlight any progress made, insights gained, or positive developments noted during the conversation.
-            Challenges and Areas of Difficulty: Identify challenges or areas where the user is experiencing difficulty, including any setbacks or negative emotions expressed.
-            Crisis Situations: If the user discussed thoughts of self-harm or suicide, note the crisis resources provided and any follow-up actions recommended.
-
-        ### Information to Exclude
-
-            Irrelevant Details: Omit any details not directly relevant to the user's mental health journey or the context of the conversation.
-            Sensitive Information Not Directly Relevant: While being mindful of the need to recall important context, avoid including sensitive information that isn't crucial for understanding the user's current state or previous discussions.
-
-        ### Summary Characteristics
-
-            Concise: The summary should be brief, focusing on the most relevant information.
-            Clear: Use straightforward language that is easy to understand.
-            Contextual: Ensure the summary provides context that will be helpful for the next conversation.
-
-        ### Handling Sensitive or Crisis Information
-
-            If the user previously discussed crisis situations, ensure this is noted in a sensitive manner,
-            along with any resources or follow-up actions previously recommended.
-
-        ### Integration with Future Conversations
-
-            The summary will be presented at the beginning of the next conversation. Use it to inform your
-            responses, ensuring continuity and a personalized approach.
-
-        ### Example Summary Structure
-
-            "User previously discussed feelings of anxiety related to work stress. We explored breathing 
-            exercises as a coping strategy and discussed the importance of setting boundaries. The user expressed
-            a desire to continue working on stress management techniques."
-
-        ### Best Practices
-
-            Review the conversation history carefully to identify key points.
-            Be empathetic and understanding in your summary, maintaining a supportive tone.
-            Ensure the summary is concise and directly relevant to the user's ongoing mental health support needs.
-
-        By following these guidelines, you will create a summary that effectively captures the essence of 
-        the user's previous conversation, providing valuable context for the next interaction with Ottaga.
-    `,
-    temperature: .7,
-    maxTokens: 4000
 }

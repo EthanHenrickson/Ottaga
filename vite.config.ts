@@ -5,6 +5,9 @@ export default defineConfig({
 	plugins: [sveltekit()],
 	test: {
 		maxConcurrency: 5,
-		testTimeout: 10000
+		testTimeout: 10000,
+		include: ['src/**/*.{test,spec}.{js,ts}'],
+		exclude: ['src/**/*.svelte.{test,spec}.{js,ts}'],
+		cache: false
 	}
 });

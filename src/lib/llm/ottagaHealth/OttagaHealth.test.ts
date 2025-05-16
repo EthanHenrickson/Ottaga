@@ -7,10 +7,9 @@
  * - Generate appropriate system prompts
  */
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { Ottaga } from './Ottaga';
 import { ChatDatabase } from '$lib/db/chat';
-import { LLMHelper } from './LLMHelper';
 import type { Message } from '$lib/types';
+import { OttagaHealthLLM, OttagaSafeGuardLLM } from '../Ottaga';
 
 /**
  * Mock database and helper services for isolated testing
@@ -20,13 +19,6 @@ vi.mock('$lib/db/chat', () => ({
     ChatDatabase: {
         createChat: vi.fn(),
         addChatMessage: vi.fn(),
-    }
-}));
-
-// Mock LLMHelper
-vi.mock('./LLMHelper', () => ({
-    LLMHelper: {
-        CheckUserMessage: vi.fn()
     }
 }));
 
@@ -40,6 +32,11 @@ const mockClient = {
     }
 };
 
+OttagaHealthLLM.llmInstance.callCompletion = vi.fn();
+
+// Explicitly mock OttagaSafeGuardLLM.CheckUserMessage
+OttagaSafeGuardLLM.CheckUserMessage = vi.fn();
+
 /**
  * Main test suite for Ottaga LLM functionality
  */
@@ -47,35 +44,35 @@ describe('OttagaLLM', () => {
     beforeEach(() => {
         // Reset all mocks
         vi.clearAllMocks();
-        
+
         // Mock the client
         // @ts-ignore - Replace the client with our mock
-        Ottaga.Client = mockClient;
+        OttagaHealthLLM.llmInstance.callCompletion = mockClient;
     });
 
     /**
      * Tests for chat session creation functionality
      */
     describe('CreateChat', () => {
-        it('should create a chat without user info', () => {
+        it('should create a chat without user info', async () => {
             vi.mocked(ChatDatabase.createChat).mockResolvedValue({
                 success: true,
                 message: 'Chat created successfully',
-                data: 'test-chat-id'
+                data: { uuid: 'test-chat-id' }
             });
 
-            const chatId = Ottaga.CreateChat();
+            const OttagaResponse = await OttagaHealthLLM.CreateChat();
 
             expect(ChatDatabase.createChat).toHaveBeenCalledWith(undefined);
             expect(ChatDatabase.addChatMessage).toHaveBeenCalledOnce();
-            expect(chatId).toBe('test-chat-id');
+            expect(OttagaResponse.chatID).toBe('test-chat-id');
         });
 
-        it('should create a chat with user info and past sessions', () => {
+        it('should create a chat with user info and past sessions', async () => {
             vi.mocked(ChatDatabase.createChat).mockResolvedValue({
                 success: true,
                 message: 'Chat created successfully',
-                data: 'test-chat-id'
+                data: { uuid: 'test-chat-id' }
             });
 
             const userInfo = {
@@ -83,7 +80,7 @@ describe('OttagaLLM', () => {
                 pastSessionSummaries: ['Past session 1', 'Past session 2']
             };
 
-            const chatId = Ottaga.CreateChat(userInfo);
+            const OttagaResponse = await OttagaHealthLLM.CreateChat(userInfo);
 
             expect(ChatDatabase.createChat).toHaveBeenCalledWith('test-user');
             expect(ChatDatabase.addChatMessage).toHaveBeenCalledWith(
@@ -93,16 +90,15 @@ describe('OttagaLLM', () => {
                     content: expect.stringContaining('Past session 1')
                 })
             );
-            expect(chatId).toBe('test-chat-id');
+            expect(OttagaResponse.chatID).toBe('test-chat-id');
         });
 
-        it('should throw error when chat creation fails', () => {
+        it('should throw error when chat creation fails', async () => {
             vi.mocked(ChatDatabase.createChat).mockResolvedValue({
                 success: false,
                 message: 'Failed to create chat'
             });
-
-            expect(() => Ottaga.CreateChat()).toThrow('Failed to create Chat for Ottaga');
+            await expect((async () => { await OttagaHealthLLM.CreateChat() })()).rejects.toThrow('Failed to create Chat for Ottaga');
         });
     });
 
@@ -114,20 +110,21 @@ describe('OttagaLLM', () => {
             { role: 'system', content: 'Test system prompt' },
             { role: 'user', content: 'Hello' }
         ];
+        
         const newMessage: Message = { role: 'user', content: 'How are you?' };
 
         it('should handle non-malicious messages', async () => {
             // Mock LLMHelper to return non-malicious
-            vi.mocked(LLMHelper.CheckUserMessage).mockResolvedValue({ isMalicious: false, messageResponse: "" });
+            vi.mocked(OttagaSafeGuardLLM.CheckUserMessage).mockResolvedValue({ isMalicious: false, messageResponse: "" });
 
             // Mock OpenAI response
             mockCreate.mockResolvedValue({
                 choices: [{ message: { content: 'I am doing well!' } }]
             });
 
-            const response = await Ottaga.SendMessage(pastMessages, newMessage);
+            const response = OttagaHealthLLM.SendMessage(pastMessages, newMessage);
 
-            expect(LLMHelper.CheckUserMessage).toHaveBeenCalledWith(newMessage);
+            expect(OttagaSafeGuardLLM.CheckUserMessage).toHaveBeenCalledWith(newMessage);
             expect(mockCreate).toHaveBeenCalledOnce();
             expect(response).toEqual({
                 data: {
@@ -139,14 +136,14 @@ describe('OttagaLLM', () => {
 
         it('should handle malicious messages', async () => {
             // Mock LLMHelper to return malicious
-            vi.mocked(LLMHelper.CheckUserMessage).mockResolvedValue({
+            vi.mocked(OttagaSafeGuardLLM.CheckUserMessage).mockResolvedValue({
                 isMalicious: true,
                 messageResponse: 'This message was flagged as inappropriate'
             });
 
-            const response = await Ottaga.SendMessage(pastMessages, newMessage);
+            const response = await OttagaHealthLLM.SendMessage(pastMessages, newMessage);
 
-            expect(LLMHelper.CheckUserMessage).toHaveBeenCalledWith(newMessage);
+            expect(OttagaSafeGuardLLM.CheckUserMessage).toHaveBeenCalledWith(newMessage);
             expect(mockCreate).not.toHaveBeenCalled();
             expect(response).toEqual({
                 data: {
@@ -157,12 +154,12 @@ describe('OttagaLLM', () => {
         });
 
         it('should handle empty LLM response', async () => {
-            vi.mocked(LLMHelper.CheckUserMessage).mockResolvedValue({ isMalicious: false, messageResponse: "" });
+            vi.mocked(OttagaSafeGuardLLM.CheckUserMessage).mockResolvedValue({ isMalicious: false, messageResponse: "" });
             mockCreate.mockResolvedValue({
                 choices: [{ message: { content: '' } }]
             });
 
-            const response = await Ottaga.SendMessage(pastMessages, newMessage);
+            const response = await OttagaHealthLLM.SendMessage(pastMessages, newMessage);
 
             expect(response).toEqual({
                 data: {

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Chat from '$lib/components/Chat.svelte';
+	import Chat from '$lib/components/ChatContainer.svelte';
     import type { PageProps } from './$types';
 
 	//Take in the chatID from the server and pass it too the chat component 

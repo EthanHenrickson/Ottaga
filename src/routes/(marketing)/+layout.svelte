@@ -1,10 +1,13 @@
 <script>
-	import Nav from "$lib/components/Nav.svelte";
+	let { children } = $props();
+
+	import Nav from "$lib/components/marketing/mainPage/Nav.svelte";
 	import { browser } from "$app/environment";
 	import { beforeNavigate, afterNavigate } from "$app/navigation";
+	import { dev } from "$app/environment";
 	import posthog from "posthog-js";
 
-	if (browser) {
+	if (browser && !dev) {
 		beforeNavigate(() => posthog.capture("$pageleave"));
 		afterNavigate(() => posthog.capture("$pageview"));
 	}
@@ -13,7 +16,7 @@
 <div class="website">
 	<Nav />
 	<main>
-		<slot />
+		{@render children?.()}
 	</main>
 </div>
 

@@ -15,13 +15,11 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
     }
 
     async callCompletion(messages: Message[]): Promise<CompletionResponse<string>> {
-        let apiMessageArray = [{ role: "system", content: this.systemPrompt }, ...messages] as Message[]
-
         const apiResponse = await this.client.chat.completions.create({
             model: this.model,
             temperature: this.temperature,
             max_tokens: this.maxTokens,
-            messages: apiMessageArray,
+            messages: messages,
             stream: false
         })
 
@@ -72,10 +70,10 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
     }
 
     private extractChunk(chunk: string) {
-        const data = JSON.parse(chunk)
+        const data = JSON.parse(chunk) as OpenAI.ChatCompletionChunk
 
-        if (data?.object == "chat.completion.chunk") {
-            if (data?.choices[0].finish_reason == null) {
+        if (data.object == "chat.completion.chunk" && data.choices[0]) {
+            if (data.choices[0].finish_reason == null) {
                 return data.choices[0].delta.content as string
             }
         }

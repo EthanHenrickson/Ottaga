@@ -4,12 +4,15 @@
 	import { marked } from "marked";
 	import DownArrow from "$lib/icons/downArrow.svelte";
 	import { DecodeSSEandParseContent } from "$lib/utility/SSEHelper";
+	import { tick } from "svelte";
 
 	// Props: chatID is used to identify the current chat session
 	let { chatID }: { chatID: string } = $props();
 
 	// References the HTML element containing the chat messages
 	let chatMessageContainer: HTMLElement;
+
+	let chatScrolledToBottom: boolean = $state(false);
 
 	let isLoading = $state(false);
 	let userMessageInput = $state(""); //References new user message input
@@ -20,12 +23,11 @@
 		},
 	]);
 
-	//Representing if a user is scrolled to the bottom of the chat window
-	let isChatScrolledToBottom: Boolean = $state(true);
-
 	// Function to scroll to the bottom of the chat container
-	function scrollToBottom() {
-		chatMessageContainer.scrollTo({
+	async function scrollToBottom() {
+		await tick();
+
+		chatMessageContainer.scroll({
 			top: chatMessageContainer.scrollHeight,
 			behavior: "smooth",
 		});
@@ -38,12 +40,15 @@
 		// Skip empty messages
 		if (!userMessageInput.trim()) return;
 
-		// Set loading state and append message to chat
-		isLoading = true;
-		messageArray.push({ role: "user", content: userMessageInput });
+		let wasChatScrolledToBottom = chatScrolledToBottom;
 
-		await CheckUserAtBottomOfChat();
-		scrollToBottom();
+		// Set loading state and append message to chat
+		messageArray.push({ role: "user", content: userMessageInput });
+		isLoading = true;
+
+		if (wasChatScrolledToBottom) {
+			scrollToBottom();
+		}
 
 		try {
 			// Send messages to LLM API endpoint
@@ -62,6 +67,7 @@
 
 			if (reader) {
 				messageArray.push({ role: "assistant", content: "" });
+				isLoading = false;
 
 				// Process the stream
 				let breakLoops = false;
@@ -86,11 +92,7 @@
 						}
 					}
 
-					// Scroll to bottom if user is at the bottom
-					let tempIsChatOnBottom = isChatScrolledToBottom;
-
-					if (tempIsChatOnBottom == true) {
-						await CheckUserAtBottomOfChat();
+					if (chatScrolledToBottom) {
 						scrollToBottom();
 					}
 
@@ -113,7 +115,7 @@
 	}
 
 	//Checks to see if the user is scrolled to the bottom of the chat window
-	async function CheckUserAtBottomOfChat() {
+	async function handleScroll() {
 		//Get chat window height elements
 		const TotalHeight = chatMessageContainer.scrollHeight;
 		const PixelsScrolled = chatMessageContainer.scrollTop;
@@ -121,7 +123,7 @@
 
 		//Total number of pixels from being scrolled to bottom of chat window
 		const PixelsFromBottom = TotalHeight - PixelsScrolled - DisplayHeight;
-		isChatScrolledToBottom = Math.abs(PixelsFromBottom) < 200;
+		chatScrolledToBottom = Math.abs(PixelsFromBottom) < 50;
 	}
 </script>
 
@@ -129,7 +131,7 @@
 	<div
 		class="messages"
 		bind:this={chatMessageContainer}
-		onscroll={CheckUserAtBottomOfChat}
+		onscroll={handleScroll}
 	>
 		{#each messageArray as message}
 			<div class="message {message.role}">
@@ -155,7 +157,7 @@
 			>Send</button
 		>
 
-		{#if !isChatScrolledToBottom}
+		<!-- {#if !isUserScrolling}
 			<div class="bottomScroll">
 				<button
 					class="downButton"
@@ -163,7 +165,7 @@
 					onclick={scrollToBottom}><DownArrow /></button
 				>
 			</div>
-		{/if}
+		{/if} -->
 	</form>
 </div>
 

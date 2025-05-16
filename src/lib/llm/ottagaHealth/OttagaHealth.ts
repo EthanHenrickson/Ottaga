@@ -15,35 +15,8 @@ export class OttagaHealth {
         this.llmInstance = llmInstance;
     }
 
-    async CreateChat(userInfo?: { userID: string, pastSessionSummaries?: string[] }): Promise<{ chatID: string }> {
-        //Create a chat with userID if provided
-        let newChat = await ChatDatabase.createChat(userInfo?.userID)
-
-        if (newChat.success) {
-            //Generate system prompt
-            const systemMessage = this.GenerateSystemPrompt(userInfo?.pastSessionSummaries)
-            await ChatDatabase.addChatMessage(newChat.data.uuid, systemMessage)
-
-            //Return chatID
-            return { chatID: newChat.data.uuid }
-        } else {
-            throw Error("Failed to create Chat for Ottaga")
-        }
-    }
-
-    /**
-     * Generates a system prompt that includes past session summaries.
-     * @param pastUserSessionSummaries - Array of previous session summaries to include in the prompt
-     * @returns A Message object containing the generated system prompt
-     */
-    private GenerateSystemPrompt(pastUserSessionSummaries?: string[]): Message {
-        //Return variable
-        let returnMessage: Message = {
-            role: "system",
-            content: ""
-        }
-
-        return returnMessage
+    get SystemPrompt() {
+        return this.llmInstance.SystemPrompt
     }
 
     /**
@@ -54,10 +27,6 @@ export class OttagaHealth {
      * @throws Error if the model's response is undefined
      */
     async *SendMessage(messages: Message[]): AsyncGenerator<StreamingResponse<string>> {
-        const responseMessage: Message = {
-            role: "assistant",
-            content: ""
-        }
         //Get LLM response message
         const chatResponse = this.llmInstance.callStreaming(messages)
 

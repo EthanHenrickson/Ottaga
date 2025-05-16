@@ -1,10 +1,10 @@
 import type { CompletionResponse, LLMConfig, Message, StreamingResponse } from "$lib/types";
 
 export class OttagaAbstractBaseProvider {
-    systemPrompt: string;
-    model: string;
-    temperature: number;
-    maxTokens: number;
+    protected systemPrompt: string;
+    protected model: string;
+    protected temperature: number;
+    protected maxTokens: number;
 
     constructor(llmConfig: LLMConfig) {
         this.systemPrompt = llmConfig.systemPrompt;

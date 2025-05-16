@@ -22,7 +22,7 @@ export class OttagaSafeGuard {
     async CheckUserMessage(message: Message): Promise<MaliciousLLMResponse> {
         let returnResponse: MaliciousLLMResponse = { isMalicious: true, messageResponse: "Sorry that message couldn't be parsed. Please try again." }
 
-        let response = await this.llmInstance.callCompletion([message])
+        let response = await this.llmInstance.callCompletion([{ role: "system", content: this.llmInstance.SystemPrompt }, message] as Message[])
 
         if (response === null || response.success === false) {
             Analytics.captureException("User attempted to send malicious message", "Anon", { message: message })

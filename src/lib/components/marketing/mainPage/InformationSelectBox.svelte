@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { fade, fly } from "svelte/transition";
+
     let dataJson = {
         "Session Memory >":
             "Experience personalized support with our AI that remembers important details from your conversations while maintaining complete privacy. Your chat history helps provide more meaningful responses, but all data is fully anonymized with no connection to your real identity. Must be signed in. Users may also opt out if they would prefer.",
@@ -30,7 +32,11 @@
             {/each}
         </div>
         <div class="valueBlock">
-            {dataJson[selectedKey]}
+            {#key selectedKey}
+                <div>
+                    {dataJson[selectedKey]}
+                </div>
+            {/key}
         </div>
     </div>
 </div>
@@ -49,7 +55,6 @@
         flex-direction: row;
         max-width: 900px;
         align-items: center;
-        margin: 0px 1rem;
     }
 
     h2 {
@@ -72,6 +77,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        overflow-x: hidden;
     }
 
     button {

@@ -38,6 +38,29 @@
 		font-family: "Open Sans", serif;
 	}
 
+	:global(h1) {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    :global(h2) {
+        font-size: 1.5rem;
+        margin: 2rem 0 1rem;
+    }
+
+    :global(ul) {
+        margin: 1rem 0;
+        padding-left: 2rem;
+    }
+
+    :global(li) {
+        margin-bottom: 0.5rem;
+    }
+
+    :global(strong) {
+        font-weight: bold;
+    }
+
 	main {
 		margin-left: auto;
 		margin-right: auto;

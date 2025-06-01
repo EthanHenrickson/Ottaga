@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from "$app/state";
-	import Menu from "$lib/icons/Menu.svelte";
-	import Close from "$lib/icons/Close.svelte";
+	import Menu from "$lib/icons/menu.svelte";
+	import Close from "$lib/icons/close.svelte";
 
 	let isMobile = $state(false);
 	let isOpen = $state(false);

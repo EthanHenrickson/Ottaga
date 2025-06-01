@@ -1,7 +1,7 @@
 <script>
-    import Clock from "$lib/icons/Clock.svelte";
-    import CutCreditCard from "$lib/icons/CutCreditCard.svelte";
-    import Lock from "$lib/icons/Lock.svelte";
+    import Clock from "$lib/icons/clock.svelte";
+    import CutCreditCard from "$lib/icons/cutCreditCard.svelte";
+    import Lock from "$lib/icons/lock.svelte";
 </script>
 
 <div class="content">

@@ -27,7 +27,13 @@
 		<div class="loginMode">
 			{mode === "Login" ? "Login" : "Create Account"}
 		</div>
-		<button class="accountMode" onclick={toggleAccountMode}>
+		<button
+			class="accountMode"
+			onclick={toggleAccountMode}
+			aria-label={mode === "Login"
+				? "Create new account"
+				: "Return to login"}
+		>
 			<span>
 				{mode === "Login"
 					? "Don't have an account?"
@@ -48,6 +54,9 @@
 					name="name"
 					max="20"
 					required
+					aria-required="true"
+					aria-invalid={form?.error ? "true" : "false"}
+					aria-describedby="error"
 				/>
 			</div>
 		{/if}
@@ -61,6 +70,9 @@
 				name="email"
 				pattern={regexEmail}
 				required
+				aria-required="true"
+				aria-invalid={form?.error ? "true" : "false"}
+				aria-describedby="error"
 			/>
 		</div>
 		<br />
@@ -72,14 +84,25 @@
 				placeholder="ABC123"
 				name="password"
 				required
+				aria-required="true"
+				aria-invalid={form?.error ? "true" : "false"}
+				aria-describedby="error"
 			/>
+			{#if form?.error}
+				<span id="error" class="error" aria-live="assertive"
+					>{form.error}</span
+				>
+			{/if}
 		</div>
-		<button type="submit" class="submitButton"
-			>{mode === "Login" ? "Login" : "Create"}</button
+		<button
+			type="submit"
+			class="submitButton"
+			aria-label={mode === "Login"
+				? "Login to account"
+				: "Create new account"}
 		>
-		{#if form?.error}
-			<p class="error">{form.error}</p>
-		{/if}
+			{mode === "Login" ? "Login" : "Create"}
+		</button>
 	</form>
 </div>
 

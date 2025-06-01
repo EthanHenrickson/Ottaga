@@ -31,29 +31,46 @@
 		<span class="gap"></span>
 
 		{#if isMobile}
-			{#if isOpen}
-				<Close buttonToggle={toggleMenu} />
-			{:else}
-				<Menu buttonToggle={toggleMenu} />
-			{/if}
+			<button
+				onclick={toggleMenu}
+				aria-label={isOpen ? "Close menu" : "Open menu"}
+				aria-expanded={isOpen}
+				aria-haspopup="true"
+				class="menu-toggle"
+			>
+				{#if isOpen}
+					<Close />
+				{:else}
+					<Menu />
+				{/if}
+			</button>
 		{/if}
 
-		<nav class="mainNav" class:open={isOpen}>
+		<nav class="mainNav" class:open={isOpen} aria-label="Main">
 			<div class="nav-links">
 				<a
 					href="/dashboard"
+					onclick={toggleMenu}
 					class:active={page.url.pathname === "/dashboard"}
-					onclick={toggleMenu}>Home</a
+					aria-current={page.url.pathname === "/dashboard"
+						? "page"
+						: undefined}>Home</a
 				>
 				<a
 					href="/dashboard/session"
+					onclick={toggleMenu}
 					class:active={page.url.pathname === "/dashboard/session"}
-					onclick={toggleMenu}>Session</a
+					aria-current={page.url.pathname === "/dashboard/session"
+						? "page"
+						: undefined}>Session</a
 				>
 				<a
 					href="/dashboard/profile"
+					onclick={toggleMenu}
 					class:active={page.url.pathname === "/dashboard/profile"}
-					onclick={toggleMenu}>Profile</a
+					aria-current={page.url.pathname === "/dashboard/profile"
+						? "page"
+						: undefined}>Profile</a
 				>
 			</div>
 		</nav>
@@ -96,6 +113,14 @@
 		font-size: 1.25rem;
 		transition: color 0.2s;
 		font-weight: 400;
+	}
+
+	.menu-toggle {
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0.5rem;
+		z-index: 1000;
 	}
 
 	.mainNav a.active {

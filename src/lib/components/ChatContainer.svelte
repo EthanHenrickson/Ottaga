@@ -2,7 +2,7 @@
 	import type { Message } from "$lib/types";
 
 	import { marked } from "marked";
-	import DownArrow from "$lib/icons/downArrow.svelte";
+	import DownArrow from "$lib/icons/DownArrow.svelte";
 	import { DecodeSSEandParseContent } from "$lib/utility/SSEHelper";
 	import { tick } from "svelte";
 

@@ -12,7 +12,7 @@ test("Cookie", async ({ page }) => {
     const LegalPage = new LegalMap(page)
 
     await LegalPage.GoTo("cookie")
-    await expect(page.getByRole('heading', { name: 'Cookie Policy', exact: true })).toBeAttached()
+    await expect(page.getByRole('heading', { name: 'Browser Storage Policy', exact: true })).toBeAttached()
 })
 
 test("Privacy", async ({ page }) => {

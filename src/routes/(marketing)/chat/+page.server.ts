@@ -10,7 +10,7 @@ export const load: PageServerLoad = async () => {
 
     if (chatDBResponse.success) {
         //Generate system prompt
-        const systemMessage = OttagaHealthLLM.SystemPrompt
+        const systemMessage = OttagaHealthLLM.llmInstance.SystemPrompt
         await ChatDatabase.addChatMessage(chatDBResponse.data.uuid, { role: 'system', content: systemMessage })
 
         //Return chatID

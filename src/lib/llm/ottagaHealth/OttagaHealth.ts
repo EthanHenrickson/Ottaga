@@ -9,14 +9,14 @@ import type { OttagaAbstractBaseProvider } from '../providers/OttagaAbstractBase
  * to the LLM using OpenAI's chat completions API.
  */
 export class OttagaHealth {
-    llmInstance: OttagaAbstractBaseProvider;
+    llmProviderInstance: OttagaAbstractBaseProvider;
 
     constructor(llmInstance: OttagaAbstractBaseProvider) {
-        this.llmInstance = llmInstance;
+        this.llmProviderInstance = llmInstance;
     }
 
     get SystemPrompt() {
-        return this.llmInstance.SystemPrompt
+        return this.llmProviderInstance.SystemPrompt
     }
 
     /**
@@ -28,7 +28,7 @@ export class OttagaHealth {
      */
     async *SendMessage(messages: Message[]): AsyncGenerator<StreamingResponse<string>> {
         //Get LLM response message
-        const chatResponse = this.llmInstance.callStreaming(messages)
+        const chatResponse = this.llmProviderInstance.callStreaming(messages, false)
 
         for await (const chunk of chatResponse) {
             if(chunk.success === true){

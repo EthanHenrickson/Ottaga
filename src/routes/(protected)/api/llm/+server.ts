@@ -49,7 +49,7 @@ export const POST: RequestHandler = async ({ request, }) => {
                 controller.enqueue(GenerateSSEResponse("[DONE]"));
                 controller.close();
 
-                Analytics.capture({ distinctId: "Anon", event: "api/llm called" })
+                Analytics.capture({ distinctId: "Anon", event: "api/llm called"})
             } catch (error) {
 
                 Analytics.captureException({ error: "Failed to get Ottaga response", additionalProperties: { errorMessage: error } })

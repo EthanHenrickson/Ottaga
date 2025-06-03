@@ -1,39 +1,33 @@
 import type { CompletionResponse, LLMConfig, Message, StreamingResponse } from "$lib/types";
 
 export class OttagaAbstractBaseProvider {
-    protected systemPrompt: string;
-    protected model: string;
-    protected temperature: number;
-    protected maxTokens: number;
+    protected llmConfig: LLMConfig
 
     constructor(llmConfig: LLMConfig) {
-        this.systemPrompt = llmConfig.systemPrompt;
-        this.model = llmConfig.model;
-        this.temperature = llmConfig.temperature;
-        this.maxTokens = llmConfig.maxTokens;
+        this.llmConfig = llmConfig;
     }
 
-    callCompletion(message: Message[]): Promise<CompletionResponse<string>> {
+    callCompletion(message: Message[], showReasoningTokens = false): Promise<CompletionResponse<string>> {
         throw new Error("Not implemented");
     }
-    callStreaming(message: Message[]): AsyncGenerator<StreamingResponse<string>> {
+    callStreaming(message: Message[], showReasoningTokens = false): AsyncGenerator<StreamingResponse<string>> {
         throw new Error("Not implemented");
     }
 
     get SystemPrompt() {
-        return this.systemPrompt;
+        return this.llmConfig.systemPrompt;
     }
 
     get Model() {
-        return this.model;
+        return this.llmConfig.model;
     }
 
     get Temperature() {
-        return this.temperature;
+        return this.llmConfig.temperature;
     }
 
     get MaxTokens() {
-        return this.maxTokens;
+        return this.llmConfig.maxTokens;
     }
 
 }

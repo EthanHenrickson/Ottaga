@@ -15,10 +15,6 @@ export class OttagaHealth {
         this.llmInstance = llmInstance;
     }
 
-    get SystemPrompt() {
-        return this.llmInstance.SystemPrompt
-    }
-
     /**
      * Sends a series of messages to the LLM and returns the model's response.
      * @param pastMessages - Array of previous Message objects in the conversation
@@ -31,7 +27,7 @@ export class OttagaHealth {
         const chatResponse = this.llmInstance.callStreaming(messages)
 
         for await (const chunk of chatResponse) {
-            if(chunk.success === true){
+            if (chunk.success === true) {
                 yield {
                     success: true,
                     data: chunk.data

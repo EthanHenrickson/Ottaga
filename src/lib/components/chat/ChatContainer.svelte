@@ -5,6 +5,8 @@
 	import DownArrow from "$lib/icons/downArrow.svelte";
 	import { DecodeSSE } from "$lib/utility/SSEHelper";
 	import { tick } from "svelte";
+	import { fade } from "svelte/transition";
+	import LoadingMessageContainer from "./LoadingMessageContainer.svelte";
 
 	// Props: chatID is used to identify the current chat session
 	let { chatID }: { chatID: string } = $props();
@@ -40,15 +42,13 @@
 		// Skip empty messages
 		if (!userMessageInput.trim()) return;
 
-		let wasChatScrolledToBottom = chatScrolledToBottom;
-
 		// Set loading state and append message to chat
-		messageArray.push({ role: "user", content: userMessageInput });
 		isLoading = true;
+		messageArray.push({ role: "user", content: userMessageInput });
 
-		if (wasChatScrolledToBottom) {
-			scrollToBottom();
-		}
+		await tick();
+
+		scrollToBottom();
 
 		try {
 			// Send messages to LLM API endpoint
@@ -126,6 +126,13 @@
 	}
 </script>
 
+{#snippet messageBox(message: Message)}
+	<div class="message {message.role}">
+		<strong>{message.role === "user" ? "You" : "Ottaga"}:</strong>
+		{@html marked.parse(message.content)}
+	</div>
+{/snippet}
+
 <div class="chat-container">
 	<div
 		class="messages"
@@ -133,14 +140,13 @@
 		onscroll={handleScroll}
 	>
 		{#each messageArray as message}
-			<div class="message {message.role}">
-				<strong>{message.role === "user" ? "You" : "Ottaga"}:</strong>
-				{@html marked.parse(message.content)}
-			</div>
+			{@render messageBox(message)}
 		{/each}
 
 		{#if isLoading}
-			<div class="loading">Loading...</div>
+			<div class="loadingMessageContainer">
+				<LoadingMessageContainer />
+			</div>
 		{/if}
 	</div>
 
@@ -155,16 +161,6 @@
 		<button class="sendButton" type="submit" disabled={isLoading}
 			>Send</button
 		>
-
-		<!-- {#if !isUserScrolling}
-			<div class="bottomScroll">
-				<button
-					class="downButton"
-					type="button"
-					onclick={scrollToBottom}><DownArrow /></button
-				>
-			</div>
-		{/if} -->
 	</form>
 </div>
 
@@ -192,6 +188,7 @@
 		flex-grow: 1;
 		overflow: scroll;
 		padding: 1rem;
+		padding-bottom: 0rem;
 	}
 
 	.message {
@@ -257,5 +254,11 @@
 		justify-content: center;
 		z-index: 5;
 		background-color: transparent;
+	}
+
+	.loadingMessageContainer {
+		width: 100%;
+		text-align: center;
+		font-style: italic;
 	}
 </style>

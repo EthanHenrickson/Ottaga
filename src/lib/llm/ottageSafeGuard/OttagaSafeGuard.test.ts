@@ -22,11 +22,11 @@ describe("Check user message - error", () => {
         // Mock the client
         // Ensure llmClient is defined before mocking
         // @ts-ignore - Replace the client with our mock
-        OttagaSafeGuardLLM.llmInstance.callCompletion = mockCallCompletion;
+        OttagaSafeGuardLLM.llmProviderInstance.callCompletion = mockCallCompletion;
     });
 
-    it("Should return with default values", async () => {
-        mockCallCompletion.mockResolvedValue('{}');
+    it("Should return with default values if it can't connect to API", async () => {
+        mockCallCompletion.mockResolvedValue('');
 
         let result = await OttagaSafeGuardLLM.CheckUserMessage({ role: "user", content: "Hi there" })
         expect(result).toStrictEqual({
@@ -36,13 +36,13 @@ describe("Check user message - error", () => {
 
     it("Should have an error parsing and return with default values", async () => {
         const consoleMock = vi.spyOn(console, 'log').mockImplementation(() => undefined);
-        mockCallCompletion.mockResolvedValue("{");
+        mockCallCompletion.mockResolvedValue({success: true, data: "{"});
 
         let result = await OttagaSafeGuardLLM.CheckUserMessage({ role: "user", content: "Hi there" })
         expect(result).toStrictEqual({
             isMalicious: true, messageResponse: "Sorry that message couldn't be parsed. Please try again."
         })
-        expect(consoleMock).toHaveBeenCalledOnce()
+        expect(consoleMock).toHaveBeenCalledOnce() 
     })
 })
 

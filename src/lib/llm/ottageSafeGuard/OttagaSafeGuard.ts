@@ -3,10 +3,10 @@ import Analytics from "$lib/utility/ServerAnalytics";
 import { OttagaAbstractBaseProvider } from "../providers/OttagaAbstractBaseProvider";
 
 export class OttagaSafeGuard {
-    llmInstance: OttagaAbstractBaseProvider;
+    llmProviderInstance: OttagaAbstractBaseProvider;
 
     constructor(llmInstance: OttagaAbstractBaseProvider) {
-        this.llmInstance = llmInstance;
+        this.llmProviderInstance = llmInstance;
     }
 
     /**
@@ -22,10 +22,11 @@ export class OttagaSafeGuard {
     async CheckUserMessage(message: Message): Promise<MaliciousLLMResponse> {
         let returnResponse: MaliciousLLMResponse = { isMalicious: true, messageResponse: "Sorry that message couldn't be parsed. Please try again." }
 
-        let response = await this.llmInstance.callCompletion([{ role: "system", content: this.llmInstance.SystemPrompt }, message] as Message[])
+        let response = await this.llmProviderInstance.callCompletion([{ role: "system", content: this.llmProviderInstance.SystemPrompt }, message] as Message[])
 
-        if (response === null || response.success === false) {
-            Analytics.captureException("User attempted to send malicious message", "Anon", { message: message })
+        //If response failed; return default message and log to analytics
+        if (!response || !response.success) {
+            Analytics.captureException("Call to LLM provider for malicious message failed", "Anon", { message: message, responseFromLLM: response })
             return returnResponse
         }
 
@@ -34,6 +35,10 @@ export class OttagaSafeGuard {
 
             if (typeof ParseLLMResponse.isMalicious === "boolean" && typeof ParseLLMResponse.messageResponse === "string") {
                 returnResponse = ParseLLMResponse
+
+                if (ParseLLMResponse.isMalicious){
+                    Analytics.capture({ distinctId: "Anon", event: "User attempted to send malicious message", properties: { message: message }})
+                }
             }
         } catch {
             console.log("Failed to parse json output - ", response)

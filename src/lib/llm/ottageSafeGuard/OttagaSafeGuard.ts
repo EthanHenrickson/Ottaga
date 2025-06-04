@@ -36,7 +36,7 @@ export class OttagaSafeGuard {
             if (typeof ParseLLMResponse.isMalicious === "boolean" && typeof ParseLLMResponse.messageResponse === "string") {
                 returnResponse = ParseLLMResponse
 
-                if (ParseLLMResponse.isMalicious){
+                if (ParseLLMResponse.isMalicious) {
                     Analytics.capture({ distinctId: "Anon", event: "User attempted to send malicious message", properties: { message: message }})
                 }
             }

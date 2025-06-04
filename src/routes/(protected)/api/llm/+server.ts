@@ -28,9 +28,6 @@ export const POST: RequestHandler = async ({ request, }) => {
                 //Check to see if users message is malicious
                 const maliciousCheck = await OttagaSafeGuardLLM.CheckUserMessage(newMessage)
 
-                //If the users message was found to be malicious, respond with the malicious message response
-                //Else call the OttagaHealthLLM and stream the response back to the frontend
- 
                 if (maliciousCheck.isMalicious) {
                     const responseMessage = EncodeToSSE(maliciousCheck.messageResponse)
                     controller.enqueue(responseMessage)
@@ -38,7 +35,6 @@ export const POST: RequestHandler = async ({ request, }) => {
                     let finalGeneratedResponse = ''
                     let OttagaHealthResponse = OttagaHealthLLM.SendMessage([...previousMessages, newMessage])
 
-                    //As chunks are received from OttagaHealthLLM we parse them and send them back to the end user 
                     for await (const messageChunk of OttagaHealthResponse) {
                         if (messageChunk.success) {
                             const responseMessage = EncodeToSSE(messageChunk.data)
@@ -46,22 +42,20 @@ export const POST: RequestHandler = async ({ request, }) => {
                             finalGeneratedResponse += messageChunk.data
                         }
                     }
-
-                    //Lastly if it was all successful then save the new messages to the database
                     ChatDatabase.addChatMessage(chatID, newMessage)
                     ChatDatabase.addChatMessage(chatID, { role: 'assistant', content: finalGeneratedResponse })
                 }
 
-                //Send SEE close message and close the stream
                 controller.enqueue(EncodeToSSE("[DONE]"));
                 controller.close();
 
-                Analytics.capture({ distinctId: "Anon", event: "api/llm called"})
+                Analytics.capture({ distinctId: "Anon", event: "api/llm called" })
             } catch (error) {
 
                 Analytics.captureException({ error: "Failed to get Ottaga response", additionalProperties: { errorMessage: error } })
                 console.error(error);
                 controller.close();
+
 
                 return json({ success: false, message: `LLM API Server Error - ${error}` }, { status: 500 });
             }

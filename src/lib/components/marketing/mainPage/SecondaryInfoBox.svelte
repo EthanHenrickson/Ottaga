@@ -4,26 +4,26 @@
     import Lock from "$lib/icons/lock.svelte";
 </script>
 
-<div class="content">
-    <h2>What Makes Ottaga Special?</h2>
-    <div class="features">
-        <div class="feature">
+<section class="content" aria-labelledby="feature-heading">
+    <h2 id="feature-heading">What Makes Ottaga Special?</h2>
+    <div class="features" role="list">
+        <div class="feature" role="listitem">
             <Clock />
             <h3>Always Available</h3>
             <p>24/7 Support, no matter the time.</p>
         </div>
-        <div class="feature">
+        <div class="feature" role="listitem">
             <Lock />
             <h3>Private & Secure</h3>
             <p>You control all your data.</p>
         </div>
-        <div class="feature">
+        <div class="feature" role="listitem">
             <CutCreditCard />
             <h3>Completely Free</h3>
             <p>We will always be free for everyone</p>
         </div>
     </div>
-</div>
+</section>
 
 <style>
     .content {

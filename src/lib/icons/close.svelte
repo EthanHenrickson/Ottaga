@@ -1,8 +1,6 @@
-<script lang="ts">
-    let {buttonToggle}: {buttonToggle: Function} = $props()
-</script>
-
-<button onclick={()=>{buttonToggle()}} aria-label="Close Menu">
+<button
+    aria-label="Close Menu"
+>
     <svg
         clip-rule="evenodd"
         fill-rule="evenodd"
@@ -18,12 +16,12 @@
 
 <style>
     button {
-		z-index: 101;
+        z-index: 101;
         outline: none;
         background: none;
         border: none;
     }
-    
+
     svg {
         width: 40px;
         height: auto;

@@ -14,6 +14,12 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
         });
     }
 
+    /**
+     * Calls the OpenAI chat completion API without streaming.
+     *
+     * @param {Message[]} messages - Array of message objects representing the conversation history
+     * @returns {Promise<CompletionResponse<string>>} Promise resolving to completion response object
+     */
     async callCompletion(messages: Message[]): Promise<CompletionResponse<string>> {
         const apiResponse = await this.client.chat.completions.create({
             model: this.model,
@@ -35,6 +41,16 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
 
     }
 
+    /**
+     * Calls the OpenAI chat completion API with streaming enabled.
+     * Returns an async generator that yields streaming response chunks.
+     *
+     * @param {Message[]} messages - Array of message objects representing the conversation history
+     * @yields {StreamingResponse<string>} Yields streaming response objects containing either:
+     *   - Success with partial completion data (string)
+     *   - Failure indication when no valid chunk is available
+     * @returns {AsyncGenerator<StreamingResponse<string>>} Async generator for streaming responses
+     */
     async *callStreaming(messages: Message[]): AsyncGenerator<StreamingResponse<string>> {
         let apiMessageArray = [{ role: "system", content: this.systemPrompt }, ...messages] as Message[]
 
@@ -53,10 +69,11 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
             const { done, value } = await reader.read()
             if (done) break;
 
+            //Decode reader stream and extract data out of it. Then yield (return for async generator) it
             let chunk = decoder.decode(value);
             let dataChunk = this.extractChunk(chunk)
 
-            if (dataChunk != undefined) {
+            if (dataChunk != undefined || dataChunk != null) {
                 yield {
                     success: true,
                     data: dataChunk
@@ -69,7 +86,12 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
         }
     }
 
-    private extractChunk(chunk: string) {
+    /**
+     * Takes in an Open AI Streaming Chunk and returns the message content
+     * @param {string} chunk OpenAI Streaming Chunk to be processed
+     * @returns {string | null} Chunk data
+     */
+    private extractChunk(chunk: string): string | null {
         const data = JSON.parse(chunk) as OpenAI.ChatCompletionChunk
 
         if (data.object == "chat.completion.chunk" && data.choices[0]) {

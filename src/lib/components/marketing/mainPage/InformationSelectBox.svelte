@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { fade, fly } from "svelte/transition";
+
     let dataJson = {
         "Session Memory >":
             "Experience personalized support with our AI that remembers important details from your conversations while maintaining complete privacy. Your chat history helps provide more meaningful responses, but all data is fully anonymized with no connection to your real identity. Must be signed in. Users may also opt out if they would prefer.",
@@ -11,29 +13,50 @@
     };
 
     let dataJsonKeys = Object.keys(dataJson);
-
-    let selectedKey: keyof typeof dataJson =
-        dataJsonKeys[0] as keyof typeof dataJson;
+    let selectedKey: keyof typeof dataJson = dataJsonKeys[0] as keyof typeof dataJson;
+    
+    // Generate unique IDs for accessibility
+    const tabIds = dataJsonKeys.map((_, i) => `tab-${i}`);
+    const panelId = "help-panel";
 </script>
 
-<div class="content">
+<section class="content" aria-label="How Ottaga Can Help">
     <h2>How Ottaga Can Help</h2>
-    <div class="informationBox">
+    <div class="informationBox" role="tablist" aria-label="Help categories">
         <div class="keyBlock">
-            {#each dataJsonKeys as key}
+            {#each dataJsonKeys as key, i}
                 <button
-                    class:active={selectedKey == key}
-                    onclick={() => (selectedKey = key as keyof typeof dataJson)}
+                    role="tab"
+                    id={tabIds[i]}
+                    aria-controls={panelId}
+                    aria-selected={selectedKey === key}
+                    class:active={selectedKey === key}
+                    on:click={() => (selectedKey = key as keyof typeof dataJson)}
+                    on:keydown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            selectedKey = key as keyof typeof dataJson;
+                        }
+                    }}
                 >
                     {key}
                 </button>
             {/each}
         </div>
-        <div class="valueBlock">
-            {dataJson[selectedKey]}
+        <div 
+            class="valueBlock"
+            id={panelId}
+            role="tabpanel"
+            aria-labelledby={tabIds[dataJsonKeys.indexOf(selectedKey)]}
+            tabindex="0"
+        >
+            {#key selectedKey}
+                <div>
+                    {dataJson[selectedKey]}
+                </div>
+            {/key}
         </div>
     </div>
-</div>
+</section>
 
 <style>
     .content {
@@ -49,7 +72,6 @@
         flex-direction: row;
         max-width: 900px;
         align-items: center;
-        margin: 0px 1rem;
     }
 
     h2 {
@@ -72,6 +94,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        overflow-x: hidden;
     }
 
     button {
@@ -80,13 +103,14 @@
         cursor: pointer;
         border: none;
         border-bottom: 1px solid black;
-
         text-align: right;
         font-size: 1.1rem;
         padding: 1.1rem;
+        transition: background-color 0.2s;
     }
 
-    .active {
+    button[aria-selected="true"] {
         box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.5);
+        background: rgba(117, 199, 250, 0.8);
     }
 </style>

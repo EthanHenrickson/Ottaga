@@ -1,8 +1,4 @@
-<script lang="ts">
-    let { buttonToggle }: {buttonToggle: Function} = $props();
-</script>
-
-<button onclick={()=>{buttonToggle()}} aria-label="Menu">
+<button aria-label="Open Menu">
     <svg
         clip-rule="evenodd"
         fill-rule="evenodd"

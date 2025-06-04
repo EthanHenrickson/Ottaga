@@ -3,7 +3,7 @@
 
 	import { marked } from "marked";
 	import DownArrow from "$lib/icons/downArrow.svelte";
-	import { DecodeSSEandParseContent } from "$lib/utility/SSEHelper";
+	import { DecodeSSE } from "$lib/utility/SSEHelper";
 	import { tick } from "svelte";
 	import { fade } from "svelte/transition";
 	import LoadingMessageContainer from "./LoadingMessageContainer.svelte";
@@ -76,13 +76,12 @@
 
 					if (done) break;
 
-					const decodeResultDataArray = DecodeSSEandParseContent(
-						value,
-						{ stripDataField: true, parseJson: true },
-					) as { content: string }[];
+					const decodedSSEArray = DecodeSSE<{
+						content: string;
+					}>(value);
 
 					//Loop through SSE blocks and append chunks to messages
-					for (let dataBlock of decodeResultDataArray) {
+					for (let dataBlock of decodedSSEArray) {
 						if (dataBlock.content == "[DONE]") {
 							breakLoops = true;
 							break;
@@ -175,7 +174,7 @@
 	.chat-container {
 		height: 90%;
 		width: 90%;
-		max-width: 800px;
+		max-width: 700px;
 		margin: 0 auto;
 
 		display: flex;

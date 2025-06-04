@@ -89,7 +89,7 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
                 if (isReasoning) continue;
             }
 
-            if (dataChunk != undefined || dataChunk != null) {
+            if (dataChunk) {
                 yield {
                     success: true,
                     data: dataChunk

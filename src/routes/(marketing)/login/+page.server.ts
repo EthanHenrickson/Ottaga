@@ -1,6 +1,6 @@
 /** @type {import('./$types').Actions} */
 import { CookieDatabase } from '$lib/db/cookie';
-import { UserDatabase } from '$lib/db/user';
+import { UserDatabase } from '$lib/db/user/user';
 import { fail, redirect } from '@sveltejs/kit';
 import argon2 from 'argon2';
 

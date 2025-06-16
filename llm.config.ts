@@ -4,7 +4,7 @@ import type { LLMConfig } from "$lib/types"
 export let OttagaHealthConfig: LLMConfig = {
     baseUrl: 'https://api.together.xyz/v1',
     apiKey: TOGETHER_API_KEY,
-    model: "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+    model: "Qwen/Qwen3-235B-A22B-fp8-tput",
     systemPrompt: `
         # Ottaga: Mental Health Support Assistant
 
@@ -57,7 +57,6 @@ export let OttagaHealthConfig: LLMConfig = {
         - Validate and understand their emotions and experiences
         - Offer reflections that deepen insight rather than just repeating content
         - Suggest specific, actionable strategies tailored to their situation
-        - Provide psychoeducation about emotions and coping skills when relevant
 
         ## Safety Protocols
         - Take expressions of harm to self or others seriously

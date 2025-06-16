@@ -6,6 +6,7 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
     protected client: OpenAI
 
     constructor(llmConfig: LLMConfig) {
+        
         super(llmConfig);
 
         this.client = new OpenAI({
@@ -20,20 +21,26 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
      * @param {Message[]} messages - Array of message objects representing the conversation history
      * @returns {Promise<CompletionResponse<string>>} Promise resolving to completion response object
      */
-    async callCompletion(messages: Message[]): Promise<CompletionResponse<string>> {
+    async callCompletion(messages: Message[], showReasoningTokens = false): Promise<CompletionResponse<string>> {
+        let apiMessageArray = [{ role: "system", content: this.systemPrompt }, ...messages] as Message[]
+
         const apiResponse = await this.client.chat.completions.create({
             model: this.model,
             temperature: this.temperature,
             max_tokens: this.maxTokens,
-            messages: messages,
+            messages: apiMessageArray,
             stream: false
         })
 
-        if (apiResponse.choices.length != 0) {
+        let messageContent = apiResponse.choices[0].message.content
 
+        if (messageContent) {
+            if (!showReasoningTokens && messageContent.includes("</think>")) {
+                messageContent = messageContent.slice(messageContent.indexOf("</think>") + 8)
+            }
             return {
                 success: true,
-                data: apiResponse.choices[0].message.content || ""
+                data: messageContent
             }
         } else {
             return { success: false }
@@ -51,7 +58,8 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
      *   - Failure indication when no valid chunk is available
      * @returns {AsyncGenerator<StreamingResponse<string>>} Async generator for streaming responses
      */
-    async *callStreaming(messages: Message[]): AsyncGenerator<StreamingResponse<string>> {
+    async *callStreaming(messages: Message[], showReasoningTokens = false): AsyncGenerator<StreamingResponse<string>> {
+        let isReasoning = false
         let apiMessageArray = [{ role: "system", content: this.systemPrompt }, ...messages] as Message[]
 
         const apiResponse = await this.client.chat.completions.create({
@@ -73,7 +81,19 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
             let chunk = decoder.decode(value);
             let dataChunk = this.extractChunk(chunk)
 
-            if (dataChunk != undefined || dataChunk != null) {
+            if (!showReasoningTokens) {
+                //Skip sending over thinking tokens
+                if (dataChunk == "<think>") {
+                    isReasoning = true
+                } else if (dataChunk == "</think>") {
+                    isReasoning = false
+                    continue
+                }
+
+                if (isReasoning) continue;
+            }
+
+            if (dataChunk) {
                 yield {
                     success: true,
                     data: dataChunk
@@ -94,7 +114,7 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
     private extractChunk(chunk: string): string | null {
         const data = JSON.parse(chunk) as OpenAI.ChatCompletionChunk
 
-        if (data.object == "chat.completion.chunk" && data.choices[0]) {
+        if (data.choices[0]) {
             if (data.choices[0].finish_reason == null) {
                 return data.choices[0].delta.content as string
             }

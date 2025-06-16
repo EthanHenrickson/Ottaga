@@ -14,7 +14,7 @@ export function DecodeSSE<T = any>(SSEchunk: Uint8Array<ArrayBufferLike>): T[];
 
 /**
  * Decodes a Server-Sent Events (SSE) chunk and parses its content into an array of data items.
- * Optionally strips the "data: " prefix and parses JSON content if desired.
+ * Optionally parses JSON content if desired.
  *
  * @param SSEchunk - A Uint8Array containing the raw SSE data.
  * @param options - Configuration options:

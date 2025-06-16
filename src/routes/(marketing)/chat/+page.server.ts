@@ -1,6 +1,6 @@
 import type { PageServerLoad } from "./$types";
 import { OttagaHealthLLM } from "$lib/llm/Ottaga";
-import { ChatDatabase } from "$lib/db/chat";
+import { ChatDatabase } from "$lib/db/chat/chat";
 
 export const load: PageServerLoad = async () => {
     let chatID: string
@@ -10,7 +10,7 @@ export const load: PageServerLoad = async () => {
 
     if (chatDBResponse.success) {
         //Generate system prompt
-        const systemMessage = OttagaHealthLLM.llmInstance.SystemPrompt
+        const systemMessage = OttagaHealthLLM.llmProviderInstance.SystemPrompt
         await ChatDatabase.addChatMessage(chatDBResponse.data.uuid, { role: 'system', content: systemMessage })
 
         //Return chatID

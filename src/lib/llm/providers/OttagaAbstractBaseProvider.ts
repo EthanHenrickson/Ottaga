@@ -20,7 +20,7 @@ export class OttagaAbstractBaseProvider {
      * @returns {Promise<CompletionResponse<string>>} Promise resolving to completion response
      * @throws {Error} When not implemented
      */
-    callCompletion(messages: Message[]): Promise<CompletionResponse<string>> {
+    callCompletion(messages: Message[], showReasoningTokens = false): Promise<CompletionResponse<string>> {
         throw new Error("Not implemented");
     }
     
@@ -31,7 +31,7 @@ export class OttagaAbstractBaseProvider {
      * @returns {AsyncGenerator<StreamingResponse<string>>} Async generator yielding streaming response chunks
      * @throws {Error} When not implemented
      */
-    callStreaming(messages: Message[]): AsyncGenerator<StreamingResponse<string>> {
+    callStreaming(messages: Message[], showReasoningTokens = false): AsyncGenerator<StreamingResponse<string>> {
         throw new Error("Not implemented");
     }
 

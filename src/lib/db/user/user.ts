@@ -1,6 +1,6 @@
 import type { NewUserTableRecord, DatabaseResponse, DatabaseDataResponse, UserTableRecord } from "$lib/types";
 import { v4 } from "uuid";
-import { BaseDatabase } from "./database";
+import { BaseDatabase } from "../database";
 import type { Updateable } from "kysely";
 import type { UserTable } from "$lib/databaseTypes";
 

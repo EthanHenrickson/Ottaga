@@ -22,7 +22,7 @@ export class OttagaSafeGuard {
     async CheckUserMessage(message: Message): Promise<MaliciousLLMResponse> {
         let returnResponse: MaliciousLLMResponse = { isMalicious: true, messageResponse: "Sorry that message couldn't be parsed. Please try again." }
 
-        let response = await this.llmProviderInstance.callCompletion([{ role: "system", content: this.llmProviderInstance.SystemPrompt }, message] as Message[])
+        let response = await this.llmProviderInstance.callCompletion([message])
 
         //If response failed; return default message and log to analytics
         if (!response || !response.success) {
@@ -36,7 +36,7 @@ export class OttagaSafeGuard {
             if (typeof ParseLLMResponse.isMalicious === "boolean" && typeof ParseLLMResponse.messageResponse === "string") {
                 returnResponse = ParseLLMResponse
 
-                if (ParseLLMResponse.isMalicious){
+                if (ParseLLMResponse.isMalicious) {
                     Analytics.capture({ distinctId: "Anon", event: "User attempted to send malicious message", properties: { message: message }})
                 }
             }

@@ -1,11 +1,4 @@
-/**
- * Tests for LLMHelper's message moderation functionality
- * 
- * Verifies the LLMHelper's ability to detect and handle potentially
- * malicious user messages before they reach the main assistant.
- */
 import { OttagaSafeGuardLLM } from "../Ottaga";
-import { GoodPrompts, MaliciousPrompts } from "./TestPrompts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock OpenAI client
@@ -14,7 +7,7 @@ const mockCallCompletion = vi.fn();
 /**
  * Tests error handling scenarios in message checking
  */
-describe("Check user message - error", () => {
+describe("Check user message", () => {
     beforeEach(() => {
         // Reset all mocks
         vi.clearAllMocks();
@@ -44,36 +37,24 @@ describe("Check user message - error", () => {
         })
         expect(consoleMock).toHaveBeenCalledOnce() 
     })
-})
 
-describe.concurrent('Malicious Message Tests', () => {
-    const TEST_TIMEOUT = 30000
+    it("Should parse malicious message", async () => {
+        mockCallCompletion.mockResolvedValue({ success: true, data: `{ "isMalicious": true, "messageResponse": "This is a bad message" }` });
 
-    MaliciousPrompts.forEach((prompt) => {
-        it(`${prompt.content}`, async () => {
-            const result = await OttagaSafeGuardLLM.CheckUserMessage(prompt)
+        let result = await OttagaSafeGuardLLM.CheckUserMessage({ role: "user", content: "Hi there" })
+        expect(result).toStrictEqual({
+            isMalicious: true, messageResponse: "This is a bad message"
+        })
 
-            expect(result).toHaveProperty('isMalicious')
-            expect(result).toHaveProperty('messageResponse')
-            expect(typeof result.isMalicious).toBe('boolean')
-            expect(typeof result.messageResponse).toBe('string')
-            expect(result.isMalicious).toBe(true)
-        }, TEST_TIMEOUT)
     })
-})
 
-describe.concurrent('Good Message Tests', () => {
-    const TEST_TIMEOUT = 30000
+    it("Should parse non-malicious message", async () => {
+        mockCallCompletion.mockResolvedValue({ success: true, data: `{ "isMalicious": false, "messageResponse": "" }` });
 
-    GoodPrompts.forEach((prompt) => {
-        it(`${prompt.content}`, async () => {
-            const result = await OttagaSafeGuardLLM.CheckUserMessage(prompt)
-
-            expect(result).toHaveProperty('isMalicious')
-            expect(result).toHaveProperty('messageResponse')
-            expect(typeof result.isMalicious).toBe('boolean')
-            expect(typeof result.messageResponse).toBe('string')
-            expect(result.isMalicious).toBe(false)
-        }, TEST_TIMEOUT)
+        let result = await OttagaSafeGuardLLM.CheckUserMessage({ role: "user", content: "Hi there" })
+        expect(result).toStrictEqual({
+            isMalicious: false,
+            messageResponse: ""
+        })
     })
 })

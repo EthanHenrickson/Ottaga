@@ -2,7 +2,7 @@ import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { ChatDatabase } from "./chat";
 import type { Message } from "$lib/types";
 import { v4, v7 } from "uuid";
-import { UserDatabase } from "./user";
+import { UserDatabase } from "../user/user";
 
 describe("Chat Database Operations", () => {
 

@@ -1,6 +1,6 @@
 import type { ChatTableRecord, DatabaseDataResponse, DatabaseResponse, Message, UserTableRecord } from "$lib/types";
 import { v4, v7 } from "uuid";
-import { BaseDatabase } from "./database";
+import { BaseDatabase } from "../database";
 
 class ChatDB extends BaseDatabase {
     constructor() {

@@ -6,6 +6,7 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
     protected client: OpenAI
 
     constructor(llmConfig: LLMConfig) {
+        
         super(llmConfig);
 
         this.client = new OpenAI({
@@ -21,11 +22,13 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
      * @returns {Promise<CompletionResponse<string>>} Promise resolving to completion response object
      */
     async callCompletion(messages: Message[], showReasoningTokens = false): Promise<CompletionResponse<string>> {
+        let apiMessageArray = [{ role: "system", content: this.systemPrompt }, ...messages] as Message[]
+
         const apiResponse = await this.client.chat.completions.create({
             model: this.model,
             temperature: this.temperature,
             max_tokens: this.maxTokens,
-            messages: messages,
+            messages: apiMessageArray,
             stream: false
         })
 
@@ -84,6 +87,7 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
                     isReasoning = true
                 } else if (dataChunk == "</think>") {
                     isReasoning = false
+                    continue
                 }
 
                 if (isReasoning) continue;
@@ -110,7 +114,7 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
     private extractChunk(chunk: string): string | null {
         const data = JSON.parse(chunk) as OpenAI.ChatCompletionChunk
 
-        if (data.object == "chat.completion.chunk" && data.choices[0]) {
+        if (data.choices[0]) {
             if (data.choices[0].finish_reason == null) {
                 return data.choices[0].delta.content as string
             }

@@ -25,8 +25,8 @@
 		--MessageBackground-Assistant: #f5f5f5;
 		--MessageBackground-User: #e3f2fd;
 
-		--AccentColorPrimary: #2485c1;
-		--AccentColorSecondary: #e6f6fe;
+		--AccentColorPrimary: #3b97d0;	
+		--AccentColorSecondary: #7cc3f0;
 
 		--Orange400: rgb(255, 175, 65);
 
@@ -35,7 +35,6 @@
 
 	:global(body) {
 		margin: 0;
-		font-family: "Open Sans", serif;
 	}
 
 	:global(h1) {

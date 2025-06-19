@@ -1,3 +1,7 @@
+<script lang="ts">
+    import { fly } from "svelte/transition";
+
+</script>
 <header class="content" aria-label="Main page header">
     <div class="header" role="heading" aria-level="1">
         <h1>We care about <span class="highlightYou" aria-hidden="true">you</span><span class="sr-only">you</span>.</h1>
@@ -17,12 +21,12 @@
         flex-direction: column;
         align-items: center;
         gap: 2rem;
-        padding: 10rem 0rem;
-        padding-top: 14rem;
+        height: 100vh;
+        justify-content: center;
         background: linear-gradient(
-			to top,
-			rgba(255, 255, 255, 0),
-			rgba(188, 223, 245, 0.8)
+			to bottom,
+			var(--AccentColorSecondary),
+			rgba(255, 255, 255, 0)
 		);
     }
 
@@ -55,7 +59,7 @@
 
     .header h1 {
         font-size: 6rem;
-        font-weight: 400;
+        font-weight: 300;
         margin: 0rem;
         text-align: center;
     }
@@ -102,14 +106,10 @@
 
     a:hover {
         filter: drop-shadow(rgb(139, 139, 139) 0.2rem 0.3rem 5px);
+        transform: translateY(-3px);
     }
 
     @media (max-width: 600px) {
-        .content {
-            padding: 6rem 0rem;
-            padding-top: 14rem;
-        }
-
         .getStarted {
             align-items: center;
             justify-content: center;

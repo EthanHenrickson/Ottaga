@@ -2,10 +2,8 @@
 	import type { Message } from "$lib/types";
 
 	import { marked } from "marked";
-	import DownArrow from "$lib/icons/downArrow.svelte";
 	import { DecodeSSE } from "$lib/utility/SSEHelper";
 	import { tick } from "svelte";
-	import { fade } from "svelte/transition";
 	import LoadingMessageContainer from "./LoadingMessageContainer.svelte";
 
 	// Props: chatID is used to identify the current chat session

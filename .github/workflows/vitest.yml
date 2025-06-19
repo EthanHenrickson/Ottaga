@@ -28,3 +28,6 @@ jobs:
         TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
         POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
     - run: npm run test:unit
+      env:
+        TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
+        POSTGRES_URL: ${{ secrets.POSTGRES_URL }}

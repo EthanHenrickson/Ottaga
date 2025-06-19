@@ -28,8 +28,6 @@ jobs:
       env:
         TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
         POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
-    - name: Start Web Server
-      run: npm run preview
     - name: Run Playwright tests
       run: npm run test:e2e
     - uses: actions/upload-artifact@v4

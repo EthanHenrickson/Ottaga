@@ -26,6 +26,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+      env: # Or as an environment variable
+        TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
+        POSTGRES_URL: ${{secrets.POSTGRES_URL}}
     - run: npm i
     - run: npm run build
     - run: npm run test

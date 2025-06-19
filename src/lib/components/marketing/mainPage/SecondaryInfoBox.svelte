@@ -10,17 +10,17 @@
         <div class="feature" role="listitem">
             <Clock />
             <h3>Always Available</h3>
-            <p>24/7 Support, no matter the time.</p>
+            <p>24/7 support whenever you need it. No appointments, no waiting lists - just immediate, compassionate assistance when you need it most.</p>
         </div>
         <div class="feature" role="listitem">
             <Lock />
             <h3>Private & Secure</h3>
-            <p>You control all your data.</p>
+            <p>Your conversations are completely private and we will never share or sell your data. You maintain full control over your information.</p>
         </div>
         <div class="feature" role="listitem">
             <CutCreditCard />
             <h3>Completely Free</h3>
-            <p>We will always be free for everyone</p>
+            <p>Mental health support should be accessible to everyone. Our core services will always remain free with no hidden costs or premium barriers.</p>
         </div>
     </div>
 </section>
@@ -28,8 +28,7 @@
 <style>
     .content {
         width: 100%;
-        margin: 5rem 0rem;
-        margin-top: 8rem;
+        margin: 7rem 0rem;
     }
 
     h2 {
@@ -41,7 +40,7 @@
 
     .features {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 2rem;
         margin: 2rem auto;
         width: 100%;
@@ -60,13 +59,12 @@
         color: black;
         margin-top: 0.5rem;
         margin-bottom: 1rem;
-        font-size: 1.6rem;
-        font-weight: 500;
+        font-size: 1.7rem;
+        font-weight: 400;
     }
 
     .feature p {
         font-size: 1.1rem;
-        line-height: 1.5;
         font-weight: 300;
     }
 

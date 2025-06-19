@@ -167,6 +167,6 @@ export let OttagaSafeGuardConfig: LLMConfig = {
         "messageResponse": ""
     }`,
 
-    temperature: .15,
+    temperature: .6,
     maxTokens: 800,
 }

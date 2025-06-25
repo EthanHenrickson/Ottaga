@@ -1,6 +1,7 @@
 import type { DatabaseResponse, DatabaseDataResponse, CookieTableRecord } from "$lib/types";
 import { v7 } from "uuid";
 import { BaseDatabase } from "./database";
+import Analytics from "$lib/utility/ServerAnalytics";
 
 /**
  * Service for handling user authentication and cookie management
@@ -18,9 +19,7 @@ class CookieDB extends BaseDatabase {
      */
     async createCookie(userID: string): Promise<DatabaseDataResponse<string>> {
         const uuid = v7()
-
-        const futureExpireTime = new Date();
-        futureExpireTime.setTime(futureExpireTime.getTime() + (30 * 60 * 1000));
+        const futureExpireTime = new Date(Date.now() + (30 * 60 * 1000));
 
         const query = this.db.insertInto("cookie").values({ id: uuid, FK_userID: userID, expireTime: futureExpireTime });
         const result = await query.executeTakeFirst()
@@ -33,7 +32,7 @@ class CookieDB extends BaseDatabase {
             };
 
         } else {
-            console.error('Failed cookie creation - UserID:', userID);
+            Analytics.captureException(`Failed to create cookie for userId - ${userID}`)
 
             return {
                 success: false,
@@ -44,11 +43,11 @@ class CookieDB extends BaseDatabase {
 
     /**
      * Remove a specific cookie from the database
-     * @param {string} id - The unique identifier of the cookie to remove
+     * @param {string} cookieID - The unique identifier of the cookie to remove
      * @returns {DatabaseResponse} Response indicating success or failure of cookie deletion
      */
-    async deleteByID(id: string): Promise<DatabaseResponse> {
-        const query = this.db.deleteFrom("cookie").where("id", "=", id)
+    async deleteByID(cookieID: string): Promise<DatabaseResponse> {
+        const query = this.db.deleteFrom("cookie").where("id", "=", cookieID)
         const result = await query.executeTakeFirst();
 
         if (result.numDeletedRows == BigInt(1)) {
@@ -58,7 +57,7 @@ class CookieDB extends BaseDatabase {
             };
 
         } else {
-            console.error('Failed to remove cookie - userID:', id);
+            Analytics.captureException(`Failed to delete cookie for cookieID - ${cookieID}`)
 
             return {
                 success: false,
@@ -69,11 +68,11 @@ class CookieDB extends BaseDatabase {
 
     /**
      * Retrieve a cookie by its ID
-     * @param {string} id - The ID of the cookie to retrieve
+     * @param {string} cookieID - The ID of the cookie to retrieve
      * @returns {DatabaseDataResponse<CookieTableRecord>} The cookie record if found
      */
-    async getByID(id: string): Promise<DatabaseDataResponse<{ cookie: CookieTableRecord }>> {
-        const query = this.db.selectFrom("cookie").selectAll().where("id", "=", id)
+    async getByID(cookieID: string): Promise<DatabaseDataResponse<{ cookie: CookieTableRecord }>> {
+        const query = this.db.selectFrom("cookie").selectAll().where("id", "=", cookieID)
         const result = <CookieTableRecord | undefined>await query.executeTakeFirst()
 
         if (result) {
@@ -84,7 +83,7 @@ class CookieDB extends BaseDatabase {
             };
 
         } else {
-            console.error('Failed cookie finding - userID:', id);
+            console.error('Failed cookie finding - userID:', cookieID);
 
             return {
                 success: false,
@@ -95,14 +94,13 @@ class CookieDB extends BaseDatabase {
 
     /**
      * Update the expiration time of a specific cookie
-     * @param {string} id - The unique identifier of the cookie to update
+     * @param {string} cookieID - The unique identifier of the cookie to update
      * @returns {DatabaseResponse} Response indicating success or failure of cookie update
      */
-    async updateByID(id: string): Promise<DatabaseResponse> {
-        const futureExpireTime = new Date();
-        futureExpireTime.setTime(futureExpireTime.getTime() + (30 * 60 * 1000));
+    async updateByID(cookieID: string): Promise<DatabaseResponse> {
+        const futureExpireTime = new Date(Date.now() + (30 * 60 * 1000));
 
-        const query = this.db.updateTable("cookie").set({ expireTime: futureExpireTime }).where("id", "=", id)
+        const query = this.db.updateTable("cookie").set({ expireTime: futureExpireTime }).where("id", "=", cookieID)
         const result = await query.executeTakeFirst()
 
         if (result.numUpdatedRows == BigInt(1)) {
@@ -112,7 +110,7 @@ class CookieDB extends BaseDatabase {
             };
 
         } else {
-            console.error('Failed cookie updating - cookieID:', id);
+            console.error('Failed cookie updating - cookieID:', cookieID);
 
             return {
                 success: false,

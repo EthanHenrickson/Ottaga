@@ -8,22 +8,23 @@
         "Generating response...",
     ];
 
-    let index = 0;
-    let currentMessage = "";
+    let index = $state(0);
+    let currentMessage = $state("");
 
     onMount(() => {
-        currentMessage = loadingMessageOptions[index];
-
         let LoadingMessageInterval = setInterval(() => {
             if (index < loadingMessageOptions.length - 1) {
-                index += 1;
+                index += 1
             }
-            currentMessage = loadingMessageOptions[index];
-        }, 2500);
+        }, 3000);
 
-        //Remove interval when component is destroyed
         return () => clearInterval(LoadingMessageInterval);
     });
+
+    //Update the message being shown when the index is changed
+    $effect(()=>{
+        currentMessage = loadingMessageOptions[index];
+    })
 </script>
 
 <div class="grid">

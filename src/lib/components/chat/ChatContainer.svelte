@@ -12,8 +12,8 @@
 	// References the HTML element containing the chat messages
 	let chatMessageContainer: HTMLElement;
 
+	//State variables
 	let chatScrolledToBottom: boolean = $state(false);
-
 	let isLoading = $state(false);
 	let userMessageInput = $state(""); //References new user message input
 	let messageArray: Message[] = $state([
@@ -26,7 +26,6 @@
 	// Function to scroll to the bottom of the chat container
 	async function scrollToBottom() {
 		await tick();
-
 		chatMessageContainer.scroll({
 			top: chatMessageContainer.scrollHeight,
 			behavior: "smooth",
@@ -45,7 +44,6 @@
 		messageArray.push({ role: "user", content: userMessageInput });
 
 		await tick();
-
 		scrollToBottom();
 
 		try {

@@ -18,9 +18,7 @@ export const handle: Handle = async ({ event, resolve }) => {
         return resolve(event);
     }
 
-    // Retrieve the session cookie from the browser
     const cookieID = event.cookies.get('sessionID');
-
     if (!cookieID) {
         // No session cookie found - redirect to login
         redirect(302, '/login');
@@ -29,7 +27,6 @@ export const handle: Handle = async ({ event, resolve }) => {
     // Fetch the cookie details from the authentication database
     const databaseCookie = await CookieDatabase.getByID(cookieID);
     if (!databaseCookie.success) {
-        // Cookie not found in the database - redirect to login
         redirect(302, '/login');
     }
 

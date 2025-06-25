@@ -8,6 +8,14 @@ import type { NewUserTableRecord } from '$lib/types';
 import type { Actions } from './$types';
 import Analytics from '$lib/utility/ServerAnalytics';
 
+const extractFormData = (data: FormData) => {
+	return {
+		email: data.get('email')?.toString().toLowerCase() as string,
+		password: data.get('password') as string,
+		name: data.get('name') as string
+	}
+}
+
 export const actions = {
 	/**
 	 * Handles user login attempts
@@ -18,25 +26,20 @@ export const actions = {
 	 * 3. Creates session cookie on success
 	 * 4. Returns error on failure
 	 */
-	login: async ({ cookies, request }) => {
-		const data = await request.formData();
-		const email = (<string>data.get('email')).toLowerCase();
-		const password = <string>data.get('password');
 
+	login: async ({ cookies, request }) => {
+		const { email, password } = extractFormData(await request.formData())
 		const user = await UserDatabase.getByEmail(email);
 
-		if (user.success) {
-			if (await argon2.verify(user.data.userRecord.hashedPassword, password)) {
-				const cookieResponse = await CookieDatabase.createCookie(user.data.userRecord.id);
+		if (user.success && await argon2.verify(user.data.userRecord.hashedPassword, password)) {
+			const cookieResponse = await CookieDatabase.createCookie(user.data.userRecord.id);
 
-				if (cookieResponse.success) {
-					const cookieID = cookieResponse.data
-					cookies.set('sessionID', cookieID, { path: '/' });
-					redirect(302, '/dashboard');
-				} else {
-					Analytics.captureException("Failed to create cookie in database")
-					throw Error("Couldn't create cookie")
-				}
+			if (cookieResponse.success) {
+				cookies.set('sessionID', cookieResponse.data, { path: '/' });
+				redirect(302, '/dashboard');
+			} else {
+				Analytics.captureException("Failed to create cookie in database")
+				throw Error("Couldn't create cookie")
 			}
 		}
 
@@ -44,6 +47,7 @@ export const actions = {
 			error: 'Incorrect username or password'
 		});
 	},
+	
 	/**
 	 * Handles new user registration
 	 * 
@@ -54,17 +58,12 @@ export const actions = {
 	 * 4. Returns error if email already exists
 	 */
 	signup: async ({ request }) => {
-		const data = await request.formData();
-
-		const name = <string>data.get('name');
-		const email = <string>data.get('email');
-		const password = <string>data.get('password');
-
+		const { email, password, name } = extractFormData(await request.formData())
 		const passwordHash = await argon2.hash(password, { timeCost: 2 });
 
 		const newUserData: NewUserTableRecord = {
 			name: name,
-			email: email.toLowerCase(),
+			email: email,
 			hashedPassword: passwordHash,
 		};
 

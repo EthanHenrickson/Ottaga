@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { fade, fly } from "svelte/transition";
-
     let dataJson = {
         "Session Memory >":
             "Experience personalized support with our AI that remembers important details from your conversations while maintaining complete privacy. Your chat history helps provide more meaningful responses, but all data is fully anonymized with no connection to your real identity. Must be signed in. Users may also opt out if they would prefer.",
@@ -99,18 +97,20 @@
 
     button {
         outline: none;
-        background: rgba(202, 233, 252, 0.8);
         cursor: pointer;
         border: none;
         border-bottom: 1px solid black;
         text-align: right;
         font-size: 1.1rem;
         padding: 1.1rem;
-        transition: background-color 0.2s;
+        transition: all 0.2s;
+        background-color: var(--AccentColorSecondary);
+        color: black;
     }
 
     button[aria-selected="true"] {
         box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.5);
-        background: rgba(117, 199, 250, 0.8);
+        background-color: var(--AccentColorPrimary);
+        color: white;
     }
 </style>

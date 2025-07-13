@@ -1,3 +1,14 @@
+<svelte:head>
+	<title>AOttaga | Learn</title>
+
+	<meta
+		name="description"
+		content="Learn about Ottaga's approach to AI-powered mental health support. Discover our privacy-first principles, creator story, and commitment to your wellbeing."
+	/>
+	<meta name="keywords" content="about Ottaga, mental health mission, AI therapy, privacy-first, emotional support" />
+	<meta charset="UTF-8" />
+</svelte:head>
+
 <h1>Our Approach to Mental Health Support</h1>
 
 <h2>Who We Are</h2>

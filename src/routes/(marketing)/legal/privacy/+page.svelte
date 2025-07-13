@@ -1,3 +1,14 @@
+<svelte:head>
+	<title>Ottaga | Privacy</title>
+
+	<meta
+		name="description"
+		content="Read Ottaga's comprehensive privacy policy. Learn how we protect your mental health data with privacy-first practices and minimal tracking."
+	/>
+	<meta name="keywords" content="privacy policy, data protection, mental health privacy, Ottaga security" />
+	<meta charset="UTF-8" />
+</svelte:head>
+
 <h1>Privacy Policy</h1>
 
 <p><strong>Last Updated: May 31st, 2025</strong></p>

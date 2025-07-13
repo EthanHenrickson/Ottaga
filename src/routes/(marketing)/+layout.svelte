@@ -35,6 +35,7 @@
 
 	:global(body) {
 		margin: 0;
+		background-color: rgb(254, 252, 249);
 	}
 
 	:global(h1) {
@@ -60,9 +61,20 @@
 		font-weight: bold;
 	}
 
+	:global(button) {
+		padding: .7rem 1.5rem;
+		background-color: var(--AccentColorPrimary);
+		color: white;
+		border-radius: .4rem;
+		cursor: pointer;
+		border: none;
+		font-size: .9rem;
+	}
+
 	:global(button:focus-visible, a:focus-visible) {
-		outline: 2px solid var(--AccentColorPrimary);
+		outline: 2px solid var(--AccentColorPrimary) !important;
 		outline-offset: 2px;
+		border-radius: .25rem;
 	}
 
 	main {

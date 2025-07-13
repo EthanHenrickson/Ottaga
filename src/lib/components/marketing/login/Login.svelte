@@ -114,7 +114,7 @@
 
 		background-color: var(--MessageBackground-Assistant);
 		border-radius: 1rem;
-		filter: drop-shadow(rgb(54, 54, 54) 0.2rem 0.2rem 0.5rem);
+		filter: drop-shadow(rgb(116, 116, 116) 0.4rem 0.4rem .6rem);
 	}
 
 	.head {
@@ -133,18 +133,11 @@
 		background-color: transparent;
 		color: rgb(0, 0, 0);
 		cursor: pointer;
+		padding: 0rem;
 	}
 
 	.submitButton {
-		font-size: 1.2rem;
 		margin-top: 1rem;
-		padding: 1rem 2rem;
-		background-color: var(--AccentColorPrimary);
-		color: white;
-		border: 2px solid transparent;
-		cursor: pointer;
-		border-radius: 0.5rem;
-		transition: all 0.25s;
 	}
 
 	.error {

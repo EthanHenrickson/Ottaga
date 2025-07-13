@@ -27,11 +27,6 @@
 		gap: 50px;
 
 		padding: 1rem 0rem;
-		background: linear-gradient(
-			to bottom,
-			rgba(255, 255, 255, 0),
-			rgba(210, 235, 250, 0.8)
-		);
 	}
 
 	.section {

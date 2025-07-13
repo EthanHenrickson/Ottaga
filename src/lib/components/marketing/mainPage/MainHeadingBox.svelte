@@ -13,6 +13,9 @@
         <a href="/chat" class="conversationButton" role="button" aria-label="Start a conversation with Ottaga">Start a conversation</a>
         <a href="/learn" class="learnButton" role="button" aria-label="Learn more about Ottaga">Learn More</a>
     </div>
+    <div class="noSignUp">
+        No Sign Up Required. Get Support Instantly.
+    </div>
 </header>
 
 <style>
@@ -92,6 +95,10 @@
     .learnButton {
         background-color: white;
         color: black;
+    }
+
+    .noSignUp {
+        transform: translateY(-1rem);
     }
 
     a {

@@ -116,7 +116,7 @@
 	.mainNav a {
 		text-decoration: none;
 		color: var(--text-color);
-		font-size: 1.4rem;
+		font-size: 1.3rem;
 		transition: color 0.2s;
 		font-weight: 400;
 	}

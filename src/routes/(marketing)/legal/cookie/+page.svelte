@@ -1,3 +1,14 @@
+<svelte:head>
+	<title>Ottaga | Cookies</title>
+
+	<meta
+		name="description"
+		content="Learn about Ottaga's minimal cookie approach. We use only essential authentication cookies and prioritize your privacy with memory-based storage."
+	/>
+	<meta name="keywords" content="cookie policy, browser storage, privacy-first, minimal tracking, Ottaga cookies" />
+	<meta charset="UTF-8" />
+</svelte:head>
+
 <h1>Browser Storage Policy</h1>
 
 <p><strong>Last Updated: May 31st, 2025</strong></p>

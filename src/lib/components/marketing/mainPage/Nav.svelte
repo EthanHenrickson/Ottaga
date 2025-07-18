@@ -2,7 +2,7 @@
 	import { page } from "$app/state";
 	import Menu from "$lib/icons/menu.svelte";
 	import Close from "$lib/icons/close.svelte";
-    import { onMount } from "svelte";
+	import { onMount } from "svelte";
 
 	let isMobile = $state(false);
 	let isOpen = $state(false);
@@ -98,7 +98,7 @@
 	}
 
 	.logo {
-		font-size: 2rem;
+		font-size: 1.8rem;
 		font-weight: 400;
 		color: var(--primary-color);
 		z-index: 101;
@@ -116,7 +116,7 @@
 	.mainNav a {
 		text-decoration: none;
 		color: var(--text-color);
-		font-size: 1.4rem;
+		font-size: 1.1rem;
 		transition: color 0.2s;
 		font-weight: 400;
 	}
@@ -185,6 +185,14 @@
 
 		.mainNav a {
 			font-size: 1.5rem;
+		}
+
+		.menu-toggle {
+			padding: none;
+		}
+
+		button {
+			padding: none;
 		}
 	}
 </style>

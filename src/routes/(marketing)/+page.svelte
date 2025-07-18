@@ -1,13 +1,15 @@
 <script lang="ts">
 	import MainHeadingBox from "$lib/components/marketing/mainPage/MainHeadingBox.svelte";
-	import SecondaryInfoBox from "$lib/components/marketing/mainPage/SecondaryInfoBox.svelte";
+	import InformationCards from "$lib/components/marketing/mainPage/InformationCards.svelte";
 	import InformationSelectBox from "$lib/components/marketing/mainPage/InformationSelectBox.svelte";
 	import Footer from "$lib/components/marketing/mainPage/Footer.svelte";
+    import FounderMessage from "$lib/components/marketing/mainPage/FounderMessage.svelte";
 </script>
 
 <div class="content">
 	<MainHeadingBox />
-	<SecondaryInfoBox />
+	<InformationCards />
+	<FounderMessage />
 	<InformationSelectBox />
 	<Footer />
 </div>

@@ -1,4 +1,3 @@
-<button aria-label="Open Menu">
     <svg
         clip-rule="evenodd"
         fill-rule="evenodd"
@@ -11,16 +10,8 @@
             fill-rule="nonzero"
         /></svg
     >
-</button>
 
 <style>
-    button {
-		z-index: 101;
-        outline: none;
-        background: none;
-        border: none;
-    }
-
     svg {
         width: 40px;
         height: auto;

@@ -8,17 +8,31 @@
 </script>
 
 <div class="content">
-	<Chat {chatID}/>
+	<div class="chat">
+		<Chat {chatID}/>
+	</div>
 </div>
 
 <style>
 	.content {
-		height: 90vh;
 		width: 100%;
+		min-height: 100vh;
+
 		display: flex;
-		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		padding-top: 3rem;
+		
+	}
+
+	.chat {
+		width: 60vw;
+		height: 85vh;
+		margin-top: 3rem;
+	}
+
+	@media (width < 800px) {
+		.chat {
+			width: 90vw;
+		}
 	}
 </style>

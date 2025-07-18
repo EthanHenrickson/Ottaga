@@ -108,19 +108,21 @@
 
     button {
         outline: none;
-        background: rgba(202, 233, 252, 0.8);
+        background: var(--AccentColorSecondary);
         cursor: pointer;
         border: none;
         border-bottom: 1px solid black;
         text-align: right;
         font-size: 1.1rem;
         padding: 1.1rem;
+        color: black;
         transition: background-color 0.2s;
     }
 
     button[aria-selected="true"] {
         box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.5);
-        background: rgba(117, 199, 250, 0.8);
+        background: var(--AccentColorPrimary);
+        color: white;
     }
 
     @media (max-width: 600px) {

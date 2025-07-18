@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { fade, fly } from "svelte/transition";
-
     let dataJson = {
         "Session Memory":
             "Experience personalized support with our AI that remembers important details from your conversations while maintaining complete privacy. Your chat history helps provide more meaningful responses, but all data is fully anonymized with no connection to your real identity. Must be signed in. Users may also opt out if they would prefer.",

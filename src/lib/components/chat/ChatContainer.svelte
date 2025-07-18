@@ -232,15 +232,6 @@
 		border-radius: 4px;
 	}
 
-	.sendButton {
-		padding: 10px 20px;
-		background-color: var(--AccentColorPrimary);
-		color: white;
-		border: none;
-		border-radius: 4px;
-		cursor: pointer;
-	}
-
 	.downButton {
 		border: none;
 		background: none;

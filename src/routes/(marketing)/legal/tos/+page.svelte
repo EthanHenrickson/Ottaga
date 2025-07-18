@@ -1,3 +1,14 @@
+<svelte:head>
+	<title>Ottaga | Terms of Service</title>
+
+	<meta
+		name="description"
+		content="Review Ottaga's terms of service for our AI mental health platform. Understand your rights, responsibilities, and our service guidelines."
+	/>
+	<meta name="keywords" content="terms of service, user agreement, mental health platform, AI support terms" />
+	<meta charset="UTF-8" />
+</svelte:head>
+
 <h1>Terms of Service</h1>
 
 <p><strong>Last Updated: May 31st, 2025</strong></p>

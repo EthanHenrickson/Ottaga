@@ -65,7 +65,7 @@
 
 	:global(p){
 		margin: .8rem 0px;
-	}
+  }
 
 	:global(button) {
 		padding: 0.7rem 1.5rem;

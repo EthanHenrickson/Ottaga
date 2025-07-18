@@ -1,5 +1,5 @@
 <svelte:head>
-    <title>AOttaga | Learn</title>
+    <title>Ottaga | Learn</title>
 
     <meta
         name="description"

@@ -1,12 +1,15 @@
 <svelte:head>
-	<title>AOttaga | Learn</title>
+    <title>Ottaga | Learn</title>
 
-	<meta
-		name="description"
-		content="Learn about Ottaga's approach to AI-powered mental health support. Discover our privacy-first principles, creator story, and commitment to your wellbeing."
-	/>
-	<meta name="keywords" content="about Ottaga, mental health mission, AI therapy, privacy-first, emotional support" />
-	<meta charset="UTF-8" />
+    <meta
+        name="description"
+        content="Learn about Ottaga's approach to AI-powered mental health support. Discover our privacy-first principles, creator story, and commitment to your wellbeing."
+    />
+    <meta
+        name="keywords"
+        content="about Ottaga, mental health mission, AI therapy, privacy-first, emotional support"
+    />
+    <meta charset="UTF-8" />
 </svelte:head>
 
 <h1>Our Approach to Mental Health Support</h1>
@@ -78,6 +81,11 @@
     <li>
         <strong>Personal commitment</strong> - Every feature and decision is made
         with genuine care for user wellbeing
+    </li>
+    <li>
+        <strong>Completely Free</strong> - Unlike other AI Health services we are
+        100% free. No hidden limits. No BS. This services is entirely funded by the
+        developer and donations. We want mental health too be accessible for everyone.
     </li>
 </ul>
 

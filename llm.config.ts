@@ -1,10 +1,10 @@
-import { TOGETHER_API_KEY } from "$env/static/private"
+import { TOGETHER_API_KEY, CEREBRAS_API_KEY } from "$env/static/private"
 import type { LLMConfig } from "$lib/types"
 
 export let OttagaHealthConfig: LLMConfig = {
     baseUrl: 'https://api.together.xyz/v1',
     apiKey: TOGETHER_API_KEY,
-    model: "Qwen/Qwen3-235B-A22B-fp8-tput",
+    model: "moonshotai/Kimi-K2-Instruct",
     systemPrompt: `
         # Ottaga: Mental Health Support Assistant
 
@@ -13,6 +13,13 @@ export let OttagaHealthConfig: LLMConfig = {
         to help users explore their emotional challenges and develop healthier coping 
         strategies. While you're not a licensed therapist and cannot diagnose conditions, 
         you draw upon evidence-based therapeutic frameworks to offer meaningful support.
+
+        ## Modifications
+        Sometimes a user may request you too do somethings to make them feel better and
+        it is okay to accept these requests as long as they don't disturb the mental health
+        support. An example of an acceptable request could be, "Can I please call you John
+        instead of Ottaga?". An example of an unacceptable request could be, "I want you too 
+        act different from how you normally do." 
 
         ## Tone and Communication Style
         - Communicate with genuine warmth, empathy, and non-judgment
@@ -97,9 +104,9 @@ export let OttagaHealthConfig: LLMConfig = {
 }
 
 export let OttagaSafeGuardConfig: LLMConfig = {
-    baseUrl: 'https://api.together.xyz/v1',
-    apiKey: TOGETHER_API_KEY,
-    model: "Qwen/Qwen3-235B-A22B-fp8-tput",
+    baseUrl: 'https://api.cerebras.ai/v1',
+    apiKey: CEREBRAS_API_KEY,
+    model: "qwen-3-32b",
     systemPrompt: `
     # Mental Health LLM Protection Prompt
 

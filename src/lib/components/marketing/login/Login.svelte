@@ -25,7 +25,7 @@
 <div class="login">
 	<div class="head">
 		<div class="loginMode">
-			{mode === "Login" ? "Login" : "Create Account"}
+			{mode === "Login" ? "Login" : "Register"}
 		</div>
 		<button
 			class="accountMode"
@@ -101,7 +101,7 @@
 				? "Login to account"
 				: "Create new account"}
 		>
-			{mode === "Login" ? "Login" : "Create"}
+			{mode === "Login" ? "Login" : "Register"}
 		</button>
 	</form>
 </div>
@@ -112,7 +112,7 @@
 		flex-direction: column;
 		padding: 4rem;
 
-		background-color: var(--MessageBackground-Assistant);
+		background-color:var(--AccentColorSecondary);
 		border-radius: 1rem;
 		filter: drop-shadow(rgb(116, 116, 116) 0.4rem 0.4rem .6rem);
 	}

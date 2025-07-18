@@ -8,16 +8,21 @@
 			</nav>
 			<nav aria-label="Legal information" class="section">
 				<h2 class="sr-only">Legal</h2>
-				<a href="/legal/tos" aria-label="Terms of Service">Terms of Service</a>
-				<a href="/legal/privacy" aria-label="Privacy Policy">Privacy Policy</a>
-				<a href="/legal/cookie" aria-label="Cookie Policy">Cookie Policy</a>
+				<a href="/legal/tos" aria-label="Terms of Service"
+					>Terms of Service</a
+				>
+				<a href="/legal/privacy" aria-label="Privacy Policy"
+					>Privacy Policy</a
+				>
+				<a href="/legal/cookie" aria-label="Cookie Policy"
+					>Cookie Policy</a
+				>
 			</nav>
 		</div>
 	</div>
 </footer>
 
 <style>
-
 	.content {
 		width: 100%;
 
@@ -46,7 +51,7 @@
 	a:hover {
 		text-decoration: underline;
 	}
-	
+
 	.sr-only {
 		position: absolute;
 		width: 1px;
@@ -57,5 +62,11 @@
 		clip: rect(0, 0, 0, 0);
 		white-space: nowrap;
 		border: 0;
+	}
+
+	@media (max-width: 600px) {
+		a {
+			font-size: 0.9rem;
+		}
 	}
 </style>

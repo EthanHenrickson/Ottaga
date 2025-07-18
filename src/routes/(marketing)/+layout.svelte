@@ -13,29 +13,31 @@
 	}
 </script>
 
-<div class="website">
-	<Nav />
-	<main>
-		{@render children?.()}
-	</main>
-</div>
+<Nav />
+<main>
+	{@render children?.()}
+</main>
 
 <style>
 	:global(:root) {
 		--MessageBackground-Assistant: #f5f5f5;
-		--MessageBackground-User: #e3f2fd;
+		--MessageBackground-User: #e4fde3;
 
-		--AccentColorPrimary: #3b97d0;	
-		--AccentColorSecondary: #7cc3f0;
+		--AccentColorPrimary: #00a62f;
+		--AccentColorSecondary: rgb(219, 255, 216);
 
 		--Orange400: rgb(255, 175, 65);
 
 		--text-color: black;
 	}
 
+	:global(html) {
+		scroll-behavior: smooth;
+	}
+
 	:global(body) {
 		margin: 0;
-		background-color: rgb(254, 252, 249);
+		background-color: #fff;
 	}
 
 	:global(h1) {
@@ -61,29 +63,28 @@
 		font-weight: bold;
 	}
 
+	:global(p){
+		margin: .8rem 0px;
+  }
+
 	:global(button) {
-		padding: .7rem 1.5rem;
+		padding: 0.7rem 1.5rem;
 		background-color: var(--AccentColorPrimary);
 		color: white;
-		border-radius: .4rem;
+		border-radius: 0.4rem;
 		cursor: pointer;
 		border: none;
-		font-size: .9rem;
+		font-size: 0.8rem;
 	}
 
-	:global(button:focus-visible, a:focus-visible) {
+	:global(button:focus-visible, a:focus-visible, input:focus-visible) {
 		outline: 2px solid var(--AccentColorPrimary) !important;
 		outline-offset: 2px;
-		border-radius: .25rem;
+		border-radius: 0.25rem;
 	}
 
 	main {
-		margin-left: auto;
-		margin-right: auto;
-		min-height: 90vh;
-	}
-
-	.website {
+		width: 100%;
 		min-height: 100vh;
 	}
 </style>

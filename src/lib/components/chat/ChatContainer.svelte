@@ -125,76 +125,93 @@
 {#snippet messageBox(message: Message)}
 	<div class="message {message.role}">
 		<strong>{message.role === "user" ? "You" : "Ottaga"}:</strong>
-		{@html marked.parse(message.content)}
+		<p>
+			{@html marked.parse(message.content)}
+		</p>
 	</div>
 {/snippet}
 
-<div class="chat-container">
-	<div
-		class="messages"
-		bind:this={chatMessageContainer}
-		onscroll={handleScroll}
-	>
-		{#each messageArray as message}
-			{@render messageBox(message)}
-		{/each}
+<div class="content">
 
-		{#if isLoading}
-			<div class="loadingMessageContainer">
-				<LoadingMessageContainer />
-			</div>
-		{/if}
-	</div>
-
-	<form onsubmit={handleSubmit} class="input-form">
-		<input
-			type="text"
-			bind:value={userMessageInput}
-			placeholder="Type your message..."
-			disabled={isLoading}
-		/>
-
-		<button class="sendButton" type="submit" disabled={isLoading}
-			>Send</button
+	<div class="chat-container">
+		<div
+			class="messages"
+			bind:this={chatMessageContainer}
+			onscroll={handleScroll}
 		>
-	</form>
+			{#each messageArray as message}
+				{@render messageBox(message)}
+			{/each}
+	
+			{#if isLoading}
+				<div class="loadingMessageContainer">
+					<LoadingMessageContainer />
+				</div>
+			{/if}
+		</div>
+	
+		<form onsubmit={handleSubmit} class="input-form">
+			<input
+				type="text"
+				bind:value={userMessageInput}
+				placeholder="Send a message"
+				disabled={isLoading}
+			/>
+	
+			<button class="sendButton" type="submit" disabled={isLoading}
+				>Send</button
+			>
+		</form>
+	</div>
 </div>
 
+
 <style>
-	@media (max-width: 800px) {
-		.chat-container {
-			padding: 10px !important;
-		}
+	.content {
+		height: 99%;
+		margin: 0px auto;
 	}
 
 	.chat-container {
-		height: 90%;
-		width: 90%;
-		max-width: 700px;
-		margin: 0 auto;
+		height: 100%;
+		max-width: 800px;
+		padding: 1rem;
 
 		display: flex;
 		flex-direction: column;
 
-		border: 2px solid #ccc;
-		border-radius: 4px;
+		border-left: 1px solid;
+		border-right: 1px solid;
+  		border-image: linear-gradient(to bottom, transparent 0%, var(--AccentColorPrimary) 10%, var(--AccentColorPrimary) 80%, transparent 90%) 1 100%;
 	}
 
 	.messages {
-		flex-grow: 1;
+		width: 100%;
+		height: 100%;
+
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+
 		overflow: scroll;
-		padding: 1rem;
-		padding-bottom: 0rem;
+
+		margin-bottom: 20px;
+		font-family: 'Times New Roman', Times, serif;
 	}
 
 	.message {
-		margin-bottom: 10px;
-		padding: 1rem;
-		border-radius: 1rem;
+		padding: 0.75rem;
+		border-radius: 0.75rem;
+		width: 80%;
+	}
+
+	.message strong {
+		font-weight: 600;
 	}
 
 	.message.user {
 		background-color: var(--MessageBackground-User);
+		align-self: end;
 	}
 
 	.message.assistant {
@@ -205,7 +222,6 @@
 		display: flex;
 		gap: 10px;
 		top: 0px;
-		padding: 1rem;
 		position: relative;
 	}
 

@@ -1,21 +1,23 @@
 <script lang="ts">
-    import { fly } from "svelte/transition";
 
 </script>
-<header class="content" aria-label="Main page header">
-    <div class="header" role="heading" aria-level="1">
-        <h1>We care about <span class="highlightYou" aria-hidden="true">you</span><span class="sr-only">you</span>.</h1>
+<header aria-label="Main page header">
+    <div class="content">
+        <div class="header" role="heading" aria-level="1">
+            <h1>We care about <span class="highlightYou" aria-hidden="true">you</span><span class="sr-only">you</span>.</h1>
+        </div>
+        <div class="messaging">
+            <p>Your digital mental health companion - always here, always free.</p>
+        </div>
+        <div class="getStarted">
+            <a href="/chat" class="conversationButton" role="button" aria-label="Start a conversation with Ottaga">Start a conversation</a>
+            <a href="#cards" class="learnButton" role="button" aria-label="Learn more about Ottaga">Learn More</a>
+        </div>
+        <div class="noSignUp">
+            No Sign Up Required. Get Support Instantly.
+        </div>
     </div>
-    <div class="messaging">
-        <p>Your digital mental health companion - always here, always free.</p>
-    </div>
-    <div class="getStarted">
-        <a href="/chat" class="conversationButton" role="button" aria-label="Start a conversation with Ottaga">Start a conversation</a>
-        <a href="/learn" class="learnButton" role="button" aria-label="Learn more about Ottaga">Learn More</a>
-    </div>
-    <div class="noSignUp">
-        No Sign Up Required. Get Support Instantly.
-    </div>
+    <div class="triangle"></div>
 </header>
 
 <style>
@@ -23,14 +25,18 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 100%;
         gap: 2rem;
-        height: 100vh;
+        height: 85vh;
         justify-content: center;
-        background: linear-gradient(
-			to bottom,
-			var(--AccentColorSecondary),
-			rgba(255, 255, 255, 0)
-		);
+        background-color: var(--AccentColorSecondary);
+    }
+
+    .triangle {
+        height: 6rem;
+        width: 100%;
+        clip-path: polygon(0 0,100% 100%,100% 0);
+        background-color: var(--AccentColorSecondary);
     }
 
     .highlightYou {
@@ -43,8 +49,8 @@
         text-decoration-color: var(--AccentColorPrimary);
         text-decoration-thickness: 3px;
         position: absolute;
-        color: transparent;
-        z-index: -1;
+        color: transparent  ;
+        z-index: 1;
         transform: translateY(-8px);
     }
     
@@ -62,7 +68,7 @@
 
     .header h1 {
         font-size: 6rem;
-        font-weight: 300;
+        font-weight: 400;
         margin: 0rem;
         text-align: center;
     }
@@ -75,7 +81,7 @@
     .messaging p {
         margin: 0px;
         font-weight: 300;
-        font-size: 1.7rem;
+        font-size: 1.6rem;
         text-align: center;
     }
 
@@ -99,14 +105,16 @@
 
     .noSignUp {
         transform: translateY(-1rem);
+        font-size: .9rem;
+        font-style: italic;
     }
 
     a {
         text-decoration: none;
         padding: 1rem 2rem;
         border-radius: 0.75rem;
-        font-size: 1.2rem;
-        font-weight: 500;
+        font-size: 1.1rem;
+        font-weight: 400;
         filter: drop-shadow(rgb(151, 151, 151) 0.4rem 0.5rem 7px);
         transition: all 0.25s;
     }
@@ -122,8 +130,12 @@
             justify-content: center;
         }
 
+        .messaging p{
+            font-size: 1.2rem;
+        }   
+
         .header h1 {
-            font-size: 3rem;
+            font-size: 2.6rem;
         }
 
         .highlightYou::before {
@@ -135,6 +147,12 @@
             color: transparent;
             z-index: -1;
             transform: translateY(-5px);
+        }
+
+        a {
+            font-size: 1rem;
+            padding: 1rem 2rem;
+        border-radius: 0.75rem;
         }
     }
 </style>

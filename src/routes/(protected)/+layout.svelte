@@ -12,8 +12,8 @@
 
 <style>
     :global(:root) {
-		--MessageBackground-Assistant: #f5f5f5;
-		--MessageBackground-User: #e3f2fd;
+		--MessageBackground-Assistant: #dfd9d9;
+		--MessageBackground-User: #d7e4ed;
 
 		--AccentColorPrimary: #2485c1;
 		--AccentColorSecondary: #e6f6fe;

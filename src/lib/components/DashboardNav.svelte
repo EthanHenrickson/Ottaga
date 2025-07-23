@@ -54,15 +54,15 @@
 					class:active={page.url.pathname === "/dashboard"}
 					aria-current={page.url.pathname === "/dashboard"
 						? "page"
-						: undefined}>Home</a
+						: undefined}>Dashboard</a
 				>
 				<a
-					href="/dashboard/session"
+					href="/dashboard/chat"
 					onclick={toggleMenu}
-					class:active={page.url.pathname === "/dashboard/session"}
-					aria-current={page.url.pathname === "/dashboard/session"
+					class:active={page.url.pathname === "/dashboard/chat"}
+					aria-current={page.url.pathname === "/dashboard/chat"
 						? "page"
-						: undefined}>Session</a
+						: undefined}>Chat</a
 				>
 				<a
 					href="/dashboard/profile"
@@ -85,14 +85,19 @@
 		align-items: center;
 		border-bottom: 1px solid var(--hover-bg);
 
-		backdrop-filter: blur(6px);
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+
+		backdrop-filter: blur(4px);
 		z-index: 100;
 		padding: 10px 4rem;
-		background-color: rgba(255, 255, 255, 0.068);
+		background-color: transparent;
 	}
 
 	.logo {
-		font-size: 1.7rem;
+		font-size: 1.8rem;
 		font-weight: 400;
 		color: var(--primary-color);
 		z-index: 101;
@@ -110,7 +115,7 @@
 	.mainNav a {
 		text-decoration: none;
 		color: var(--text-color);
-		font-size: 1.25rem;
+		font-size: 1.1rem;
 		transition: color 0.2s;
 		font-weight: 400;
 	}
@@ -179,6 +184,14 @@
 
 		.mainNav a {
 			font-size: 1.5rem;
+		}
+
+		.menu-toggle {
+			padding: none;
+		}
+
+		button {
+			padding: none;
 		}
 	}
 </style>

@@ -2,7 +2,7 @@
 	import type { Message } from "$lib/types";
 
 	import { marked } from "marked";
-	import { DecodeSSE } from "$lib/utility/SSEHelper";
+	import { DecodeSSE } from "$lib/utility/SSE/SSEHelper";
 	import { tick } from "svelte";
 	import LoadingMessageContainer from "./LoadingMessageContainer.svelte";
 
@@ -168,14 +168,18 @@
 
 <style>
 	.content {
-		height: 99%;
 		margin: 0px auto;
+
+		max-width: 800px;
+		width: 65VW;
+		height: 85vh;
 	}
 
 	.chat-container {
-		height: 100%;
-		max-width: 800px;
 		padding: 1rem;
+
+		width: 100%;
+		height: 100%;
 
 		display: flex;
 		flex-direction: column;

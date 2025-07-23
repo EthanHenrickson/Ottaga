@@ -1,35 +1,26 @@
 <script>
+	let { children } = $props();
+
+	import { browser } from "$app/environment";
+	import { beforeNavigate, afterNavigate } from "$app/navigation";
+	import { dev } from "$app/environment";
+	import posthog from "posthog-js";
     import DashboardNav from "$lib/components/DashboardNav.svelte";
-    let { children } = $props();
+
+	if (browser && !dev) {
+		beforeNavigate(() => posthog.capture("$pageleave"));
+		afterNavigate(() => posthog.capture("$pageview"));
+	}
 </script>
 
-<div class="content">
-    <div class="nav">
-        <DashboardNav />
-    </div>
-    {@render children?.()}
-</div>
+<DashboardNav />
+<main>
+	{@render children?.()}
+</main>
 
 <style>
-    :global(:root) {
-		--MessageBackground-Assistant: #dfd9d9;
-		--MessageBackground-User: #d7e4ed;
-
-		--AccentColorPrimary: #2485c1;
-		--AccentColorSecondary: #e6f6fe;
-
-		--Orange400: rgb(255, 175, 65);
-
-		--text-color: black;
+	main {
+		width: 100%;
+		min-height: 100vh;
 	}
-
-	:global(body) {
-		margin: 0;
-		font-family: "Open Sans", serif;
-	}
-    
-    .nav {
-        position: sticky;
-        top: 0;
-    }
 </style>

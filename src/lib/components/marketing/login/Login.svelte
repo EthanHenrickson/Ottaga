@@ -12,7 +12,7 @@
 
 	// State management for form mode
 	let mode = $state<FormMode>("Login");
-	let formMode = $derived<FormAction>(
+	let formAction = $derived<FormAction>(
 		mode === "Login" ? "?/login" : "?/signup",
 	);
 
@@ -42,7 +42,7 @@
 			<span class="clickHere">Click Here</span>
 		</button>
 	</div>
-	<form action={formMode} method="post">
+	<form method="POST" action={formAction}>
 		{#if mode === "SignUp"}
 			<br />
 			<div class="inputSection">

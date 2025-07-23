@@ -43,7 +43,7 @@ export type ChatTableRecord = {
 
 export type CookieTableRecord = {
     id: string;
-    userID: number;
+    userID: string;
     expireTime: number;
 };
 

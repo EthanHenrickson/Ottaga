@@ -3,8 +3,8 @@ import { OttagaHealthLLM, OttagaSafeGuardLLM } from '$lib/llm/Ottaga';
 import { json, type RequestHandler } from '@sveltejs/kit';
 
 import type { Message } from '$lib/types';
-import Analytics from '$lib/utility/ServerAnalytics';
-import { EncodeToSSE } from '$lib/utility/SSEHelper';
+import Analytics from '$lib/utility/analytics/ServerAnalytics';
+import { EncodeToSSE } from '$lib/utility/SSE/SSEHelper';
 
 export const POST: RequestHandler = async ({ request, }) => {
     //Get data from the request

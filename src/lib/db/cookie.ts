@@ -1,7 +1,7 @@
 import type { DatabaseResponse, DatabaseDataResponse, CookieTableRecord } from "$lib/types";
 import { v7 } from "uuid";
 import { BaseDatabase } from "./database";
-import Analytics from "$lib/utility/ServerAnalytics";
+import Analytics from "$lib/utility/analytics/ServerAnalytics";
 
 /**
  * Service for handling user authentication and cookie management

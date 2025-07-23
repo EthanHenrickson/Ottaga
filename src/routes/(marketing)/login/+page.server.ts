@@ -6,7 +6,8 @@ import argon2 from 'argon2';
 
 import type { NewUserTableRecord } from '$lib/types';
 import type { Actions } from './$types';
-import Analytics from '$lib/utility/ServerAnalytics';
+import Analytics from '$lib/utility/analytics/ServerAnalytics';
+import { AuthRateLimiterSingleton } from '$lib/utility/security/rateLimiter';
 
 const extractFormData = (data: FormData) => {
 	return {
@@ -29,6 +30,14 @@ export const actions = {
 
 	login: async ({ cookies, request }) => {
 		const { email, password } = extractFormData(await request.formData())
+		const isAllowed = AuthRateLimiterSingleton.isAllowed(email)
+
+		if (!isAllowed) {
+			return fail(422, {
+				error: 'Too many incorrect attempts, try again later.'
+			});
+		}
+
 		const user = await UserDatabase.getByEmail(email);
 
 		if (user.success && await argon2.verify(user.data.userRecord.hashedPassword, password)) {
@@ -47,7 +56,7 @@ export const actions = {
 			error: 'Incorrect username or password'
 		});
 	},
-	
+
 	/**
 	 * Handles new user registration
 	 * 

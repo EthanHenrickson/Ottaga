@@ -1,5 +1,5 @@
 import type { Message, MaliciousLLMResponse } from "$lib/types";
-import Analytics from "$lib/utility/ServerAnalytics";
+import Analytics from "$lib/utility/analytics/ServerAnalytics";
 import { OttagaAbstractBaseProvider } from "../providers/OttagaAbstractBaseProvider";
 
 export class OttagaSafeGuard {
@@ -37,7 +37,7 @@ export class OttagaSafeGuard {
                 returnResponse = ParseLLMResponse
 
                 if (ParseLLMResponse.isMalicious) {
-                    Analytics.capture({ distinctId: "Anon", event: "User attempted to send malicious message", properties: { message: message }})
+                    Analytics.capture({ distinctId: "Anon", event: "User attempted to send malicious message", properties: { message: message } })
                 }
             }
         } catch {

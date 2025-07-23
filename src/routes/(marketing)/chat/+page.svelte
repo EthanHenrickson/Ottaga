@@ -36,8 +36,6 @@
 	}
 
 	.chat {
-		width: 60vw;
-		height: 85vh;
 		margin-top: 3rem;
 	}
 

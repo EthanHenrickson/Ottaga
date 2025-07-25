@@ -2,7 +2,7 @@ import type { NewUserTableRecord, DatabaseResponse, DatabaseDataResponse, UserTa
 import { v4 } from "uuid";
 import { BaseDatabase } from "../database";
 import type { Updateable } from "kysely";
-import type { UserTable } from "$lib/databaseTypes";
+import type { UserTable } from "$lib/db/databaseTypes";
 
 /**
  * Service for handling user-related database operations

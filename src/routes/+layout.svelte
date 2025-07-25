@@ -60,12 +60,31 @@
 		border-radius: 0.4rem;
 		cursor: pointer;
 		border: none;
-		font-size: 0.8rem;
+		font-size: 0.9rem;
 	}
 
-	:global(button:focus-visible, a:focus-visible, input:focus-visible) {
+	:global(button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible) {
 		outline: 2px solid var(--AccentColorPrimary) !important;
 		outline-offset: 2px;
 		border-radius: 0.25rem;
 	}
+
+	:global(select){
+		padding: .2rem .7rem;
+		font-size: .9rem;
+
+		outline: none;
+		background-color: transparent;
+
+		border-bottom: 2px solid var(--AccentColorPrimary);
+		border-top: none;
+		border-right: none;
+		border-left: none;
+	}
+
+	:global(input[type="checkbox"]) {
+		accent-color: var(--AccentColorPrimary);
+	}
+
+
 </style>

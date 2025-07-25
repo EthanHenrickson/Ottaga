@@ -1,5 +1,5 @@
 
-import { CookieDatabase } from '$lib/db/cookie';
+import { CookieDatabase } from '$lib/db/cookie/cookie';
 import { redirect, type Handle } from '@sveltejs/kit';
 
 /**
@@ -13,21 +13,25 @@ import { redirect, type Handle } from '@sveltejs/kit';
  *
  */
 export const handle: Handle = async ({ event, resolve }) => {
-    // Skip authentication for auth routes or non-dashboard routes
-    if (event.url.pathname.startsWith('/api/auth') || !event.url.pathname.startsWith('/dashboard')) {
+
+    const ProtectedRoutes = ['/api', '/dashboard']
+    let isProtectedRoute = ProtectedRoutes.some(route => event.url.pathname.startsWith(route))
+
+    //Allow non protected routes and auth/llm api to be accessed by everyone
+    if (!isProtectedRoute || event.url.pathname.startsWith('/api/auth') || event.url.pathname.startsWith('/api/llm')){
         return resolve(event);
     }
 
     const cookieID = event.cookies.get('sessionID');
     if (!cookieID) {
         // No session cookie found - redirect to login
-        redirect(302, '/login');
+        redirect(303, '/login');
     }
 
     // Fetch the cookie details from the authentication database
     const databaseCookie = await CookieDatabase.getByID(cookieID);
     if (!databaseCookie.success) {
-        redirect(302, '/login');
+        redirect(303, '/login');
     }
 
     // Check if the session cookie is still valid based on expiration time
@@ -38,7 +42,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
         // Attach user information to the request locals for downstream use
         event.locals.user = {
-            id: databaseCookie.data.cookie.userID
+            id: databaseCookie.data.cookie.FK_userID
         };
 
         // Continue with the request processing

@@ -1,4 +1,4 @@
-import type { Database } from '$lib/databaseTypes'
+import type { Database } from '$lib/db/databaseTypes'
 import { POSTGRES_URL } from '$env/static/private';
 import { Pool } from 'pg';
 import { Kysely, PostgresDialect } from 'kysely';

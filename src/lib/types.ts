@@ -43,9 +43,18 @@ export type ChatTableRecord = {
 
 export type CookieTableRecord = {
     id: string;
-    userID: string;
+    FK_userID: string;
     expireTime: number;
 };
+
+export type UserSettingsTableRecord = {
+    FK_userID: string,
+    theme: string,
+    receiveCommunityDigest: boolean,
+    simplifiedLanguage: boolean,
+    reduceMotion: boolean,
+    saveConversations: boolean
+}
 
 export type Role = "user" | "assistant" | "system"
 

@@ -1,6 +1,6 @@
 import type { DatabaseResponse, DatabaseDataResponse, CookieTableRecord } from "$lib/types";
 import { v7 } from "uuid";
-import { BaseDatabase } from "./database";
+import { BaseDatabase } from "../database";
 import Analytics from "$lib/utility/analytics/ServerAnalytics";
 
 /**
@@ -14,7 +14,7 @@ class CookieDB extends BaseDatabase {
 
     /**
      * Create a new authentication cookie for a user
-     * @param {number} userID - The ID of the user the cookie belongs to
+     * @param {string} userID - The ID of the user the cookie belongs to
      * @returns {DatabaseDataResponse<string>} Response indicating success or failure with cookie uuid returned
      */
     async createCookie(userID: string): Promise<DatabaseDataResponse<string>> {

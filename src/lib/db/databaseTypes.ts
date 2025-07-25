@@ -6,7 +6,7 @@ import type {
     Selectable,
     Updateable,
 } from 'kysely'
-import type { Role } from './types'
+import type { Role } from '../types'
 
 //Overall database design
 export interface Database {
@@ -14,6 +14,7 @@ export interface Database {
     cookie: CookieTable
     message: MessageTable
     user: UserTable
+    user_settings: UserSettingsTable
 }
 
 //Chat table used to manage chats
@@ -74,4 +75,16 @@ export type User = Selectable<UserTable>
 export type NewUser = Insertable<UserTable>
 export type UserUpdate = Updateable<UserTable>
 
+//User Settings table used to manage user settings
+export interface UserSettingsTable {
+    FK_userID: string,
+    theme: ColumnType<string, never, string>
+    receiveCommunityDigest: ColumnType<boolean, never, boolean>
+    simplifiedLanguage: ColumnType<boolean, never, boolean>
+    reduceMotion: ColumnType<boolean, never, boolean>
+    saveConversations: ColumnType<boolean, never, boolean>
+}
 
+export type UserSettings = Selectable<UserSettingsTable>
+export type NewUserSettings = Insertable<UserSettingsTable>
+export type UserSettingsUpdate = Updateable<UserSettingsTable>

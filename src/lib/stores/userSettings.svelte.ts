@@ -1,48 +1,32 @@
 export type userSettings = {
-    preferences: {
-        theme: "Dark" | "Light",
-        language: string,
-        receiveCommunityDigest: boolean
-    },
-    accessibility: {
-        simplifiedLanguage: boolean,
-        reduceMotion: boolean,
-        // colorBlindMode: 'none' | 'deuteranopia' | 'protanopia' | 'tritanopia'
-    },
-    privacy: {
-        saveConversations: boolean,
-        //encryption: {
-        //    encryptDatabaseData: boolean,
-        //    hashedKey: string
-        //}
-    },
+    //preferences
+    // 'deuteranopia' | 'protanopia' | 'tritanopia'
+    theme: string,
+    receiveCommunityDigest: boolean
+    //Accessability
+    simplifiedLanguage: boolean,
+    reduceMotion: boolean,
+    //Privacy
+    saveConversations: boolean,
+    //LLM Memory: boolean
+    //encryption: {
+    //    encryptDatabaseData: boolean,
+    //    hashedKey: string
+    //}
 }
 
-export let userSettings: userSettings = $state({
-    preferences: {
-        theme: "Light",
-        language: "EN",
-        receiveCommunityDigest: true
-    },
-    accessibility: {
-        simplifiedLanguage: false,
-        reduceMotion: false,
-        // colorBlindMode: 'none'
-    },
-    privacy: {
-        saveConversations: true,
-        //allowDataExport: true,
-        //encryption: {
-        //    encryptDatabaseData: false,
-        //    hashedKey: ""
-        //}
-    },
+let userSettings: userSettings = $state({
+    theme: "Light",
+    receiveCommunityDigest: true,
+    simplifiedLanguage: false,
+    reduceMotion: false,
+    saveConversations: true,
 })
 
 export function getUserSettings(): userSettings {
     return userSettings
 }
 
-export function setUserSettings(newSettings: userSettings){
-    userSettings = userSettings
+export function setUserSettings(newSettings: userSettings) {
+    userSettings = newSettings
 }

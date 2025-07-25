@@ -15,47 +15,6 @@ export type DatabaseDataResponse<T> =
         data?: undefined;
     };
 
-export type NewUserTableRecord = {
-    name?: string;
-    email: string;
-    hashedPassword: string;
-};
-
-export type UserTableRecord = {
-    id: string;
-    name: string;
-    email: string;
-    hashedPassword: string;
-    created_at: Date;
-    details: string;
-    deleted: boolean
-}
-
-export type ChatTableRecord = {
-    id: string
-    FK_userID?: string
-    title?: string
-    description?: string
-    created_at: Date
-    modifiable: boolean
-    deleted: boolean
-}
-
-export type CookieTableRecord = {
-    id: string;
-    FK_userID: string;
-    expireTime: number;
-};
-
-export type UserSettingsTableRecord = {
-    FK_userID: string,
-    theme: string,
-    receiveCommunityDigest: boolean,
-    simplifiedLanguage: boolean,
-    reduceMotion: boolean,
-    saveConversations: boolean
-}
-
 export type Role = "user" | "assistant" | "system"
 
 export type Message = {

@@ -1,8 +1,7 @@
-import type { NewUserTableRecord, DatabaseResponse, DatabaseDataResponse, UserTableRecord } from "$lib/types";
-import { v4 } from "uuid";
+import type { DatabaseResponse, DatabaseDataResponse } from "$lib/types";
 import { BaseDatabase } from "../database";
 import type { Updateable } from "kysely";
-import type { UserTable } from "$lib/db/databaseTypes";
+import type { NewUser, User, UserTable } from "$lib/db/databaseTypes";
 
 /**
  * Service for handling user-related database operations
@@ -15,10 +14,10 @@ class UserDB extends BaseDatabase {
 
     /**
      * Create a new user in the database
-     * @param {NewUserTableRecord} userData - The user record to create
+     * @param {NewUser} userData - The user record to create
      * @returns {DatabaseDataResponse<{uuid: string}>} Response indicating success or failure of user creation and the uuid
      */
-    async createUser(userData: NewUserTableRecord): Promise<DatabaseDataResponse<{ uuid: string }>> {
+    async createUser(userData: NewUser): Promise<DatabaseResponse> {
         const existingUser = await this.getByEmail(userData.email);
         if (existingUser.success) {
 
@@ -28,16 +27,13 @@ class UserDB extends BaseDatabase {
             };
         }
 
-        const uuid = v4()
-
-        const query = this.db.insertInto("user").values({ id: uuid, name: userData.name, email: userData.email, hashedPassword: userData.hashedPassword })
+        const query = this.db.insertInto("user").values({ id: userData.id, name: userData.name, email: userData.email, hashedPassword: userData.hashedPassword })
         const result = await query.executeTakeFirst()
 
         if (result.numInsertedOrUpdatedRows == BigInt(1)) {
             return {
                 success: true,
                 message: 'User was created successfully',
-                data: { uuid: uuid }
             };
 
         } else {
@@ -53,11 +49,11 @@ class UserDB extends BaseDatabase {
     /**
      * Retrieve a user by their email address
      * @param {string} email - The email address to search for
-     * @returns {DatabaseDataResponse<{ userRecord: UserTableRecord }>} The user record if found
+     * @returns {DatabaseDataResponse<{ userRecord: User }>} The user record if found
      */
-    async getByEmail(email: string): Promise<DatabaseDataResponse<{ userRecord: UserTableRecord }>> {
+    async getByEmail(email: string): Promise<DatabaseDataResponse<{ userRecord: User }>> {
         const query = this.db.selectFrom("user").selectAll().where("email", "=", email)
-        const result = <UserTableRecord | undefined>await query.executeTakeFirst();
+        const result = <User | undefined>await query.executeTakeFirst();
         if (result) {
             return {
                 success: true,

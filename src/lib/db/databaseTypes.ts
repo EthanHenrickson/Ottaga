@@ -6,6 +6,7 @@ import type {
     Selectable,
     Updateable,
 } from 'kysely'
+
 import type { Role } from '../types'
 
 //Overall database design

@@ -35,7 +35,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     }
 
     // Check if the session cookie is still valid based on expiration time
-    const cookieValid = databaseCookie.data.cookie.expireTime > Date.now();
+    const cookieValid = databaseCookie.data.cookie.expireTime.getTime() > Date.now();
     if (cookieValid) {
         // Session is valid - refresh the cookie to extend its lifetime
         await CookieDatabase.updateByID(databaseCookie.data.cookie.id);

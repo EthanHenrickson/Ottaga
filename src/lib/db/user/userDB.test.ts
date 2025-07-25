@@ -1,10 +1,10 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { UserDatabase } from "./userDB";
-import type { NewUserTableRecord } from "$lib/types";
+import type { NewUser } from "$lib/types";
 import { faker } from '@faker-js/faker';
 
 describe("User Database Operations", () => {
-    let testUser: NewUserTableRecord;
+    let testUser: NewUser;
     let createdUserId: string;
 
     beforeEach(async () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DecodeSSE, EncodeToSSE } from "./SSE/SSEHelper";
+import { DecodeSSE, EncodeToSSE } from "./SSEHelper";
 
 describe("Should encode data", () => {
     it("Should encode a basic JSON", () => {

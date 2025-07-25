@@ -4,11 +4,12 @@ import { UserDatabase } from '$lib/db/user/userDB';
 import { fail, redirect } from '@sveltejs/kit';
 import argon2 from 'argon2';
 
-import type { NewUserTableRecord } from '$lib/types';
 import type { Actions } from './$types';
 import Analytics from '$lib/utility/analytics/ServerAnalytics';
 import { AuthRateLimiterSingleton } from '$lib/utility/security/rateLimiter';
 import { UserSettingsDatabase } from '$lib/db/userSettings/userSettingsDB';
+import type { NewUser } from '$lib/db/databaseTypes';
+import { v4 } from 'uuid';
 
 const extractFormData = (data: FormData) => {
 	return {
@@ -71,7 +72,8 @@ export const actions = {
 		const { email, password, name } = extractFormData(await request.formData())
 		const passwordHash = await argon2.hash(password, { timeCost: 2 });
 
-		const newUserData: NewUserTableRecord = {
+		const newUserData: NewUser = {
+			id: v4(),
 			name: name,
 			email: email,
 			hashedPassword: passwordHash,
@@ -79,7 +81,7 @@ export const actions = {
 
 		const result = await UserDatabase.createUser(newUserData);
 		if (result.success) {
-			await UserSettingsDatabase.createUserSettings(result.data.uuid)
+			await UserSettingsDatabase.createUserSettings(newUserData.id)
 		}
 
 		if (!result.success) {

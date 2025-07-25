@@ -1,8 +1,8 @@
-import type { DatabaseResponse, DatabaseDataResponse, UserSettingsTableRecord } from "$lib/types";
+import type { DatabaseResponse, DatabaseDataResponse } from "$lib/types";
 import { v4 } from "uuid";
 import { BaseDatabase } from "../database";
 import type { Updateable } from "kysely";
-import type { NewUserSettings, UserSettingsTable } from "$lib/db/databaseTypes";
+import type { NewUserSettings, UserSettings, UserSettingsTable } from "$lib/db/databaseTypes";
 
 /**
  * Service for handling user settings related database operations
@@ -27,7 +27,7 @@ class UserSettingsDB extends BaseDatabase {
             };
         }
 
-        const query = this.db.insertInto("user_settings").values({FK_userID: userID})
+        const query = this.db.insertInto("user_settings").values({ FK_userID: userID })
         const result = await query.executeTakeFirst()
 
         if (result.numInsertedOrUpdatedRows == BigInt(1)) {
@@ -49,11 +49,11 @@ class UserSettingsDB extends BaseDatabase {
     /**
      * Retrieve a user settings by their ID
      * @param {string} userID - The userID to search for their user settings
-     * @returns {DatabaseDataResponse<{ userSettingsRecord: UserSettingsTableRecord }>} The user settings record if found
+     * @returns {DatabaseDataResponse<{ userSettingsRecord: UserSettings }>} The user settings record if found
      */
-    async getByUserID(userID: string): Promise<DatabaseDataResponse<{ userSettingsRecord: UserSettingsTableRecord }>> {
+    async getByUserID(userID: string): Promise<DatabaseDataResponse<{ userSettingsRecord: UserSettings }>> {
         const query = this.db.selectFrom("user_settings").selectAll().where("FK_userID", "=", userID)
-        const result = <UserSettingsTableRecord | undefined>await query.executeTakeFirst();
+        const result = <UserSettings | undefined>await query.executeTakeFirst();
         if (result) {
             return {
                 success: true,

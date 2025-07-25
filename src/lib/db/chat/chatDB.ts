@@ -1,6 +1,7 @@
-import type { ChatTableRecord, DatabaseDataResponse, DatabaseResponse, Message, UserTableRecord } from "$lib/types";
+import type { DatabaseDataResponse, DatabaseResponse, Message } from "$lib/types";
 import { v4, v7 } from "uuid";
 import { BaseDatabase } from "../database";
+import type { Chat } from "../databaseTypes";
 
 class ChatDB extends BaseDatabase {
     constructor() {
@@ -35,11 +36,11 @@ class ChatDB extends BaseDatabase {
     /**
      * Retrieve a chat session by its ID
      * @param {string} chatID - The ID of the chat session to retrieve
-     * @returns {DatabaseDataResponse<{chatData: ChatTableRecord}>} Response containing the chat data if found
+     * @returns {DatabaseDataResponse<{chatData: Chat}>} Response containing the chat data if found
      */
-    async getByID(chatID: string): Promise<DatabaseDataResponse<{ chatData: ChatTableRecord }>> {
+    async getByID(chatID: string): Promise<DatabaseDataResponse<{ chatData: Chat }>> {
         const query = this.db.selectFrom("chat").selectAll().where("id", "=", chatID)
-        const result = <ChatTableRecord | undefined>await query.executeTakeFirst()
+        const result = <Chat | undefined>await query.executeTakeFirst()
 
         if (result) {
             return {

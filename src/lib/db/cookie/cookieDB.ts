@@ -1,7 +1,8 @@
-import type { DatabaseResponse, DatabaseDataResponse, CookieTableRecord } from "$lib/types";
+import type { DatabaseResponse, DatabaseDataResponse } from "$lib/types";
 import { v7 } from "uuid";
 import { BaseDatabase } from "../database";
 import Analytics from "$lib/utility/analytics/ServerAnalytics";
+import type { Cookie } from "../databaseTypes";
 
 /**
  * Service for handling user authentication and cookie management
@@ -69,11 +70,11 @@ class CookieDB extends BaseDatabase {
     /**
      * Retrieve a cookie by its ID
      * @param {string} cookieID - The ID of the cookie to retrieve
-     * @returns {DatabaseDataResponse<CookieTableRecord>} The cookie record if found
+     * @returns {DatabaseDataResponse<Cookie>} The cookie record if found
      */
-    async getByID(cookieID: string): Promise<DatabaseDataResponse<{ cookie: CookieTableRecord }>> {
+    async getByID(cookieID: string): Promise<DatabaseDataResponse<{ cookie: Cookie }>> {
         const query = this.db.selectFrom("cookie").selectAll().where("id", "=", cookieID)
-        const result = <CookieTableRecord | undefined>await query.executeTakeFirst()
+        const result = <Cookie | undefined>await query.executeTakeFirst()
 
         if (result) {
             return {

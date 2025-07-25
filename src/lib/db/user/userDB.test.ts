@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import { UserDatabase } from "./user";
+import { UserDatabase } from "./userDB";
 import type { NewUserTableRecord } from "$lib/types";
 import { faker } from '@faker-js/faker';
 

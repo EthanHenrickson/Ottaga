@@ -1,6 +1,6 @@
 import type { PageServerLoad } from "./$types";
 import { OttagaHealthLLM } from "$lib/llm/Ottaga";
-import { ChatDatabase } from "$lib/db/chat/chat";
+import { ChatDatabase } from "$lib/db/chat/chatDB";
 
 export const load: PageServerLoad = async () => {
     let chatID: string

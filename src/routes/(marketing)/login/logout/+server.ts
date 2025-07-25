@@ -1,5 +1,5 @@
 import { redirect } from '@sveltejs/kit';
-import { CookieDatabase } from '$lib/db/cookie/cookie';
+import { CookieDatabase } from '$lib/db/cookie/cookieDB';
 
 import type { RequestHandler } from './$types';
 

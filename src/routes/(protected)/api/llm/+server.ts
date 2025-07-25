@@ -1,4 +1,4 @@
-import { ChatDatabase } from '$lib/db/chat/chat';
+import { ChatDatabase } from '$lib/db/chat/chatDB';
 import { OttagaHealthLLM, OttagaSafeGuardLLM } from '$lib/llm/Ottaga';
 import { json, type RequestHandler } from '@sveltejs/kit';
 

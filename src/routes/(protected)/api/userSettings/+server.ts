@@ -1,5 +1,5 @@
 import type { UserSettingsTable } from "$lib/db/databaseTypes";
-import { UserSettingsDatabase } from "$lib/db/userSettings/userSettings";
+import { UserSettingsDatabase } from "$lib/db/userSettings/userSettingsDB";
 import type { UserSettingsTableRecord } from "$lib/types";
 import { json, type RequestHandler } from "@sveltejs/kit";
 

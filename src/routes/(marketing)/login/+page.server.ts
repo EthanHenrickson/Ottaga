@@ -1,6 +1,6 @@
 /** @type {import('./$types').Actions} */
-import { CookieDatabase } from '$lib/db/cookie/cookie';
-import { UserDatabase } from '$lib/db/user/user';
+import { CookieDatabase } from '$lib/db/cookie/cookieDB';
+import { UserDatabase } from '$lib/db/user/userDB';
 import { fail, redirect } from '@sveltejs/kit';
 import argon2 from 'argon2';
 
@@ -8,7 +8,7 @@ import type { NewUserTableRecord } from '$lib/types';
 import type { Actions } from './$types';
 import Analytics from '$lib/utility/analytics/ServerAnalytics';
 import { AuthRateLimiterSingleton } from '$lib/utility/security/rateLimiter';
-import { UserSettingsDatabase } from '$lib/db/userSettings/userSettings';
+import { UserSettingsDatabase } from '$lib/db/userSettings/userSettingsDB';
 
 const extractFormData = (data: FormData) => {
 	return {
@@ -78,7 +78,7 @@ export const actions = {
 		};
 
 		const result = await UserDatabase.createUser(newUserData);
-		if(result.success){
+		if (result.success) {
 			await UserSettingsDatabase.createUserSettings(result.data.uuid)
 		}
 

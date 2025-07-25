@@ -1,5 +1,5 @@
 
-import { CookieDatabase } from '$lib/db/cookie/cookie';
+import { CookieDatabase } from '$lib/db/cookie/cookieDB';
 import { redirect, type Handle } from '@sveltejs/kit';
 
 /**
@@ -18,7 +18,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     let isProtectedRoute = ProtectedRoutes.some(route => event.url.pathname.startsWith(route))
 
     //Allow non protected routes and auth/llm api to be accessed by everyone
-    if (!isProtectedRoute || event.url.pathname.startsWith('/api/auth') || event.url.pathname.startsWith('/api/llm')){
+    if (!isProtectedRoute || event.url.pathname.startsWith('/api/auth') || event.url.pathname.startsWith('/api/llm')) {
         return resolve(event);
     }
 

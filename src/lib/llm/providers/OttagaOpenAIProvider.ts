@@ -1,4 +1,4 @@
-import type { CompletionResponse, LLMConfig, Message, StreamingResponse } from "$lib/types";
+import type { CompletionResponse, LLMConfig, ChatMessage, StreamingResponse } from "$lib/types";
 import OpenAI from "openai";
 import { OttagaAbstractBaseProvider } from "./OttagaAbstractBaseProvider";
 
@@ -6,7 +6,7 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
     protected client: OpenAI
 
     constructor(llmConfig: LLMConfig) {
-        
+
         super(llmConfig);
 
         this.client = new OpenAI({
@@ -18,11 +18,11 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
     /**
      * Calls the OpenAI chat completion API without streaming.
      *
-     * @param {Message[]} messages - Array of message objects representing the conversation history
+     * @param {ChatMessage[]} messages - Array of message objects representing the conversation history
      * @returns {Promise<CompletionResponse<string>>} Promise resolving to completion response object
      */
-    async callCompletion(messages: Message[], showReasoningTokens = false): Promise<CompletionResponse<string>> {
-        let apiMessageArray = [{ role: "system", content: this.systemPrompt }, ...messages] as Message[]
+    async callCompletion(messages: ChatMessage[], showReasoningTokens = false): Promise<CompletionResponse<string>> {
+        let apiMessageArray = [{ role: "system", content: this.systemPrompt }, ...messages] as ChatMessage[]
 
         const apiResponse = await this.client.chat.completions.create({
             model: this.model,
@@ -52,15 +52,15 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
      * Calls the OpenAI chat completion API with streaming enabled.
      * Returns an async generator that yields streaming response chunks.
      *
-     * @param {Message[]} messages - Array of message objects representing the conversation history
+     * @param {ChatMessage[]} messages - Array of message objects representing the conversation history
      * @yields {StreamingResponse<string>} Yields streaming response objects containing either:
      *   - Success with partial completion data (string)
      *   - Failure indication when no valid chunk is available
      * @returns {AsyncGenerator<StreamingResponse<string>>} Async generator for streaming responses
      */
-    async *callStreaming(messages: Message[], showReasoningTokens = false): AsyncGenerator<StreamingResponse<string>> {
+    async *callStreaming(messages: ChatMessage[], showReasoningTokens = false): AsyncGenerator<StreamingResponse<string>> {
         let isReasoning = false
-        let apiMessageArray = [{ role: "system", content: this.systemPrompt }, ...messages] as Message[]
+        let apiMessageArray = [{ role: "system", content: this.systemPrompt }, ...messages] as ChatMessage[]
 
         const apiResponse = await this.client.chat.completions.create({
             model: this.model,

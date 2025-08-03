@@ -1,12 +1,12 @@
 import { redirect } from '@sveltejs/kit';
-import { CookieDatabase } from '$lib/db/cookie/cookieDB';
 
 import type { RequestHandler } from './$types';
+import { CookieServiceSingleton } from '$lib/server/db/Services/Implementations/CookieService';
 
 export const GET: RequestHandler = async ({ cookies }) => {
 	const cookieID = cookies.get('sessionID') || ''
 
-	await CookieDatabase.deleteByID(cookieID);
+	await CookieServiceSingleton.DeleteCookieByID(cookieID);
 
 	cookies.delete('sessionID', { path: '/' });
 	redirect(302, '/');

@@ -1,13 +1,13 @@
-import type { Database } from '$lib/db/databaseTypes'
 import { POSTGRES_URL } from '$env/static/private';
 import { Pool } from 'pg';
 import { Kysely, PostgresDialect } from 'kysely';
+import type { Database } from '../databaseTypes';
 
 /**
  * Base class for database services providing a singleton database connection
  * Ensures a single database instance is used across all service instances
  */
-export abstract class BaseDatabase {
+export abstract class BaseDatabaseRepository {
     /** The database connection instance */
     protected db;
     /** Singleton database instance */
@@ -15,7 +15,7 @@ export abstract class BaseDatabase {
 
     constructor() {
         // Check if database instance is null and create if necessary
-        if (!BaseDatabase.dbInstance) {
+        if (!BaseDatabaseRepository.dbInstance) {
             const dialect = new PostgresDialect({
                 pool: new Pool({
                     connectionString: POSTGRES_URL,
@@ -24,7 +24,7 @@ export abstract class BaseDatabase {
 
             try {
                 // Create a new database connection
-                BaseDatabase.dbInstance = new Kysely<Database>({
+                BaseDatabaseRepository.dbInstance = new Kysely<Database>({
                     dialect,
                 })
             } catch (error) {
@@ -33,6 +33,6 @@ export abstract class BaseDatabase {
             }
         }
         // Set database to the single db instance
-        this.db = BaseDatabase.dbInstance;
+        this.db = BaseDatabaseRepository.dbInstance;
     }
 }

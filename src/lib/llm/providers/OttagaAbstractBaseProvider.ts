@@ -1,4 +1,4 @@
-import type { CompletionResponse, LLMConfig, Message, StreamingResponse } from "$lib/types";
+import type { CompletionResponse, LLMConfig, ChatMessage, StreamingResponse } from "$lib/types";
 
 export class OttagaAbstractBaseProvider {
     protected systemPrompt: string;
@@ -16,22 +16,22 @@ export class OttagaAbstractBaseProvider {
     /**
      * Abstract method for synchronous completion requests.
      * Must be implemented by concrete subclasses.
-     * @param {Message[]} messages - Array of message objects for context
+     * @param {ChatMessage[]} messages - Array of message objects for context
      * @returns {Promise<CompletionResponse<string>>} Promise resolving to completion response
      * @throws {Error} When not implemented
      */
-    callCompletion(messages: Message[], showReasoningTokens = false): Promise<CompletionResponse<string>> {
+    callCompletion(messages: ChatMessage[], showReasoningTokens = false): Promise<CompletionResponse<string>> {
         throw new Error("Not implemented");
     }
-    
+
     /**
      * Abstract method for streaming completion requests.
      * Must be implemented by concrete subclasses.
-     * @param {Message[]} messages - Array of message objects for context
+     * @param {ChatMessage[]} messages - Array of message objects for context
      * @returns {AsyncGenerator<StreamingResponse<string>>} Async generator yielding streaming response chunks
      * @throws {Error} When not implemented
      */
-    callStreaming(messages: Message[], showReasoningTokens = false): AsyncGenerator<StreamingResponse<string>> {
+    callStreaming(messages: ChatMessage[], showReasoningTokens = false): AsyncGenerator<StreamingResponse<string>> {
         throw new Error("Not implemented");
     }
 

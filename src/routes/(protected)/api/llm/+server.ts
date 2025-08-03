@@ -1,25 +1,30 @@
-import { ChatDatabase } from '$lib/db/chat/chatDB';
 import { OttagaHealthLLM, OttagaSafeGuardLLM } from '$lib/llm/Ottaga';
 import { json, type RequestHandler } from '@sveltejs/kit';
 
-import type { Message } from '$lib/types';
+import type { ChatMessage } from '$lib/types';
 import Analytics from '$lib/utility/analytics/ServerAnalytics';
 import { EncodeToSSE } from '$lib/utility/SSE/SSEHelper';
+import { ChatServiceSingleton } from '$lib/server/db/Services/Implementations/ChatService';
+import { CreateMessageDTO } from '$lib/server/db/Services/DTOs/Message';
 
-export const POST: RequestHandler = async ({ request, }) => {
+export const POST: RequestHandler = async ({ request, locals }) => {
     //Get data from the request
     const data = await request.json();
     const chatID = data.chatID
-    const newMessage: Message = {
+    const newMessage: ChatMessage = {
         role: "user",
         content: data.messageInput
     }
 
     //Retrieve all previous messages and add them too the conversation
-    let previousMessages: Message[] = []
-    const databaseResponse = await ChatDatabase.getChatMessagesByID(chatID)
-    if (databaseResponse.success) {
-        previousMessages = [...databaseResponse.data.messages]
+    let previousMessages: ChatMessage[] = []
+    const databaseResponse = await ChatServiceSingleton.GetChatMessagesByID(null, chatID)
+    if (databaseResponse.success && databaseResponse.data) {
+        const databaseMessages = databaseResponse.data.messages
+
+        for (let item of databaseMessages) {
+            previousMessages.push(item.ToChatMessage())
+        }
     }
 
     const stream = new ReadableStream({
@@ -42,8 +47,8 @@ export const POST: RequestHandler = async ({ request, }) => {
                             finalGeneratedResponse += messageChunk.data
                         }
                     }
-                    ChatDatabase.addChatMessage(chatID, newMessage)
-                    ChatDatabase.addChatMessage(chatID, { role: 'assistant', content: finalGeneratedResponse })
+                    ChatServiceSingleton.CreateChatMessage(null, new CreateMessageDTO(chatID, newMessage.role, newMessage.content))
+                    ChatServiceSingleton.CreateChatMessage(null, new CreateMessageDTO(chatID, 'assistant', finalGeneratedResponse))
                 }
 
                 controller.enqueue(EncodeToSSE("[DONE]"));

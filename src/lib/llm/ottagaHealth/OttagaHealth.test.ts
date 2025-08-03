@@ -1,4 +1,4 @@
-import type { Message } from "$lib/types";
+import type { ChatMessage } from "$lib/types";
 import { OttagaHealthLLM } from "../Ottaga";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -23,7 +23,7 @@ it("Should stream with the correct data", async () => {
         yield { success: true, data: "test." }
     });
 
-    let newMessage: Message = { role: "user", content: "Hi there" }
+    let newMessage: ChatMessage = { role: "user", content: "Hi there" }
     let OttagaHealthResponse = OttagaHealthLLM.SendMessage([newMessage])
 
     let resultMessage = ""

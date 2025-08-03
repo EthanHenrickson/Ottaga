@@ -1,5 +1,5 @@
 
-import { CookieDatabase } from '$lib/db/cookie/cookieDB';
+import { CookieServiceSingleton } from '$lib/server/db/Services/Implementations/CookieService';
 import { redirect, type Handle } from '@sveltejs/kit';
 
 /**
@@ -17,8 +17,9 @@ export const handle: Handle = async ({ event, resolve }) => {
     const ProtectedRoutes = ['/api', '/dashboard']
     let isProtectedRoute = ProtectedRoutes.some(route => event.url.pathname.startsWith(route))
 
+    let isAuthRoute = event.url.pathname.startsWith('/api/auth') || event.url.pathname.startsWith('/api/llm');
     //Allow non protected routes and auth/llm api to be accessed by everyone
-    if (!isProtectedRoute || event.url.pathname.startsWith('/api/auth') || event.url.pathname.startsWith('/api/llm')) {
+    if (!isProtectedRoute || isAuthRoute) {
         return resolve(event);
     }
 
@@ -29,27 +30,27 @@ export const handle: Handle = async ({ event, resolve }) => {
     }
 
     // Fetch the cookie details from the authentication database
-    const databaseCookie = await CookieDatabase.getByID(cookieID);
-    if (!databaseCookie.success) {
+    const databaseCookie = await CookieServiceSingleton.GetCookieByID(cookieID);
+    if (!databaseCookie.success || !databaseCookie.data) {
         redirect(303, '/login');
     }
 
     // Check if the session cookie is still valid based on expiration time
-    const cookieValid = databaseCookie.data.cookie.expireTime.getTime() > Date.now();
+    const cookieValid = databaseCookie.data.expireTime.getTime() > Date.now();
     if (cookieValid) {
         // Session is valid - refresh the cookie to extend its lifetime
-        await CookieDatabase.updateByID(databaseCookie.data.cookie.id);
+        await CookieServiceSingleton.UpdateCookieByID(databaseCookie.data.cookieID);
 
         // Attach user information to the request locals for downstream use
         event.locals.user = {
-            id: databaseCookie.data.cookie.FK_userID
+            id: databaseCookie.data.cookieID
         };
 
         // Continue with the request processing
         return resolve(event);
     } else {
         // Session has expired - remove the invalid cookie
-        await CookieDatabase.deleteByID(databaseCookie.data.cookie.id);
+        await CookieServiceSingleton.DeleteCookieByID(databaseCookie.data.cookieID);
 
         // Redirect to login for expired sessions
         redirect(302, '/login');

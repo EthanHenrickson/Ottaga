@@ -9,7 +9,6 @@ export class LoginMap extends BaseMap {
 
     async GoTo() {
         await this.page.goto('/login')
-        //await this.page.waitForLoadState('networkidle')
     }
 
     async CreateAccount(name: string, email: string, password: string) {
@@ -29,5 +28,10 @@ export class LoginMap extends BaseMap {
 
         await this.page.getByRole("button", {name: 'Login'}).click()
         expect(this.page.url()).toContain('dashboard')
+    }
+
+    async Logout(){
+        await this.page.goto("/login/logout")
+        expect(this.page.url()).toContain('/')
     }
 }

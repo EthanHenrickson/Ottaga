@@ -1,4 +1,4 @@
-import type { Message, StreamingResponse } from "$lib/types";
+import type { ChatMessage, StreamingResponse } from "$lib/types";
 import type { OttagaAbstractBaseProvider } from '../providers/OttagaAbstractBaseProvider';
 
 /**
@@ -20,7 +20,7 @@ export class OttagaHealth {
      * @returns A Promise resolving to an object containing the model's response as a Message
      * @throws Error if the model's response is undefined
      */
-    async *SendMessage(messages: Message[]): AsyncGenerator<StreamingResponse<string>> {
+    async *SendMessage(messages: ChatMessage[]): AsyncGenerator<StreamingResponse<string>> {
         //Get LLM response message
         const chatResponse = this.llmProviderInstance.callStreaming(messages)
 

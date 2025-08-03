@@ -1,15 +1,13 @@
 /** @type {import('./$types').Actions} */
-import { CookieDatabase } from '$lib/db/cookie/cookieDB';
-import { UserDatabase } from '$lib/db/user/userDB';
 import { fail, redirect } from '@sveltejs/kit';
 import argon2 from 'argon2';
 
 import type { Actions } from './$types';
 import Analytics from '$lib/utility/analytics/ServerAnalytics';
 import { AuthRateLimiterSingleton } from '$lib/utility/security/rateLimiter';
-import { UserSettingsDatabase } from '$lib/db/userSettings/userSettingsDB';
-import type { NewUser } from '$lib/db/databaseTypes';
-import { v4 } from 'uuid';
+import { UserServiceSingleton } from '$lib/server/db/Services/Implementations/UserService';
+import { CookieServiceSingleton } from '$lib/server/db/Services/Implementations/CookieService';
+import { CreateUserDTO } from '$lib/server/db/Services/DTOs/User';
 
 const extractFormData = (data: FormData) => {
 	return {
@@ -40,13 +38,19 @@ export const actions = {
 			});
 		}
 
-		const user = await UserDatabase.getByEmail(email);
+		const user = await UserServiceSingleton.GetByEmail(email);
 
-		if (user.success && await argon2.verify(user.data.userRecord.hashedPassword, password)) {
-			const cookieResponse = await CookieDatabase.createCookie(user.data.userRecord.id);
+		if (user.success && user.data) {
+			const dbResponse = await argon2.verify(user.data?.hashedPassword, password)
+			if(!dbResponse){
+				return fail(422, {
+					error: 'Incorrect username or password'
+				});
+			}
+			const cookieResponse = await CookieServiceSingleton.CreateCookie(user.data.id);
 
-			if (cookieResponse.success) {
-				cookies.set('sessionID', cookieResponse.data, { path: '/' });
+			if (cookieResponse.success && cookieResponse.data) {
+				cookies.set('sessionID', cookieResponse.data.cookieID, { path: '/' });
 				redirect(302, '/dashboard');
 			} else {
 				Analytics.captureException("Failed to create cookie in database")
@@ -70,19 +74,11 @@ export const actions = {
 	 */
 	signup: async ({ request }) => {
 		const { email, password, name } = extractFormData(await request.formData())
-		const passwordHash = await argon2.hash(password, { timeCost: 2 });
 
-		const newUserData: NewUser = {
-			id: v4(),
-			name: name,
-			email: email,
-			hashedPassword: passwordHash,
-		};
+		const userDTO = new CreateUserDTO(name, email, password)
 
-		const result = await UserDatabase.createUser(newUserData);
-		if (result.success) {
-			await UserSettingsDatabase.createUserSettings(newUserData.id)
-		}
+		const result = await UserServiceSingleton.Create(userDTO);
+
 
 		if (!result.success) {
 			return fail(422, {

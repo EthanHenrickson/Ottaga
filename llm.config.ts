@@ -4,7 +4,7 @@ import type { LLMConfig } from "$lib/types"
 export let OttagaHealthConfig: LLMConfig = {
     baseUrl: 'https://api.together.xyz/v1',
     apiKey: TOGETHER_API_KEY,
-    model: "moonshotai/Kimi-K2-Instruct",
+    model: "Qwen/Qwen3-235B-A22B-Instruct-2507-tput",
     systemPrompt: `
         # Ottaga: Mental Health Support Assistant
 

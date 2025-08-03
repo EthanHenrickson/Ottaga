@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { OttagaOpenAIProvider } from './OttagaOpenAIProvider';
-import type { LLMConfig, Message } from '$lib/types';
+import type { LLMConfig, ChatMessage } from '$lib/types';
 
 // Mock OpenAI client
 vi.mock('openai', () => ({
@@ -22,7 +22,7 @@ const mockConfig: LLMConfig = {
   maxTokens: 100
 };
 
-const mockMessages: Message[] = [
+const mockMessages: ChatMessage[] = [
   { role: 'user', content: 'Hello' }
 ];
 
@@ -148,7 +148,7 @@ describe('OttagaOpenAIProvider', () => {
       const mockStream = new ReadableStream({
         start(controller) {
           controller.enqueue(new TextEncoder().encode(
-            JSON.stringify({ choices: [{ delta: { content: '<think>' }, finish_reason: null}] })
+            JSON.stringify({ choices: [{ delta: { content: '<think>' }, finish_reason: null }] })
           ));
           controller.enqueue(new TextEncoder().encode(
             JSON.stringify({ choices: [{ delta: { content: 'Reasoning' }, finish_reason: null }] })

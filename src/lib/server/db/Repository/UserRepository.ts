@@ -1,32 +1,27 @@
-import type { DatabaseResponse, DatabaseDataResponse } from "$lib/types";
-import { BaseDatabase } from "../database";
-import type { Updateable } from "kysely";
-import type { NewUser, User, UserTable } from "$lib/db/databaseTypes";
+import type { DatabaseResponse, DatabaseDataResponse, ServiceResult } from "$lib/types";
+import { BaseDatabaseRepository } from "./BaseDatabaseRepository";
+import type { CreateUser, User, UpdateUser } from "../databaseTypes";
 
-/**
- * Service for handling user-related database operations
- * @extends BaseDatabase
- */
-class UserDB extends BaseDatabase {
+
+export interface IUserRepository {
+    Create(userData: CreateUser): Promise<DatabaseResponse>
+    Update(id: string, updatedData: UpdateUser): Promise<DatabaseResponse>
+    Delete(id: string): Promise<DatabaseResponse>
+
+    GetByUserID(id: string): Promise<ServiceResult<User>>
+
+    GetByEmail(email: string): Promise<DatabaseDataResponse<User>>
+    UpdateByEmail(email: string, updatedData: UpdateUser): Promise<DatabaseResponse>
+    DeleteByEmail(email: string): Promise<DatabaseResponse>
+}
+
+
+class UserDBRepository extends BaseDatabaseRepository {
     constructor() {
         super()
     }
 
-    /**
-     * Create a new user in the database
-     * @param {NewUser} userData - The user record to create
-     * @returns {DatabaseDataResponse<{uuid: string}>} Response indicating success or failure of user creation and the uuid
-     */
-    async createUser(userData: NewUser): Promise<DatabaseResponse> {
-        const existingUser = await this.getByEmail(userData.email);
-        if (existingUser.success) {
-
-            return {
-                success: false,
-                message: 'Email already in use'
-            };
-        }
-
+    async Create(userData: CreateUser): Promise<DatabaseResponse> {
         const query = this.db.insertInto("user").values({ id: userData.id, name: userData.name, email: userData.email, hashedPassword: userData.hashedPassword })
         const result = await query.executeTakeFirst()
 
@@ -46,19 +41,14 @@ class UserDB extends BaseDatabase {
         }
     }
 
-    /**
-     * Retrieve a user by their email address
-     * @param {string} email - The email address to search for
-     * @returns {DatabaseDataResponse<{ userRecord: User }>} The user record if found
-     */
-    async getByEmail(email: string): Promise<DatabaseDataResponse<{ userRecord: User }>> {
+    async GetByEmail(email: string): Promise<DatabaseDataResponse<User>> {
         const query = this.db.selectFrom("user").selectAll().where("email", "=", email)
         const result = <User | undefined>await query.executeTakeFirst();
         if (result) {
             return {
                 success: true,
                 message: 'User was retrieved successfully',
-                data: { userRecord: result }
+                data: result
             };
 
         } else {
@@ -69,13 +59,25 @@ class UserDB extends BaseDatabase {
         }
     }
 
-    /**
-     * Update a user record by ID
-     * @param {string} id - The ID of the user to update
-     * @param {Updateable<UserTable>} updatedData - The fields to update
-     * @returns {DatabaseResponse} Response indicating success or failure of update
-     */
-    async updateByID(id: string, updatedData: Updateable<UserTable>): Promise<DatabaseResponse> {
+    async GetByUserID(id: string) : Promise<ServiceResult<User>> {
+        const query = this.db.selectFrom("user").selectAll().where("id", "=", id)
+        const result = <User | undefined>await query.executeTakeFirst();
+        if (result) {
+            return {
+                success: true,
+                message: 'User was retrieved successfully',
+                data: result
+            };
+
+        } else {
+            return {
+                success: false,
+                message: "Couldn't find user"
+            };
+        }
+    }
+
+    async Update(id: string, updatedData: UpdateUser): Promise<DatabaseResponse> {
         const query = this.db.updateTable("user").set(updatedData).where("id", "=", id)
         const result = await query.executeTakeFirst()
 
@@ -92,13 +94,7 @@ class UserDB extends BaseDatabase {
         }
     }
 
-    /**
-     * Update a user record by email
-     * @param {string} email - The email of the user to update
-     * @param {Updateable<UserTable>} updatedData - The fields to update
-     * @returns {DatabaseResponse} Response indicating success or failure of update
-     */
-    async updateByEmail(email: string, updatedData: Updateable<UserTable>): Promise<DatabaseResponse> {
+    async UpdateByEmail(email: string, updatedData: UpdateUser): Promise<DatabaseResponse> {
         const query = this.db.updateTable("user").set(updatedData).where("email", "=", email)
         const result = await query.executeTakeFirst()
 
@@ -115,12 +111,7 @@ class UserDB extends BaseDatabase {
         }
     }
 
-    /**
-     * Delete a user by ID
-     * @param {string} id - The ID of the user to delete
-     * @returns {DatabaseResponse} Response indicating success or failure of deletion
-     */
-    async deleteByID(id: string): Promise<DatabaseResponse> {
+    async Delete(id: string): Promise<DatabaseResponse> {
         const query = this.db.deleteFrom("user").where("id", "=", id)
         const result = await query.executeTakeFirst()
 
@@ -137,12 +128,7 @@ class UserDB extends BaseDatabase {
         }
     }
 
-    /**
-     * Delete a user by email
-     * @param {string} email - The email of the user to delete
-     * @returns {DatabaseResponse} Response indicating success or failure of deletion
-     */
-    async deleteByEmail(email: string): Promise<DatabaseResponse> {
+    async DeleteByEmail(email: string): Promise<DatabaseResponse> {
         const query = this.db.deleteFrom("user").where("email", "=", email)
         const result = await query.executeTakeFirst()
 
@@ -160,4 +146,4 @@ class UserDB extends BaseDatabase {
     }
 }
 
-export const UserDatabase = new UserDB()
+export const UserDatabaseRepository = new UserDBRepository()

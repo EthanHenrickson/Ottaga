@@ -1,10 +1,10 @@
 import { OttagaHealthLLM } from "$lib/llm/Ottaga"
-import type { Message } from "$lib/types"
+import type { ChatMessage } from "$lib/types"
 import { describe, it, expect } from "vitest"
 
 describe("Ottaga Health", () => {
-    it("Ensure data can be sent and received", async ()=>{
-        let newMessage:Message = {role: "user", content: "Hi there"}
+    it("Ensure data can be sent and received", async () => {
+        let newMessage: ChatMessage = { role: "user", content: "Hi there" }
         let OttagaHealthResponse = OttagaHealthLLM.SendMessage([newMessage])
 
         let resultMessage = ""

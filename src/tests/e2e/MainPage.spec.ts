@@ -1,20 +1,20 @@
 import { test, expect } from '@playwright/test';
-import { MainMap } from './pageMap/MainMap';
+import { BasicMap } from './pageMap/BasicMap';
 
-test('Verify Main Page functionality', async ({ page }) => {
-  const MainPage = new MainMap(page)
+test('Verify main marketing page functionality', async ({ page }) => {
+  const BasicPage = new BasicMap(page)
 
-  await MainPage.GoTo()
+  await BasicPage.GoTo("/")
 
-  await MainPage.ClickButton("Session Memory >")
-  await expect(page.locator("#help-panel")).toContainText("Experience personalized support")
+  await page.getByRole('tab', { name: 'Session Memory ⯈' }).click()
+  expect(page.locator("#help-panel")).toContainText("Experience personalized support")
 
-  await MainPage.ClickButton("Stress and anxiety management >")
-  await expect(page.locator("#help-panel")).toContainText("Learn practical coping")
+  await page.getByRole('tab', { name: 'Stress and anxiety management' }).click()
+  expect(page.locator("#help-panel")).toContainText("Learn practical coping")
 
-  await MainPage.ClickButton("Emotional support during difficult times >")
-  await expect(page.locator("#help-panel")).toContainText("Experience empathy and validation")
+  await page.getByRole('tab', { name: 'Emotional support during' }).click()
+  expect(page.locator("#help-panel")).toContainText("Experience empathy and validation")
 
-  await MainPage.ClickButton("Guided relaxation and mindfulness exercises >")
-  await expect(page.locator("#help-panel")).toContainText("Access a variety of mindfulness")
+  await page.getByRole('tab', { name: 'Guided relaxation and' }).click()
+  expect(page.locator("#help-panel")).toContainText("Access a variety of mindfulness")
 });

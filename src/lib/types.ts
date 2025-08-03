@@ -12,12 +12,20 @@ export type DatabaseDataResponse<T> =
     | {
         success: false;
         message: string;
-        data?: undefined;
     };
+
+export interface ServiceResult<T = null> {
+    success: boolean;
+    data?: T;
+    error?: string
+    message?: string;
+}
+
+
 
 export type Role = "user" | "assistant" | "system"
 
-export type Message = {
+export type ChatMessage = {
     role: Role,
     content: string
 }

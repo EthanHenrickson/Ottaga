@@ -1,13 +1,12 @@
+import type { Role } from '$lib/types'
 import type {
     ColumnType,
     Generated,
     Insertable,
-    JSONColumnType,
     Selectable,
     Updateable,
 } from 'kysely'
 
-import type { Role } from '../types'
 
 //Overall database design
 export interface Database {
@@ -20,72 +19,69 @@ export interface Database {
 
 //Chat table used to manage chats
 export interface ChatTable {
-    id: string
-    FK_userID: string | null
-    title: string | null
-    description: string | null
+    id: ColumnType<string, string, never>
+    FK_userID: ColumnType<string | null, string | null, never>
+    title: Generated<string>
+    description: Generated<string>
     created_at: ColumnType<Date, never, never>
     modifiable: Generated<boolean>
-    deleted: Generated<boolean>
 }
 
 export type Chat = Selectable<ChatTable>
-export type NewChat = Insertable<ChatTable>
-export type ChatUpdate = Updateable<ChatTable>
+export type CreateChat = Insertable<ChatTable>
+export type UpdateChat = Updateable<ChatTable>
 
 
 
 //Message table used to manage chats
 export interface MessageTable {
-    id: string
-    FK_chatID: string
+    id: ColumnType<string, string, never>
+    FK_chatID: ColumnType<string, string, never>
     role: Role
     content: string
     created_at: ColumnType<Date, never, never>
-    deleted: Generated<boolean>
 }
 
 export type Message = Selectable<MessageTable>
-export type NewMessage = Insertable<MessageTable>
-export type MessageUpdate = Updateable<MessageTable>
+export type CreateMessage = Insertable<MessageTable>
+export type UpdateMessage = Updateable<MessageTable>
 
 
 //Cookie table used to manage user sessions 
 export interface CookieTable {
-    id: string
-    FK_userID: string
+    id: ColumnType<string, string, never>
+    FK_userID: ColumnType<string, string, never>
     expireTime: Date
 }
 
 export type Cookie = Selectable<CookieTable>
-export type NewCookie = Insertable<CookieTable>
-export type CookieUpdate = Updateable<CookieTable>
+export type CreateCookie = Insertable<CookieTable>
+export type UpdateCookie = Updateable<CookieTable>
 
 
 //User table used to manage users
 export interface UserTable {
-    id: string
-    name: string | null
+    id: ColumnType<string, string, never>
+    name: string
     email: string
     hashedPassword: string
     created_at: ColumnType<Date, never, never>
-    deleted: Generated<boolean>
 }
 
 export type User = Selectable<UserTable>
-export type NewUser = Insertable<UserTable>
-export type UserUpdate = Updateable<UserTable>
+export type CreateUser = Insertable<UserTable>
+export type UpdateUser = Updateable<UserTable>
 
 //User Settings table used to manage user settings
 export interface UserSettingsTable {
-    FK_userID: string,
-    theme: ColumnType<string, never, string>
-    receiveCommunityDigest: ColumnType<boolean, never, boolean>
-    simplifiedLanguage: ColumnType<boolean, never, boolean>
-    reduceMotion: ColumnType<boolean, never, boolean>
-    saveConversations: ColumnType<boolean, never, boolean>
+    FK_userID: ColumnType<string, string, never>
+    theme: string
+    receiveCommunityDigest: boolean
+    simplifiedLanguage: boolean
+    reduceMotion: boolean
+    saveConversations: boolean
 }
 
 export type UserSettings = Selectable<UserSettingsTable>
-export type NewUserSettings = Insertable<UserSettingsTable>
-export type UserSettingsUpdate = Updateable<UserSettingsTable>
+export type CreateUserSettings = Insertable<UserSettingsTable>
+export type UpdateUserSettings = Updateable<UserSettingsTable>

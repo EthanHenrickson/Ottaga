@@ -1,4 +1,4 @@
-import type { Message, MaliciousLLMResponse } from "$lib/types";
+import type { ChatMessage, MaliciousLLMResponse } from "$lib/types";
 import Analytics from "$lib/utility/analytics/ServerAnalytics";
 import { OttagaAbstractBaseProvider } from "../providers/OttagaAbstractBaseProvider";
 
@@ -13,13 +13,13 @@ export class OttagaSafeGuard {
      * Checks if a user message is attempting to manipulate the LLM.
      * Sends the message to a moderation model to evaluate for malicious intent.
      * 
-     * @param {Message} message - The message to check, containing role and content
+     * @param {ChatMessage} message - The message to check, containing role and content
      * @returns {Promise<MaliciousLLMResponse>} Object containing:
      *   - isMalicious: boolean indicating if message was flagged
      *   - messageResponse: string response to send if malicious (optional)
      * @throws May throw errors from the underlying LLM API call
      */
-    async CheckUserMessage(message: Message): Promise<MaliciousLLMResponse> {
+    async CheckUserMessage(message: ChatMessage): Promise<MaliciousLLMResponse> {
         let returnResponse: MaliciousLLMResponse = { isMalicious: true, messageResponse: "Sorry that message couldn't be parsed. Please try again." }
 
         let response = await this.llmProviderInstance.callCompletion([message])

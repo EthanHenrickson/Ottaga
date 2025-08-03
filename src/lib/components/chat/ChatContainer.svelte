@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Message } from "$lib/types";
+	import type { ChatMessage } from "$lib/types";
 
 	import { marked } from "marked";
 	import { DecodeSSE } from "$lib/utility/SSE/SSEHelper";
@@ -16,7 +16,7 @@
 	let chatScrolledToBottom: boolean = $state(false);
 	let isLoading = $state(false);
 	let userMessageInput = $state(""); //References new user message input
-	let messageArray: Message[] = $state([
+	let messageArray: ChatMessage[] = $state([
 		{
 			role: "assistant",
 			content: "How are you feeling today?",
@@ -122,7 +122,7 @@
 	}
 </script>
 
-{#snippet messageBox(message: Message)}
+{#snippet messageBox(message: ChatMessage)}
 	<div class="message {message.role}">
 		<strong>{message.role === "user" ? "You" : "Ottaga"}:</strong>
 		<p>

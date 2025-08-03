@@ -1,4 +1,4 @@
-import { UserSettingsServiceSingleton } from "$lib/server/db/Services/Implementations/UserSettingsService";
+import { UserSettingsServiceSingleton } from "$lib/server/Services/Implementations/UserSettingsService";
 import { json, type RequestHandler } from "@sveltejs/kit";
 
 export const GET: RequestHandler = async ({ locals }) => {

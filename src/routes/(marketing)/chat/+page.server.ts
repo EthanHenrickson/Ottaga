@@ -1,8 +1,8 @@
 import type { PageServerLoad } from "./$types";
 import { OttagaHealthLLM } from "$lib/llm/Ottaga";
-import { ChatServiceSingleton } from "$lib/server/db/Services/Implementations/ChatService";
-import { CreateChatDTO } from "$lib/server/db/Services/DTOs/Chat";
-import { CreateMessageDTO } from "$lib/server/db/Services/DTOs/Message";
+import { ChatServiceSingleton } from "$lib/server/Services/Implementations/ChatService";
+import { CreateChatDTO } from "$lib/server/Services/DTOs/Chat";
+import { CreateMessageDTO } from "$lib/server/Services/DTOs/Message";
 
 export const load: PageServerLoad = async () => {
     //Create a new chat save the chat id

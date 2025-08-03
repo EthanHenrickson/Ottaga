@@ -1,5 +1,5 @@
 
-import { CookieServiceSingleton } from '$lib/server/db/Services/Implementations/CookieService';
+import { CookieServiceSingleton } from '$lib/server/Services/Implementations/CookieService';
 import { redirect, type Handle } from '@sveltejs/kit';
 
 /**

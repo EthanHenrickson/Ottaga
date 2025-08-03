@@ -13,6 +13,7 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: 'src/tests/e2e',
+  testMatch: '*.spec.ts',
   /* Run tests in files in parallel */
   
   fullyParallel: true,

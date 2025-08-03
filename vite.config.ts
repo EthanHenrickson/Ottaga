@@ -7,7 +7,7 @@ export default defineConfig({
 		maxConcurrency: 8,
 		testTimeout: 30000,
 		include: ['src/**/*.test.{js,ts}'],
-		exclude: ['src/**/*.svelte.{test,spec}.{js,ts}'],
+		exclude: ['src/**/*.svelte.{test,spec}.{js,ts}', 'src/tests/e2e/*.spec.ts'],
 		cache: false
 	}
 });

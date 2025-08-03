@@ -5,9 +5,9 @@ import argon2 from 'argon2';
 import type { Actions } from './$types';
 import Analytics from '$lib/utility/analytics/ServerAnalytics';
 import { AuthRateLimiterSingleton } from '$lib/utility/security/rateLimiter';
-import { UserServiceSingleton } from '$lib/server/db/Services/Implementations/UserService';
-import { CookieServiceSingleton } from '$lib/server/db/Services/Implementations/CookieService';
-import { CreateUserDTO } from '$lib/server/db/Services/DTOs/User';
+import { UserServiceSingleton } from '$lib/server/Services/Implementations/UserService';
+import { CookieServiceSingleton } from '$lib/server/Services/Implementations/CookieService';
+import { CreateUserDTO } from '$lib/server/Services/DTOs/User';
 
 const extractFormData = (data: FormData) => {
 	return {

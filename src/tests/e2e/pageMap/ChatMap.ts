@@ -1,19 +1,19 @@
-import { BaseMap } from "./BaseMap"
-import { expect, type Page } from "@playwright/test";
+import { BaseMap } from './BaseMap';
+import { expect, type Page } from '@playwright/test';
 
 export class ChatMap extends BaseMap {
-    constructor(page: Page) {
-        super(page)
-    }
+	constructor(page: Page) {
+		super(page);
+	}
 
-    async GoTo(){
-        await this.page.goto("/chat")
-        expect(this.page.url()).toContain("/chat")
-    }
+	async GoTo() {
+		await this.page.goto('/chat');
+		expect(this.page.url()).toContain('/chat');
+	}
 
-    async SendMessage(message: string){
-        await this.page.getByRole('textbox', { name: 'Send a message' }).fill(message)
-        await this.page.getByRole('button', { name: 'Send' }).click()
-        expect(this.page.locator(".user > p").last()).toContainText(message)
-    }
+	async SendMessage(message: string) {
+		await this.page.getByRole('textbox', { name: 'Send a message' }).fill(message);
+		await this.page.getByRole('button', { name: 'Send' }).click();
+		expect(this.page.locator('.user > p').last()).toContainText(message);
+	}
 }

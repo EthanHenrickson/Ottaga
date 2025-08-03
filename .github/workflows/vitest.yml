@@ -3,9 +3,9 @@
 name: Vitest CI
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main']
   pull_request:
-    branches: [ "main" ]
+    branches: ['main']
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -13,23 +13,23 @@ jobs:
       matrix:
         node-version: [22.x]
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
-    - name: Install dependencies
-      run: npm i
-    - name: Build Project
-      run: npm run build
-      env:
-        TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
-        POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
-        PUBLIC_POSTHOG_API_KEY: "Test"
-    - run: npm run test:unit
-      env:
-        TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
-        POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
-        PUBLIC_POSTHOG_API_KEY: "Test"
+      - name: Install dependencies
+        run: npm i
+      - name: Build Project
+        run: npm run build
+        env:
+          TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
+          POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
+          PUBLIC_POSTHOG_API_KEY: 'Test'
+      - run: npm run test:unit
+        env:
+          TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
+          POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
+          PUBLIC_POSTHOG_API_KEY: 'Test'

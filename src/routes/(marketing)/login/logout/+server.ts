@@ -4,7 +4,7 @@ import type { RequestHandler } from './$types';
 import { CookieServiceSingleton } from '$lib/server/Services/Implementations/CookieService';
 
 export const GET: RequestHandler = async ({ cookies }) => {
-	const cookieID = cookies.get('sessionID') || ''
+	const cookieID = cookies.get('sessionID') || '';
 
 	await CookieServiceSingleton.DeleteCookieByID(cookieID);
 

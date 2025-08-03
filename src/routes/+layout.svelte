@@ -49,9 +49,9 @@
 		font-weight: bold;
 	}
 
-	:global(p){
-		margin: .8rem 0px;
-  }
+	:global(p) {
+		margin: 0.8rem 0px;
+	}
 
 	:global(button) {
 		padding: 0.7rem 1.5rem;
@@ -69,9 +69,9 @@
 		border-radius: 0.25rem;
 	}
 
-	:global(select){
-		padding: .2rem .7rem;
-		font-size: .9rem;
+	:global(select) {
+		padding: 0.2rem 0.7rem;
+		font-size: 0.9rem;
 
 		outline: none;
 		background-color: transparent;
@@ -82,9 +82,7 @@
 		border-left: none;
 	}
 
-	:global(input[type="checkbox"]) {
+	:global(input[type='checkbox']) {
 		accent-color: var(--AccentColorPrimary);
 	}
-
-
 </style>

@@ -1,11 +1,11 @@
-import { TOGETHER_API_KEY, CEREBRAS_API_KEY } from "$env/static/private"
-import type { LLMConfig } from "$lib/types"
+import { TOGETHER_API_KEY, CEREBRAS_API_KEY } from '$env/static/private';
+import type { LLMConfig } from '$lib/types';
 
 export let OttagaHealthConfig: LLMConfig = {
-    baseUrl: 'https://api.together.xyz/v1',
-    apiKey: TOGETHER_API_KEY,
-    model: "Qwen/Qwen3-235B-A22B-Instruct-2507-tput",
-    systemPrompt: `
+	baseUrl: 'https://api.together.xyz/v1',
+	apiKey: TOGETHER_API_KEY,
+	model: 'Qwen/Qwen3-235B-A22B-Instruct-2507-tput',
+	systemPrompt: `
         # Ottaga: Mental Health Support Assistant
 
         ## Core Identity and Approach
@@ -99,15 +99,15 @@ export let OttagaHealthConfig: LLMConfig = {
         users feel truly heard while offering practical, evidence-based strategies to help
         them move toward greater well-being. Always prioritize user safety above all else.
     `,
-    temperature: .75,
-    maxTokens: 10000,
-}
+	temperature: 0.75,
+	maxTokens: 10000
+};
 
 export let OttagaSafeGuardConfig: LLMConfig = {
-    baseUrl: 'https://api.cerebras.ai/v1',
-    apiKey: CEREBRAS_API_KEY,
-    model: "qwen-3-32b",
-    systemPrompt: `
+	baseUrl: 'https://api.cerebras.ai/v1',
+	apiKey: CEREBRAS_API_KEY,
+	model: 'qwen-3-32b',
+	systemPrompt: `
     # Mental Health LLM Protection Prompt
 
     You are a specialized evaluation system designed to protect a mental health support LLM 
@@ -175,6 +175,6 @@ export let OttagaSafeGuardConfig: LLMConfig = {
         "messageResponse": ""
     }`,
 
-    temperature: .6,
-    maxTokens: 800,
-}
+	temperature: 0.6,
+	maxTokens: 800
+};

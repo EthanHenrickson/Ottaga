@@ -1,9 +1,9 @@
-import type { Page } from "@playwright/test";
+import type { Page } from '@playwright/test';
 
 export class BaseMap {
-    protected page: Page
+	protected page: Page;
 
-    constructor(page: Page) {
-        this.page = page
-    }
+	constructor(page: Page) {
+		this.page = page;
+	}
 }

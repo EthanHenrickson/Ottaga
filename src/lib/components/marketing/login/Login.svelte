@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ActionData } from "../../../../routes/(marketing)/login/$types";
+	import type { ActionData } from '../../../../routes/(marketing)/login/$types';
 
 	let { form }: { form: ActionData } = $props();
 
@@ -7,43 +7,37 @@
 	let regexEmail = String.raw`((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])`;
 
 	// Type definitions for form modes and actions
-	type FormMode = "Login" | "SignUp";
-	type FormAction = "?/login" | "?/signup";
+	type FormMode = 'Login' | 'SignUp';
+	type FormAction = '?/login' | '?/signup';
 
 	// State management for form mode
-	let mode = $state<FormMode>("Login");
-	let formAction = $derived<FormAction>(
-		mode === "Login" ? "?/login" : "?/signup",
-	);
+	let mode = $state<FormMode>('Login');
+	let formAction = $derived<FormAction>(mode === 'Login' ? '?/login' : '?/signup');
 
 	// Toggle between login and signup modes
 	function toggleAccountMode() {
-		mode = mode === "Login" ? "SignUp" : "Login";
+		mode = mode === 'Login' ? 'SignUp' : 'Login';
 	}
 </script>
 
 <div class="login">
 	<div class="head">
 		<div class="loginMode">
-			{mode === "Login" ? "Login" : "Register"}
+			{mode === 'Login' ? 'Login' : 'Register'}
 		</div>
 		<button
 			class="accountMode"
 			onclick={toggleAccountMode}
-			aria-label={mode === "Login"
-				? "Create new account"
-				: "Return to login"}
+			aria-label={mode === 'Login' ? 'Create new account' : 'Return to login'}
 		>
 			<span>
-				{mode === "Login"
-					? "Don't have an account?"
-					: "Already have an account?"}
+				{mode === 'Login' ? "Don't have an account?" : 'Already have an account?'}
 			</span>
 			<span class="clickHere">Click Here</span>
 		</button>
 	</div>
 	<form method="POST" action={formAction}>
-		{#if mode === "SignUp"}
+		{#if mode === 'SignUp'}
 			<br />
 			<div class="inputSection">
 				<label for="name">Nickname</label>
@@ -55,7 +49,7 @@
 					max="20"
 					required
 					aria-required="true"
-					aria-invalid={form?.error ? "true" : "false"}
+					aria-invalid={form?.error ? 'true' : 'false'}
 					aria-describedby="error"
 				/>
 			</div>
@@ -71,7 +65,7 @@
 				pattern={regexEmail}
 				required
 				aria-required="true"
-				aria-invalid={form?.error ? "true" : "false"}
+				aria-invalid={form?.error ? 'true' : 'false'}
 				aria-describedby="error"
 			/>
 		</div>
@@ -85,23 +79,19 @@
 				name="password"
 				required
 				aria-required="true"
-				aria-invalid={form?.error ? "true" : "false"}
+				aria-invalid={form?.error ? 'true' : 'false'}
 				aria-describedby="error"
 			/>
 			{#if form?.error}
-				<span id="error" class="error" aria-live="assertive"
-					>{form.error}</span
-				>
+				<span id="error" class="error" aria-live="assertive">{form.error}</span>
 			{/if}
 		</div>
 		<button
 			type="submit"
 			class="submitButton"
-			aria-label={mode === "Login"
-				? "Login to account"
-				: "Create new account"}
+			aria-label={mode === 'Login' ? 'Login to account' : 'Create new account'}
 		>
-			{mode === "Login" ? "Login" : "Register"}
+			{mode === 'Login' ? 'Login' : 'Register'}
 		</button>
 	</form>
 </div>
@@ -112,9 +102,9 @@
 		flex-direction: column;
 		padding: 4rem;
 
-		background-color:var(--AccentColorSecondary);
+		background-color: var(--AccentColorSecondary);
 		border-radius: 1rem;
-		filter: drop-shadow(rgb(116, 116, 116) 0.4rem 0.4rem .6rem);
+		filter: drop-shadow(rgb(116, 116, 116) 0.4rem 0.4rem 0.6rem);
 	}
 
 	.head {

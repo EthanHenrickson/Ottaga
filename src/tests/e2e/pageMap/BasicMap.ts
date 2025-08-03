@@ -1,8 +1,7 @@
-import { BaseMap } from "./BaseMap"
+import { BaseMap } from './BaseMap';
 
 export class BasicMap extends BaseMap {
-
-    async GoTo(destination: string = "/") {
-        await this.page.goto(destination)
-    }
+	async GoTo(destination: string = '/') {
+		await this.page.goto(destination);
+	}
 }

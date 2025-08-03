@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { page } from "$app/state";
-	import Menu from "$lib/icons/menu.svelte";
-	import Close from "$lib/icons/close.svelte";
+	import { page } from '$app/state';
+	import Menu from '$lib/icons/menu.svelte';
+	import Close from '$lib/icons/close.svelte';
 
 	let isMobile = $state(false);
 	let isOpen = $state(false);
@@ -33,7 +33,7 @@
 		{#if isMobile}
 			<button
 				onclick={toggleMenu}
-				aria-label={isOpen ? "Close menu" : "Open menu"}
+				aria-label={isOpen ? 'Close menu' : 'Open menu'}
 				aria-expanded={isOpen}
 				aria-haspopup="true"
 				class="menu-toggle"
@@ -51,26 +51,20 @@
 				<a
 					href="/dashboard"
 					onclick={toggleMenu}
-					class:active={page.url.pathname === "/dashboard"}
-					aria-current={page.url.pathname === "/dashboard"
-						? "page"
-						: undefined}>Dashboard</a
+					class:active={page.url.pathname === '/dashboard'}
+					aria-current={page.url.pathname === '/dashboard' ? 'page' : undefined}>Dashboard</a
 				>
 				<a
 					href="/dashboard/chat"
 					onclick={toggleMenu}
-					class:active={page.url.pathname === "/dashboard/chat"}
-					aria-current={page.url.pathname === "/dashboard/chat"
-						? "page"
-						: undefined}>Chat</a
+					class:active={page.url.pathname === '/dashboard/chat'}
+					aria-current={page.url.pathname === '/dashboard/chat' ? 'page' : undefined}>Chat</a
 				>
 				<a
 					href="/dashboard/profile"
 					onclick={toggleMenu}
-					class:active={page.url.pathname === "/dashboard/profile"}
-					aria-current={page.url.pathname === "/dashboard/profile"
-						? "page"
-						: undefined}>Profile</a
+					class:active={page.url.pathname === '/dashboard/profile'}
+					aria-current={page.url.pathname === '/dashboard/profile' ? 'page' : undefined}>Profile</a
 				>
 			</div>
 		</nav>

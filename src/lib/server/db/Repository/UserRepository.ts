@@ -3,15 +3,59 @@ import { BaseDatabaseRepository } from "./BaseDatabaseRepository";
 import type { CreateUser, User, UpdateUser } from "../databaseTypes";
 
 
+/**
+ * Repository interface for user database operations
+ */
 export interface IUserRepository {
+    /**
+     * Creates a new user in the database
+     * @param userData - The user data to create
+     * @returns Promise resolving to database response indicating success/failure
+     */
     Create(userData: CreateUser): Promise<DatabaseResponse>
+    
+    /**
+     * Updates an existing user by ID
+     * @param id - The user ID to update
+     * @param updatedData - The updated user data
+     * @returns Promise resolving to database response indicating success/failure
+     */
     Update(id: string, updatedData: UpdateUser): Promise<DatabaseResponse>
+    
+    /**
+     * Deletes a user by ID
+     * @param id - The user ID to delete
+     * @returns Promise resolving to database response indicating success/failure
+     */
     Delete(id: string): Promise<DatabaseResponse>
 
+    /**
+     * Retrieves a user by their ID
+     * @param id - The user ID to search for
+     * @returns Promise resolving to service result containing user data or error
+     */
     GetByUserID(id: string): Promise<ServiceResult<User>>
 
+    /**
+     * Retrieves a user by their email address
+     * @param email - The email address to search for
+     * @returns Promise resolving to database response containing user data or error
+     */
     GetByEmail(email: string): Promise<DatabaseDataResponse<User>>
+    
+    /**
+     * Updates an existing user by email address
+     * @param email - The email address of the user to update
+     * @param updatedData - The updated user data
+     * @returns Promise resolving to database response indicating success/failure
+     */
     UpdateByEmail(email: string, updatedData: UpdateUser): Promise<DatabaseResponse>
+    
+    /**
+     * Deletes a user by email address
+     * @param email - The email address of the user to delete
+     * @returns Promise resolving to database response indicating success/failure
+     */
     DeleteByEmail(email: string): Promise<DatabaseResponse>
 }
 

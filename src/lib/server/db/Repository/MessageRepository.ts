@@ -2,8 +2,23 @@ import type { DatabaseDataResponse, DatabaseResponse, ChatMessage, Role } from "
 import type { Message, CreateMessage } from "../databaseTypes";
 import { BaseDatabaseRepository } from "./BaseDatabaseRepository";
 
+/**
+ * Repository interface for managing chat messages in the database
+ */
 export interface IMessageRepository {
+    /**
+     * Creates a new message in the database
+     * @param data - The message data to create
+     * @returns Promise resolving to database operation response
+     */
     Create(data: CreateMessage): Promise<DatabaseResponse>
+    
+    /**
+     * Retrieves messages for a specific chat, ordered by creation date
+     * @param chatID - The unique identifier of the chat
+     * @param rowLimit - Maximum number of messages to retrieve
+     * @returns Promise resolving to array of messages or error response
+     */
     GetMessagesByID(chatID: string, rowLimit: number): Promise<DatabaseDataResponse<Message[]>>
 }
 

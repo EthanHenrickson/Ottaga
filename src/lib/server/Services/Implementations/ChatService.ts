@@ -3,16 +3,60 @@ import { MessageDatabaseRepository, type IMessageRepository } from "$lib/server/
 import type { ServiceResult } from "$lib/types";
 import { v4, v7 } from "uuid";
 import { ChatDTO, CreateChatDTO, UpdateChatDTO } from "../DTOs/Chat";
-import type { CreateChat, CreateMessage } from "../../databaseTypes";
 import { MessageDTO, type CreateMessageDTO } from "../DTOs/Message";
+import type { CreateChat, CreateMessage } from "$lib/server/db/databaseTypes";
 
+/**
+ * Interface defining chat service operations for managing chats and messages
+ */
 interface IChatService {
+    /**
+     * Creates a new chat
+     * @param userID - The user ID or null for anonymous users
+     * @param createChatDTO - Chat creation data
+     * @returns Promise resolving to service result with chat ID
+     */
     CreateChat(userID: string | null, createChatDTO: CreateChatDTO): Promise<ServiceResult<{ id: string }>>
+    
+    /**
+     * Updates an existing chat by ID
+     * @param userID - The user ID or null for anonymous users
+     * @param chatData - Chat update data including ID
+     * @returns Promise resolving to service result
+     */
     UpdateChatByID(userID: string | null, chatData: UpdateChatDTO): Promise<ServiceResult>
+    
+    /**
+     * Retrieves a chat by ID
+     * @param userID - The user ID or null for anonymous users
+     * @param chatID - The chat ID to retrieve
+     * @returns Promise resolving to service result with chat data
+     */
     GetChatByID(userID: string | null, chatID: string): Promise<ServiceResult<ChatDTO>>
+    
+    /**
+     * Deletes a chat by ID
+     * @param userID - The user ID
+     * @param chatID - The chat ID to delete
+     * @returns Promise resolving to service result with deleted chat data
+     */
     DeleteChatByID(userID: string, chatID: string): Promise<ServiceResult<ChatDTO>>
 
+    /**
+     * Creates a new message in a chat
+     * @param userID - The user ID
+     * @param data - Message creation data
+     * @returns Promise resolving to service result with message ID
+     */
     CreateChatMessage(userID: string, data: CreateMessageDTO): Promise<ServiceResult<{ id: string }>>
+    
+    /**
+     * Retrieves messages for a specific chat
+     * @param userID - The user ID
+     * @param chatID - The chat ID to get messages for
+     * @param rowLimit - Maximum number of messages to retrieve
+     * @returns Promise resolving to service result with messages array
+     */
     GetChatMessagesByID(userID: string, chatID: string, rowLimit: number): Promise<ServiceResult<{ messages: MessageDTO[] }>>
 }
 

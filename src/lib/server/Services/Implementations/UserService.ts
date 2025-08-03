@@ -1,15 +1,43 @@
-import type { CreateUser, UpdateUser } from "$lib/server/db/databaseTypes";
+import type { CreateUser } from "$lib/server/db/databaseTypes";
 import { UserDatabaseRepository, type IUserRepository } from "$lib/server/db/Repository/UserRepository";
-import type { DatabaseResponse, ServiceResult } from "$lib/types";
+import type { ServiceResult } from "$lib/types";
 import { v4 } from "uuid";
 import { CreateUserDTO, UpdateUserDTO, UserDTO } from "../DTOs/User";
 import argon2 from 'argon2';
 
 
+/**
+ * Service interface for user management operations.
+ * Handles user creation, retrieval, updates, and deletion with proper validation and error handling.
+ */
 export interface IUserService {
+    /**
+     * Creates a new user with hashed password.
+     * @param userData - User data transfer object containing name, email, and password
+     * @returns Promise resolving to ServiceResult indicating success or failure
+     */
     Create(userData: CreateUserDTO): Promise<ServiceResult>
+    
+    /**
+     * Retrieves a user by their email address.
+     * @param email - The email address to search for
+     * @returns Promise resolving to ServiceResult containing UserDTO if found
+     */
     GetByEmail(email: string): Promise<ServiceResult<UserDTO>>
+    
+    /**
+     * Updates an existing user's information.
+     * @param userID - The unique identifier of the user to update
+     * @param userData - Updated user data transfer object
+     * @returns Promise resolving to ServiceResult indicating success or failure
+     */
     Update(userID: string, userData: UpdateUserDTO): Promise<ServiceResult>
+    
+    /**
+     * Deletes a user from the system.
+     * @param userID - The unique identifier of the user to delete
+     * @returns Promise resolving to ServiceResult indicating success or failure
+     */
     Delete(userID: string): Promise<ServiceResult>
 }
 

@@ -1,11 +1,33 @@
-import type { CreateUserSettings, UserSettings } from "$lib/server/db/databaseTypes";
+import type { CreateUserSettings } from "$lib/server/db/databaseTypes";
 import { UserSettingsDatabaseRepository, type IUserSettingsRepository } from "$lib/server/db/Repository/UserSettingsRepository";
 import type { ServiceResult } from "$lib/types";
 import { CreateUserSettingsDTO, UpdateUserSettingsDTO, UserSettingsDTO } from "../DTOs/UserSettings";
 
+/**
+ * Service interface for managing user settings operations
+ */
 export interface IUserSettingsService {
+    /**
+     * Creates new user settings for a specific user
+     * @param userID - The unique identifier of the user
+     * @param userSettings - The user settings data to create
+     * @returns Promise resolving to ServiceResult indicating success or failure
+     */
     CreateUserSettings(userID: string, userSettings: CreateUserSettingsDTO): Promise<ServiceResult>
+    
+    /**
+     * Retrieves user settings by user ID
+     * @param userID - The unique identifier of the user
+     * @returns Promise resolving to ServiceResult containing UserSettingsDTO on success
+     */
     GetUserSettingsByUserID(userID: string): Promise<ServiceResult<UserSettingsDTO>>
+    
+    /**
+     * Updates existing user settings for a specific user
+     * @param userID - The unique identifier of the user
+     * @param userSettings - The updated user settings data
+     * @returns Promise resolving to ServiceResult indicating success or failure
+     */
     UpdateUserSettingsByUserID(userID: string, userSettings: UpdateUserSettingsDTO): Promise<ServiceResult>
 }
 

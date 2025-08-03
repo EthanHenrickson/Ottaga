@@ -2,10 +2,37 @@ import type { DatabaseResponse, DatabaseDataResponse } from "$lib/types";
 import type { Cookie, CreateCookie, UpdateCookie } from "../databaseTypes";
 import { BaseDatabaseRepository } from "./BaseDatabaseRepository";
 
+/**
+ * Repository interface for cookie database operations
+ */
 export interface ICookieRepository {
+    /**
+     * Creates a new cookie in the database
+     * @param data - Cookie data to create
+     * @returns Promise resolving to database response with success status and message
+     */
     Create(data: CreateCookie): Promise<DatabaseResponse>
+    
+    /**
+     * Retrieves a cookie by its ID
+     * @param cookieID - Unique identifier of the cookie
+     * @returns Promise resolving to database response with cookie data if found
+     */
     GetByID(cookieID: string): Promise<DatabaseDataResponse<Cookie>>
+    
+    /**
+     * Updates cookie data (expiration time)
+     * @param cookieID - Unique identifier of the cookie to update
+     * @param data - Updated cookie data
+     * @returns Promise resolving to database response with success status and message
+     */
     UpdateCookieTime(cookieID: string, data: UpdateCookie): Promise<DatabaseResponse>
+    
+    /**
+     * Deletes a cookie from the database
+     * @param cookieID - Unique identifier of the cookie to delete
+     * @returns Promise resolving to database response with success status and message
+     */
     Delete(cookieID: string): Promise<DatabaseResponse>
 }
 

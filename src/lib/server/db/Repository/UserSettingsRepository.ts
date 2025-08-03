@@ -2,9 +2,31 @@ import type { DatabaseResponse, DatabaseDataResponse } from "$lib/types";
 import { BaseDatabaseRepository } from "./BaseDatabaseRepository";
 import type { CreateUserSettings, UpdateUserSettings, UserSettings } from "../databaseTypes";
 
+/**
+ * Repository interface for managing user settings in the database.
+ * Provides CRUD operations for user-specific configuration data.
+ */
 export interface IUserSettingsRepository {
+    /**
+     * Creates new user settings record in the database.
+     * @param data - The user settings data to create
+     * @returns Promise resolving to database response indicating success/failure
+     */
     Create(data: CreateUserSettings): Promise<DatabaseResponse>
+    
+    /**
+     * Retrieves user settings by user ID.
+     * @param userID - The unique identifier of the user
+     * @returns Promise resolving to database response with user settings data or error
+     */
     GetByUserID(userID: string): Promise<DatabaseDataResponse<UserSettings>>
+    
+    /**
+     * Updates existing user settings for a specific user.
+     * @param userID - The unique identifier of the user
+     * @param updatedData - The partial user settings data to update
+     * @returns Promise resolving to database response indicating success/failure
+     */
     UpdateByUserID(userID: string, updatedData: UpdateUserSettings): Promise<DatabaseResponse>
 }
 

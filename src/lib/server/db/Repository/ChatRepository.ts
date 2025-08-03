@@ -2,10 +2,37 @@ import type { DatabaseDataResponse, DatabaseResponse } from "$lib/types";
 import { BaseDatabaseRepository } from "./BaseDatabaseRepository";
 import type { Chat, UpdateChat, CreateChat } from "../databaseTypes";
 
+/**
+ * Repository interface for chat database operations
+ */
 export interface IChatRepository {
+    /**
+     * Creates a new chat in the database
+     * @param data - The chat data to create
+     * @returns Promise resolving to database response with success status and message
+     */
     Create(data: CreateChat): Promise<DatabaseResponse>;
+    
+    /**
+     * Updates an existing chat in the database
+     * @param chatID - The unique identifier of the chat to update
+     * @param data - The updated chat data
+     * @returns Promise resolving to database response with success status and message
+     */
     Update(chatID: string, data: UpdateChat): Promise<DatabaseResponse>
+    
+    /**
+     * Retrieves a chat by its unique identifier
+     * @param chatID - The unique identifier of the chat to retrieve
+     * @returns Promise resolving to database response with chat data if found
+     */
     GetByID(chatID: string): Promise<DatabaseDataResponse<Chat>>;
+    
+    /**
+     * Deletes a chat from the database
+     * @param chatID - The unique identifier of the chat to delete
+     * @returns Promise resolving to database response with success status and message
+     */
     Delete(chatID: string): Promise<DatabaseResponse>;
 }
 

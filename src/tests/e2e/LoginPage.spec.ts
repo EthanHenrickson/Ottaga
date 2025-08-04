@@ -18,6 +18,20 @@ test('Skip login', async ({ page }) => {
 	expect(page.url()).not.toContain('/dashboard');
 });
 
+test('Login to a fake account', async ({ page }) => {
+	let email = faker.internet.email();
+	let password = faker.internet.password();
+
+	let LoginPage = new LoginMap(page);
+
+	await LoginPage.GoTo();
+	await LoginPage.LoginToAccount(email, password);
+
+	expect(page.url()).not.toContain('dashboard');
+	expect(page.url()).toContain('login');
+	await expect(page.locator('#error')).toContainText('Incorrect email or password');
+});
+
 test('Create an account', async ({ page }) => {
 	let LoginPage = new LoginMap(page);
 

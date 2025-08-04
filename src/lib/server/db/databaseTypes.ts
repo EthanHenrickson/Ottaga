@@ -75,11 +75,11 @@ export type UpdateUser = Updateable<UserTable>
 //User Settings table used to manage user settings
 export interface UserSettingsTable {
     FK_userID: ColumnType<string, string, never>
-    theme: string
-    receiveCommunityDigest: boolean
-    simplifiedLanguage: boolean
-    reduceMotion: boolean
-    saveConversations: boolean
+    theme: Generated<string>
+    receiveCommunityDigest: Generated<boolean>
+    simplifiedLanguage: Generated<boolean>
+    reduceMotion: Generated<boolean>
+    saveConversations: Generated<boolean>
 }
 
 export type UserSettings = Selectable<UserSettingsTable>

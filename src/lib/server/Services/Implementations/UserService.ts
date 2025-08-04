@@ -16,9 +16,9 @@ export interface IUserService {
 	/**
 	 * Creates a new user with hashed password.
 	 * @param userData - User data transfer object containing name, email, and password
-	 * @returns Promise resolving to ServiceResult indicating success or failure
+	 * @returns Promise resolving to ServiceResult indicating success or failure and new userID
 	 */
-	Create(userData: CreateUserDTO): Promise<ServiceResult>;
+	Create(userData: CreateUserDTO): Promise<ServiceResult<string>>;
 
 	/**
 	 * Retrieves a user by their email address.
@@ -49,7 +49,7 @@ class UserService implements IUserService {
 		this.UserRepository = userRepository;
 	}
 
-	async Create(userData: CreateUserDTO): Promise<ServiceResult> {
+	async Create(userData: CreateUserDTO): Promise<ServiceResult<string>> {
 		const uuid = v4();
 		const hashedPassword = await argon2.hash(userData.password, { timeCost: 2 });
 		const dbValues: CreateUser = {
@@ -70,7 +70,8 @@ class UserService implements IUserService {
 		const dbResponse = await this.UserRepository.Create(dbValues);
 		if (dbResponse.success) {
 			return {
-				success: true
+				success: true,
+				data: uuid
 			};
 		} else {
 			return {

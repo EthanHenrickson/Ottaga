@@ -1,13 +1,10 @@
 /** @type {import('./$types').Actions} */
 import { fail, redirect } from '@sveltejs/kit';
-import argon2 from 'argon2';
-
 import type { Actions } from './$types';
 import Analytics from '$lib/utility/analytics/ServerAnalytics';
 import { AuthRateLimiterSingleton } from '$lib/utility/security/rateLimiter';
-import { UserServiceSingleton } from '$lib/server/Services/Implementations/UserService';
 import { CookieServiceSingleton } from '$lib/server/Services/Implementations/CookieService';
-import { CreateUserDTO } from '$lib/server/Services/DTOs/User';
+import { AuthServiceSingleton } from '$lib/server/Services/Implementations/AuthService';
 
 const extractFormData = (data: FormData) => {
 	return {
@@ -27,40 +24,30 @@ export const actions = {
 			});
 		}
 
-		const user = await UserServiceSingleton.GetByEmail(email);
-
-		if (!user.success || !user.data) {
+		const AuthServiceResponse = await AuthServiceSingleton.VerifyAccount(email, password);
+		if (!AuthServiceResponse || !AuthServiceResponse.data) {
 			return fail(422, {
-				error: 'Incorrect username or password'
+				error: 'Incorrect email or password'
 			});
 		}
 
-		const isValidPassword = await argon2.verify(user.data?.hashedPassword, password);
-		if (!isValidPassword) {
-			return fail(422, {
-				error: 'Incorrect username or password'
-			});
-		}
-
-		const cookieResponse = await CookieServiceSingleton.CreateCookie(user.data.id);
-		if (cookieResponse.success && cookieResponse.data) {
-			cookies.set('sessionID', cookieResponse.data.cookieID, { path: '/' });
-			redirect(302, '/dashboard');
-		} else {
+		const cookieResponse = await CookieServiceSingleton.CreateCookie(AuthServiceResponse.data);
+		if (!cookieResponse.success || !cookieResponse.data) {
 			Analytics.captureException('Failed to create cookie in database');
 			throw Error("Couldn't create cookie");
 		}
+
+		cookies.set('sessionID', cookieResponse.data.cookieID, { path: '/' });
+		redirect(302, '/dashboard');
 	},
 
 	signup: async ({ request }) => {
 		const { email, password, name } = extractFormData(await request.formData());
 
-		const userDTO = new CreateUserDTO(name, email, password);
-		const result = await UserServiceSingleton.Create(userDTO);
-
-		if (!result.success) {
+		const AuthResponse = await AuthServiceSingleton.CreateAccount(email, password, name);
+		if (!AuthResponse.success) {
 			return fail(422, {
-				error: result.message
+				error: AuthResponse.message
 			});
 		}
 	}

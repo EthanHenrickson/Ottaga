@@ -27,7 +27,6 @@ export class LoginMap extends BaseMap {
 		await this.page.getByLabel('password').fill(password);
 
 		await this.page.getByRole('button', { name: 'Login' }).click();
-		expect(this.page.url()).toContain('dashboard');
 	}
 
 	async Logout() {

@@ -24,11 +24,11 @@ export class CreateUserSettingsDTO {
 	reduceMotion: boolean;
 
 	constructor(
-		theme: string,
-		receiveCommunityDigest: boolean,
-		saveConversations: boolean,
-		simplifiedLanguage: boolean,
-		reduceMotion: boolean
+		theme: string = 'light',
+		receiveCommunityDigest: boolean = true,
+		saveConversations: boolean = true,
+		simplifiedLanguage: boolean = false,
+		reduceMotion: boolean = false
 	) {
 		this.theme = theme;
 		this.receiveCommunityDigest = receiveCommunityDigest;

@@ -20,14 +20,14 @@ export interface IUserSettingsService {
 	 * @param userSettings - The user settings data to create
 	 * @returns Promise resolving to ServiceResult indicating success or failure
 	 */
-	CreateUserSettings(userID: string, userSettings: CreateUserSettingsDTO): Promise<ServiceResult>;
+	Create(userID: string, userSettings: CreateUserSettingsDTO): Promise<ServiceResult>;
 
 	/**
 	 * Retrieves user settings by user ID
 	 * @param userID - The unique identifier of the user
 	 * @returns Promise resolving to ServiceResult containing UserSettingsDTO on success
 	 */
-	GetUserSettingsByUserID(userID: string): Promise<ServiceResult<UserSettingsDTO>>;
+	GetByUserID(userID: string): Promise<ServiceResult<UserSettingsDTO>>;
 
 	/**
 	 * Updates existing user settings for a specific user
@@ -35,10 +35,7 @@ export interface IUserSettingsService {
 	 * @param userSettings - The updated user settings data
 	 * @returns Promise resolving to ServiceResult indicating success or failure
 	 */
-	UpdateUserSettingsByUserID(
-		userID: string,
-		userSettings: UpdateUserSettingsDTO
-	): Promise<ServiceResult>;
+	UpdateByUserID(userID: string, userSettings: UpdateUserSettingsDTO): Promise<ServiceResult>;
 }
 
 class UserSettingsService implements IUserSettingsService {
@@ -47,10 +44,7 @@ class UserSettingsService implements IUserSettingsService {
 		this.UserSettingsRepository = UserSettingsRepository;
 	}
 
-	async CreateUserSettings(
-		userID: string,
-		userSettings: CreateUserSettingsDTO
-	): Promise<ServiceResult> {
+	async Create(userID: string, userSettings: CreateUserSettingsDTO): Promise<ServiceResult> {
 		const existingUserSettings = await this.UserSettingsRepository.GetByUserID(userID);
 		if (existingUserSettings.success) {
 			return {
@@ -80,7 +74,7 @@ class UserSettingsService implements IUserSettingsService {
 		}
 	}
 
-	async GetUserSettingsByUserID(userID: string): Promise<ServiceResult<UserSettingsDTO>> {
+	async GetByUserID(userID: string): Promise<ServiceResult<UserSettingsDTO>> {
 		const dbResponse = await this.UserSettingsRepository.GetByUserID(userID);
 		if (dbResponse.success) {
 			return {
@@ -95,7 +89,7 @@ class UserSettingsService implements IUserSettingsService {
 		}
 	}
 
-	async UpdateUserSettingsByUserID(
+	async UpdateByUserID(
 		userID: string,
 		userSettings: UpdateUserSettingsDTO
 	): Promise<ServiceResult> {

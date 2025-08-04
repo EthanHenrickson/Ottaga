@@ -7,14 +7,14 @@ test('Verify main marketing page functionality', async ({ page }) => {
 	await BasicPage.GoTo('/');
 
 	await page.getByRole('tab', { name: 'Session Memory ⯈' }).click();
-	expect(page.locator('#help-panel')).toContainText('Experience personalized support');
+	await expect(page.locator('#help-panel')).toContainText('Experience personalized support');
 
 	await page.getByRole('tab', { name: 'Stress and anxiety management' }).click();
-	expect(page.locator('#help-panel')).toContainText('Learn practical coping');
+	await expect(page.locator('#help-panel')).toContainText('Learn practical coping');
 
 	await page.getByRole('tab', { name: 'Emotional support during' }).click();
-	expect(page.locator('#help-panel')).toContainText('Experience empathy and validation');
+	await expect(page.locator('#help-panel')).toContainText('Experience empathy and validation');
 
 	await page.getByRole('tab', { name: 'Guided relaxation and' }).click();
-	expect(page.locator('#help-panel')).toContainText('Access a variety of mindfulness');
+	await expect(page.locator('#help-panel')).toContainText('Access a variety of mindfulness');
 });

@@ -1,22 +1,13 @@
 import { CookieServiceSingleton } from '$lib/server/Services/Implementations/CookieService';
 import { redirect, type Handle } from '@sveltejs/kit';
 
-/**
- * Server-side authentication hook for handling route access and session management.
- *
- * This hook intercepts server-side route requests and performs the following key functions:
- * - Allows unrestricted access to authentication routes and non-home routes
- * - Validates user sessions using browser cookies
- * - Redirects unauthenticated or expired sessions to the login page
- * - Refreshes valid session cookies to extend their lifetime
- *
- */
 export const handle: Handle = async ({ event, resolve }) => {
 	const ProtectedRoutes = ['/api', '/dashboard'];
 	let isProtectedRoute = ProtectedRoutes.some((route) => event.url.pathname.startsWith(route));
 
 	let isAuthRoute =
 		event.url.pathname.startsWith('/api/auth') || event.url.pathname.startsWith('/api/llm');
+
 	//Allow non protected routes and auth/llm api to be accessed by everyone
 	if (!isProtectedRoute || isAuthRoute) {
 		return resolve(event);

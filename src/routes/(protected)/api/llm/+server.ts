@@ -17,45 +17,47 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	};
 
 	//Retrieve all previous messages and add them too the conversation
-	let previousMessages: ChatMessage[] = [];
 	const databaseResponse = await ChatServiceSingleton.GetChatMessagesByID(null, chatID);
-	if (databaseResponse.success && databaseResponse.data) {
-		const databaseMessages = databaseResponse.data.messages;
+	if (!databaseResponse.success || !databaseResponse.data) {
+		throw Error('Failed to retrieve past messages');
+	}
 
-		for (let item of databaseMessages) {
-			previousMessages.push(item.ToChatMessage());
-		}
+	const databaseMessages = databaseResponse.data.messages;
+	let previousMessages: ChatMessage[] = [];
+
+	for (let item of databaseMessages) {
+		previousMessages.push(item.ToChatMessage());
 	}
 
 	const stream = new ReadableStream({
 		async start(controller) {
 			try {
-				//Check to see if users message is malicious
 				const maliciousCheck = await OttagaSafeGuardLLM.CheckUserMessage(newMessage);
-
 				if (maliciousCheck.isMalicious) {
 					const responseMessage = EncodeToSSE(maliciousCheck.messageResponse);
 					controller.enqueue(responseMessage);
-				} else {
-					let finalGeneratedResponse = '';
-					let OttagaHealthResponse = OttagaHealthLLM.SendMessage([...previousMessages, newMessage]);
-
-					for await (const messageChunk of OttagaHealthResponse) {
-						if (messageChunk.success) {
-							const responseMessage = EncodeToSSE(messageChunk.data);
-							controller.enqueue(responseMessage);
-							finalGeneratedResponse += messageChunk.data;
-						}
-					}
-					ChatServiceSingleton.CreateChatMessage(
-						null,
-						new CreateMessageDTO(chatID, newMessage.role, newMessage.content)
-					);
-					ChatServiceSingleton.CreateChatMessage(
-						null,
-						new CreateMessageDTO(chatID, 'assistant', finalGeneratedResponse)
-					);
 				}
+
+				let FinalAssistantGeneratedResponse = '';
+				let OttagaHealthResponse = OttagaHealthLLM.SendMessage([...previousMessages, newMessage]);
+
+				for await (const messageChunk of OttagaHealthResponse) {
+					if (messageChunk.success) {
+						const responseMessage = EncodeToSSE(messageChunk.data);
+						controller.enqueue(responseMessage);
+						FinalAssistantGeneratedResponse += messageChunk.data;
+					}
+				}
+
+				const UserMessageDTO = new CreateMessageDTO(chatID, newMessage.role, newMessage.content);
+				ChatServiceSingleton.CreateChatMessage(null, UserMessageDTO);
+
+				const AssistantMessageDTO = new CreateMessageDTO(
+					chatID,
+					'assistant',
+					FinalAssistantGeneratedResponse
+				);
+				ChatServiceSingleton.CreateChatMessage(null, AssistantMessageDTO);
 
 				controller.enqueue(EncodeToSSE('[DONE]'));
 				controller.close();
@@ -66,6 +68,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 					error: 'Failed to get Ottaga response',
 					additionalProperties: { errorMessage: error }
 				});
+
 				console.error(error);
 				controller.close();
 

@@ -1,4 +1,4 @@
-import { CookieServiceSingleton } from '$lib/server/Services/Implementations/CookieService';
+import { CookieServiceSingleton } from '$lib/server/Services/CookieService';
 import { redirect, type Handle } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
@@ -33,7 +33,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 		// Attach user information to the request locals for downstream use
 		event.locals.user = {
-			id: databaseCookie.data.cookieID
+			id: databaseCookie.data.FK_userID
 		};
 
 		// Continue with the request processing

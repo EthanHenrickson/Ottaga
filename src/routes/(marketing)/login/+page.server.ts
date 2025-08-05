@@ -3,8 +3,8 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import Analytics from '$lib/utility/analytics/ServerAnalytics';
 import { AuthRateLimiterSingleton } from '$lib/utility/security/rateLimiter';
-import { CookieServiceSingleton } from '$lib/server/Services/Implementations/CookieService';
-import { AuthServiceSingleton } from '$lib/server/Services/Implementations/AuthService';
+import { CookieServiceSingleton } from '$lib/server/Services/CookieService';
+import { AuthServiceSingleton } from '$lib/server/Services/AuthService';
 
 const extractFormData = (data: FormData) => {
 	return {

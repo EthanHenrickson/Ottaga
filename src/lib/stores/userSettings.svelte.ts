@@ -1,32 +1,11 @@
-export type userSettings = {
-	//preferences
-	// 'deuteranopia' | 'protanopia' | 'tritanopia'
-	theme: string;
-	receiveCommunityDigest: boolean;
-	//Accessability
-	simplifiedLanguage: boolean;
-	reduceMotion: boolean;
-	//Privacy
-	saveConversations: boolean;
-	//LLM Memory: boolean
-	//encryption: {
-	//    encryptDatabaseData: boolean,
-	//    hashedKey: string
-	//}
-};
+import { UserSettingsDTO } from "$lib/DTOs/UserSettings";
 
-let userSettings: userSettings = $state({
-	theme: 'Light',
-	receiveCommunityDigest: true,
-	simplifiedLanguage: false,
-	reduceMotion: false,
-	saveConversations: true
-});
+let userSettings: UserSettingsDTO = $state(new UserSettingsDTO());
 
-export function getUserSettings(): userSettings {
+export function getUserSettings(): UserSettingsDTO {
 	return userSettings;
 }
 
-export function setUserSettings(newSettings: userSettings) {
+export function setUserSettings(newSettings: UserSettingsDTO) {
 	userSettings = newSettings;
 }

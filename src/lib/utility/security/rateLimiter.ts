@@ -16,10 +16,8 @@ class RateLimiter {
 		let currentTime = Date.now();
 		let record = this.attempts.get(id);
 
-		console.log(record);
-
 		if (!record || record.resetTime < currentTime) {
-			this.attempts.set(id, { count: 1, resetTime: Date.now() * this.throttleTime });
+			this.attempts.set(id, { count: 1, resetTime: Date.now() + this.throttleTime });
 			return true;
 		}
 

@@ -14,6 +14,10 @@ export class UserDTO {
 		this.hashedPassword = data.hashedPassword;
 		this.created_at = data.created_at;
 	}
+
+	ToClientSafe() {
+		this.hashedPassword = ''
+	}
 }
 
 export class CreateUserDTO {

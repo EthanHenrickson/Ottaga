@@ -8,8 +8,8 @@ import {
 } from '$lib/server/db/Repository/MessageRepository';
 import type { ServiceResult } from '$lib/types';
 import { v4, v7 } from 'uuid';
-import { ChatDTO, CreateChatDTO, UpdateChatDTO } from '../DTOs/Chat';
-import { MessageDTO, type CreateMessageDTO } from '../DTOs/Message';
+import { ChatDTO, CreateChatDTO, UpdateChatDTO } from '../../DTOs/Chat';
+import { MessageDTO, type CreateMessageDTO } from '../../DTOs/Message';
 import type { CreateChat, CreateMessage } from '$lib/server/db/databaseTypes';
 
 /**
@@ -109,7 +109,7 @@ class ChatService implements IChatService {
 	async UpdateChatByID(userID: string | null, chatData: UpdateChatDTO): Promise<ServiceResult> {
 		const existingChat = await this.ChatRepository.GetByID(chatData.id);
 		if (existingChat.success) {
-			if (existingChat.data.FK_userID != userID) {
+			if (existingChat.data.FK_userID !== userID) {
 				return {
 					success: false,
 					message: 'Not adequate permission'
@@ -139,7 +139,7 @@ class ChatService implements IChatService {
 	async GetChatByID(userID: string | null, chatID: string): Promise<ServiceResult<ChatDTO>> {
 		const dbResponse = await this.ChatRepository.GetByID(chatID);
 		if (dbResponse.success) {
-			if (dbResponse.data.FK_userID != userID) {
+			if (dbResponse.data.FK_userID !== userID) {
 				return {
 					success: false,
 					message: 'Not adequate permission'
@@ -162,7 +162,7 @@ class ChatService implements IChatService {
 		const existingUser = await this.ChatRepository.GetByID(chatID);
 
 		if (existingUser.success) {
-			if (existingUser.data.FK_userID != userID) {
+			if (existingUser.data.FK_userID !== userID) {
 				return {
 					success: false,
 					message: 'Not adequate permission'
@@ -195,7 +195,7 @@ class ChatService implements IChatService {
 	): Promise<ServiceResult<{ id: string }>> {
 		const existingChat = await this.ChatRepository.GetByID(data.chatID);
 		if (existingChat.success) {
-			if (existingChat.data.FK_userID != userID) {
+			if (existingChat.data.FK_userID !== userID) {
 				return {
 					success: false,
 					message: 'Not adequate permission'
@@ -238,7 +238,7 @@ class ChatService implements IChatService {
 	): Promise<ServiceResult<{ messages: MessageDTO[] }>> {
 		const existingChat = await this.ChatRepository.GetByID(chatID);
 		if (existingChat.success) {
-			if (existingChat.data.FK_userID != userID) {
+			if (existingChat.data.FK_userID !== userID) {
 				return {
 					success: false,
 					message: 'Not adequate permission'

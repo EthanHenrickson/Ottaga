@@ -1,13 +1,14 @@
 import type { UserSettings } from '$lib/server/db/databaseTypes';
 
 export class UserSettingsDTO {
-	theme: string;
-	receiveCommunityDigest: boolean;
-	saveConversations: boolean;
-	simplifiedLanguage: boolean;
-	reduceMotion: boolean;
+	theme: string = 'light';
+	receiveCommunityDigest: boolean = true;
+	saveConversations: boolean = true;
+	simplifiedLanguage: boolean = false;
+	reduceMotion: boolean = false;
 
-	constructor(data: UserSettings) {
+	constructor(data?: UserSettings) {
+		if(!data) return
 		this.theme = data.theme;
 		this.receiveCommunityDigest = data.receiveCommunityDigest;
 		this.saveConversations = data.saveConversations;

@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { CookieServiceSingleton } from '$lib/server/Services/Implementations/CookieService';
+import { CookieServiceSingleton } from '$lib/server/Services/CookieService';
 
 export const GET: RequestHandler = async ({ cookies }) => {
 	const cookieID = cookies.get('sessionID') || '';

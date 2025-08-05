@@ -8,7 +8,7 @@ import {
 	CreateUserSettingsDTO,
 	UpdateUserSettingsDTO,
 	UserSettingsDTO
-} from '../DTOs/UserSettings';
+} from '../../DTOs/UserSettings';
 
 /**
  * Service interface for managing user settings operations
@@ -93,6 +93,11 @@ class UserSettingsService implements IUserSettingsService {
 		userID: string,
 		userSettings: UpdateUserSettingsDTO
 	): Promise<ServiceResult> {
+		const existingSettings = await this.UserSettingsRepository.GetByUserID(userID);
+		if (!existingSettings.success) {
+			return { success: false, message: 'Settings not found' };
+		}
+		
 		const dbResponse = await this.UserSettingsRepository.UpdateByUserID(userID, userSettings);
 		if (dbResponse.success) {
 			return {

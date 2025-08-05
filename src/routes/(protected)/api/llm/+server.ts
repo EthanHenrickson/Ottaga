@@ -4,8 +4,8 @@ import { json, type RequestHandler } from '@sveltejs/kit';
 import type { ChatMessage } from '$lib/types';
 import Analytics from '$lib/utility/analytics/ServerAnalytics';
 import { EncodeToSSE } from '$lib/utility/SSE/SSEHelper';
-import { ChatServiceSingleton } from '$lib/server/Services/Implementations/ChatService';
-import { CreateMessageDTO } from '$lib/server/Services/DTOs/Message';
+import { ChatServiceSingleton } from '$lib/server/Services/ChatService';
+import { CreateMessageDTO } from '$lib/DTOs/Message';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	//Get data from the request

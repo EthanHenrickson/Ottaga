@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Toast } from '$lib/stores/toastClient.svelte';
 	import type { ActionData } from '../../../../routes/(marketing)/login/$types';
 
 	let { form }: { form: ActionData } = $props();

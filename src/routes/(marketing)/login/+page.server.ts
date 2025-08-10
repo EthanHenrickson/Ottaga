@@ -1,8 +1,8 @@
 /** @type {import('./$types').Actions} */
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
-import Analytics from '$lib/utility/analytics/ServerAnalytics';
-import { AuthRateLimiterSingleton } from '$lib/utility/security/rateLimiter';
+import Analytics from '$lib/utility/server/analytics/ServerAnalytics';
+import { AuthRateLimiterSingleton } from '$lib/utility/server/security/rateLimiter';
 import { CookieServiceSingleton } from '$lib/server/Services/CookieService';
 import { AuthServiceSingleton } from '$lib/server/Services/AuthService';
 
@@ -20,7 +20,8 @@ export const actions = {
 
 		if (!AuthRateLimiterSingleton.isAllowed(email)) {
 			return fail(422, {
-				error: 'Too many incorrect attempts, try again later.'
+				error: 'Too many incorrect attempts, try again later.',
+				
 			});
 		}
 

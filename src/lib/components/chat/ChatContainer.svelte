@@ -2,7 +2,7 @@
 	import type { ChatMessage } from '$lib/types';
 
 	import { marked } from 'marked';
-	import { DecodeSSE } from '$lib/utility/SSE/SSEHelper';
+	import { DecodeSSE } from '$lib/utility/server/SSE/SSEHelper';
 	import { tick } from 'svelte';
 	import LoadingMessageContainer from './LoadingMessageContainer.svelte';
 

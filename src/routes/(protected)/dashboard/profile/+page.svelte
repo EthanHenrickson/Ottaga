@@ -1,17 +1,25 @@
 <script lang="ts">
+	import { Toast } from '$lib/stores/toastClient.svelte';
 	import { getUserSettings, setUserSettings } from '$lib/stores/userSettings.svelte';
 
 	let userSettings = getUserSettings();
 
 	async function saveUserSettings() {
 		setUserSettings(userSettings);
-		await fetch('/api/userSettings', {
+		const response = await fetch('/api/userSettings', {
 			method: 'POST',
 			body: JSON.stringify(userSettings),
 			headers: {
 				'content-type': 'application/json'
 			}
 		});
+
+		const responseData = await response.json()
+		console.log(responseData.success)
+
+		if(responseData.success){
+			Toast.create("Updated User Settings", 'Success')
+		}
 	}
 </script>
 
@@ -23,8 +31,8 @@
 			<div class="dropdown setting">
 				<label for="theme">Color Theme</label>
 				<select name="" id="theme" bind:value={userSettings.theme}>
-					<option value="Dark">Dark</option>
-					<option value="Light">Light</option>
+					<option value="dark">Dark</option>
+					<option value="light">Light</option>
 				</select>
 			</div>
 			<div class="checkbox setting">

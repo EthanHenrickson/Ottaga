@@ -1,5 +1,5 @@
 import type { ChatMessage, MaliciousLLMResponse } from '$lib/types';
-import Analytics from '$lib/utility/analytics/ServerAnalytics';
+import Analytics from '$lib/utility/server/analytics/ServerAnalytics';
 import { OttagaAbstractBaseProvider } from '../providers/OttagaAbstractBaseProvider';
 
 export class OttagaSafeGuard {

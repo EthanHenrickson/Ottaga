@@ -2,8 +2,8 @@ import { OttagaHealthLLM, OttagaSafeGuardLLM } from '$lib/llm/Ottaga';
 import { json, type RequestHandler } from '@sveltejs/kit';
 
 import type { ChatMessage } from '$lib/types';
-import Analytics from '$lib/utility/analytics/ServerAnalytics';
-import { EncodeToSSE } from '$lib/utility/SSE/SSEHelper';
+import Analytics from '$lib/utility/server/analytics/ServerAnalytics';
+import { EncodeToSSE } from '$lib/utility/server/SSE/SSEHelper';
 import { ChatServiceSingleton } from '$lib/server/Services/ChatService';
 import { CreateMessageDTO } from '$lib/DTOs/Message';
 

@@ -16,7 +16,7 @@ export class UserDTO {
 	}
 
 	ToClientSafe() {
-		this.hashedPassword = ''
+		this.hashedPassword = '';
 	}
 }
 

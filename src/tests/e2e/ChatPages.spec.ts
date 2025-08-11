@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { ChatMap } from './pageMap/ChatMap';
 
-test('Send Message', async ({ page }) => {
+test('Should allow a user to send a message', async ({ page }) => {
 	const ChatPage = new ChatMap(page);
 
 	await ChatPage.GoTo();

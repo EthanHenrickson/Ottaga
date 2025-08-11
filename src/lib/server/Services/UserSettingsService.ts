@@ -97,7 +97,7 @@ class UserSettingsService implements IUserSettingsService {
 		if (!existingSettings.success) {
 			return { success: false, message: 'Settings not found' };
 		}
-		
+
 		const dbResponse = await this.UserSettingsRepository.UpdateByUserID(userID, userSettings);
 		if (dbResponse.success) {
 			return {

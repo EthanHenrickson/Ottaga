@@ -13,7 +13,13 @@
 	}: { id: string; message: string; type: 'Success' | 'Warning' | 'Error' | 'Info' } = $props();
 </script>
 
-<div class={`toast ${type}`} role="alert" aria-live="polite" in:fade out:fly={{x: 75, duration: 1000}}>
+<div
+	class={`toast ${type}`}
+	role="alert"
+	aria-live="polite"
+	in:fade
+	out:fly={{ x: 75, duration: 1000 }}
+>
 	<div class="icon">
 		{#if type == 'Success'}
 			<Success />
@@ -68,7 +74,7 @@
 		padding-left: 0rem;
 		border-radius: 0.5rem;
 		width: 16rem;
-		opacity: .95;
+		opacity: 0.95;
 
 		filter: drop-shadow(rgb(154, 154, 154) 0.4rem 0.4rem 0.6rem);
 	}
@@ -78,7 +84,7 @@
 		align-items: center;
 		margin-right: 10px;
 		flex-grow: 1;
-		font-size: .9rem;
+		font-size: 0.9rem;
 		font-weight: 400;
 	}
 
@@ -91,8 +97,8 @@
 		color: black;
 	}
 
-	.icon{
-		padding: 0rem .75rem;
+	.icon {
+		padding: 0rem 0.75rem;
 	}
 
 	button {

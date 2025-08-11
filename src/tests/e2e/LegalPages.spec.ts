@@ -1,14 +1,14 @@
 import { expect, test } from '@playwright/test';
 import { BasicMap } from './pageMap/BasicMap';
 
-test('TOS', async ({ page }) => {
+test('Should expect TOS page too exist', async ({ page }) => {
 	const MainPage = new BasicMap(page);
 
 	await MainPage.GoTo('/legal/tos');
 	await expect(page.getByRole('heading', { name: 'Terms of Service', exact: true })).toBeAttached();
 });
 
-test('Cookie', async ({ page }) => {
+test('Should expect cookie page too exist', async ({ page }) => {
 	const MainPage = new BasicMap(page);
 
 	await MainPage.GoTo('/legal/cookie');
@@ -17,7 +17,7 @@ test('Cookie', async ({ page }) => {
 	).toBeAttached();
 });
 
-test('Privacy', async ({ page }) => {
+test('Should expect privacy page too exist', async ({ page }) => {
 	const MainPage = new BasicMap(page);
 
 	await MainPage.GoTo('/legal/privacy');

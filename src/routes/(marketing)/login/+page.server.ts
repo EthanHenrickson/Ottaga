@@ -20,8 +20,7 @@ export const actions = {
 
 		if (!AuthRateLimiterSingleton.isAllowed(email)) {
 			return fail(422, {
-				error: 'Too many incorrect attempts, try again later.',
-				
+				error: 'Too many incorrect attempts, try again later.'
 			});
 		}
 

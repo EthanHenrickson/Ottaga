@@ -8,7 +8,7 @@ export class UserSettingsDTO {
 	reduceMotion: boolean = false;
 
 	constructor(data?: UserSettings) {
-		if(!data) return
+		if (!data) return;
 		this.theme = data.theme;
 		this.receiveCommunityDigest = data.receiveCommunityDigest;
 		this.saveConversations = data.saveConversations;

@@ -14,11 +14,11 @@
 			}
 		});
 
-		const responseData = await response.json()
-		console.log(responseData.success)
+		const responseData = await response.json();
+		console.log(responseData.success);
 
-		if(responseData.success){
-			Toast.create("Updated User Settings", 'Success')
+		if (responseData.success) {
+			Toast.create('Updated User Settings', 'Success');
 		}
 	}
 </script>

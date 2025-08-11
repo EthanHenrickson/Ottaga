@@ -5,8 +5,8 @@
 	let { data, children } = $props();
 
 	onMount(() => {
-        const userPreferences = JSON.parse(data.preferences) as UserSettingsDTO
-        setUserSettings(userPreferences)
+		const userPreferences = JSON.parse(data.preferences) as UserSettingsDTO;
+		setUserSettings(userPreferences);
 	});
 </script>
 

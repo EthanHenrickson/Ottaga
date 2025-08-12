@@ -6,7 +6,7 @@ import Analytics from '$lib/utility/server/analytics/ServerAnalytics';
 import { EncodeToSSE } from '$lib/utility/server/SSE/SSEHelper';
 import { ChatServiceSingleton } from '$lib/server/Services/ChatService';
 import { CreateMessageDTO } from '$lib/client/DTOs/Message';
-import { LLMCallRateLimiterSingleton } from '$lib/utility/server/security/RateLimiter';
+import { LLMCallRateLimiterSingleton } from '$lib/utility/server/security/rateLimiter';
 
 export const POST: RequestHandler = async ({ request }) => {
 	//Get data from the request

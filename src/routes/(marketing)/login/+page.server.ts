@@ -2,7 +2,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import Analytics from '$lib/utility/server/analytics/ServerAnalytics';
-import { AuthRateLimiterSingleton } from '$lib/utility/server/security/RateLimiter';
+import { AuthRateLimiterSingleton } from '$lib/utility/server/security/rateLimiter';
 import { CookieServiceSingleton } from '$lib/server/Services/CookieService';
 import { AuthServiceSingleton } from '$lib/server/Services/AuthService';
 

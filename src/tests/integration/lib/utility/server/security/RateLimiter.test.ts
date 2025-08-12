@@ -1,4 +1,4 @@
-import { RateLimiter } from '$lib/utility/server/security/RateLimiter';
+import { RateLimiter } from '$lib/utility/server/security/rateLimiter';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('Rate Limiter', () => {

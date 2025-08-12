@@ -14,7 +14,7 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
-		"lint": "prettier --check ."
+		"lint": "eslint src/"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.33.0",
@@ -27,11 +27,12 @@
 		"@types/better-sqlite3": "^7.6.12",
 		"@types/pg": "^8.11.13",
 		"eslint": "^9.33.0",
+		"eslint-plugin-svelte": "^3.11.0",
 		"globals": "^16.3.0",
 		"jiti": "^2.5.1",
 		"prettier": "^3.4.2",
 		"prettier-plugin-svelte": "^3.3.3",
-		"svelte": "^5.0.0",
+		"svelte": "^5.38.1",
 		"svelte-check": "^4.0.0",
 		"typescript": "^5.0.0",
 		"typescript-eslint": "^8.39.1",

@@ -1,4 +1,4 @@
-class RateLimiter {
+export class RateLimiter {
 	private attempts = new Map<string, { count: number; resetTime: number }>();
 	private throttleTime: number;
 	private maxAttempts: number;

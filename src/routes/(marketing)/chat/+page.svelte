@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Chat from '$lib/components/chat/ChatContainer.svelte';
 	import type { PageProps } from './$types';
+	import ChatContainer from '$lib/client/components/chat/ChatContainer.svelte';
 
 	//Take in the chatID from the server and pass it too the chat component
 	let { data }: PageProps = $props();
@@ -23,7 +23,7 @@
 
 <div class="content">
 	<div class="chat">
-		<Chat {chatID} />
+		<ChatContainer {chatID} />
 	</div>
 </div>
 

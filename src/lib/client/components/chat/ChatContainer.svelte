@@ -71,7 +71,7 @@
 					const { done, value } = await reader.read();
 
 					if (done) break;
-
+					
 					const decodedSSEArray = DecodeSSE<{
 						content: string;
 					}>(value);

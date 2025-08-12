@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import Menu from '$lib/icons/menu.svelte';
-	import Close from '$lib/icons/close.svelte';
-	import { onMount } from 'svelte';
+	import Menu from '$lib/client/icons/menu.svelte';
+	import Close from '$lib/client/icons/close.svelte';
 
 	let isMobile = $state(false);
 	let isOpen = $state(false);
@@ -50,22 +49,22 @@
 		<nav class="mainNav" class:open={isOpen} aria-label="Main">
 			<div class="nav-links">
 				<a
-					href="/"
+					href="/dashboard"
 					onclick={toggleMenu}
-					class:active={page.url.pathname === '/'}
-					aria-current={page.url.pathname === '/' ? 'page' : undefined}>Home</a
+					class:active={page.url.pathname === '/dashboard'}
+					aria-current={page.url.pathname === '/dashboard' ? 'page' : undefined}>Dashboard</a
 				>
 				<a
-					href="/chat"
+					href="/dashboard/chat"
 					onclick={toggleMenu}
-					class:active={page.url.pathname === '/chat'}
-					aria-current={page.url.pathname === '/chat' ? 'page' : undefined}>Chat</a
+					class:active={page.url.pathname === '/dashboard/chat'}
+					aria-current={page.url.pathname === '/dashboard/chat' ? 'page' : undefined}>Chat</a
 				>
 				<a
-					href="/login"
+					href="/dashboard/profile"
 					onclick={toggleMenu}
-					class:active={page.url.pathname === '/login'}
-					aria-current={page.url.pathname === '/login' ? 'page' : undefined}>Account</a
+					class:active={page.url.pathname === '/dashboard/profile'}
+					aria-current={page.url.pathname === '/dashboard/profile' ? 'page' : undefined}>Profile</a
 				>
 			</div>
 		</nav>

@@ -5,7 +5,7 @@ import {
 } from '$lib/server/db/Repository/UserRepository';
 import type { ServiceResult } from '$lib/types';
 import { v4 } from 'uuid';
-import { CreateUserDTO, UpdateUserDTO, UserDTO } from '../../DTOs/User';
+import { CreateUserDTO, UpdateUserDTO, UserDTO } from '../../client/DTOs/User';
 import argon2 from 'argon2';
 
 /**

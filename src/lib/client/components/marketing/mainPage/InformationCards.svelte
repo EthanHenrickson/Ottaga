@@ -1,8 +1,8 @@
 <script>
-	import Clock from '$lib/icons/clock.svelte';
-	import CutCreditCard from '$lib/icons/cutCreditCard.svelte';
-	import Lock from '$lib/icons/lock.svelte';
-	import OpenDoor from '$lib/icons/openDoor.svelte';
+	import Clock from '$lib/client/icons/clock.svelte';
+	import CutCreditCard from '$lib/client/icons/cutCreditCard.svelte';
+	import Lock from '$lib/client/icons/lock.svelte';
+	import OpenDoor from '$lib/client/icons/openDoor.svelte';
 </script>
 
 <section class="content" aria-labelledby="feature-heading" id="cards">

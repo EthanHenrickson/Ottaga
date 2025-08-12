@@ -2,8 +2,8 @@ import type { ServiceResult } from '$lib/types';
 import argon2 from 'argon2';
 import { UserServiceSingleton, type IUserService } from './UserService';
 import { UserSettingsServiceSingleton, type IUserSettingsService } from './UserSettingsService';
-import { CreateUserDTO } from '../../DTOs/User';
-import { CreateUserSettingsDTO } from '../../DTOs/UserSettings';
+import { CreateUserDTO } from '../../client/DTOs/User';
+import { CreateUserSettingsDTO } from '../../client/DTOs/UserSettings';
 
 export interface IAuthService {
 	CreateAccount(email: string, password: string, name: string): Promise<ServiceResult<string>>;

@@ -8,8 +8,8 @@ import {
 } from '$lib/server/db/Repository/MessageRepository';
 import type { ServiceResult } from '$lib/types';
 import { v4, v7 } from 'uuid';
-import { ChatDTO, CreateChatDTO, UpdateChatDTO } from '../../DTOs/Chat';
-import { MessageDTO, type CreateMessageDTO } from '../../DTOs/Message';
+import { ChatDTO, CreateChatDTO, UpdateChatDTO } from '../../client/DTOs/Chat';
+import { MessageDTO, type CreateMessageDTO } from '../../client/DTOs/Message';
 import type { CreateChat, CreateMessage } from '$lib/server/db/databaseTypes';
 
 /**

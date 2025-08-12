@@ -1,7 +1,7 @@
 import { UserSettingsServiceSingleton } from '$lib/server/Services/UserSettingsService.js';
 import { fail } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
-import { CreateUserSettingsDTO } from '$lib/DTOs/UserSettings';
+import { CreateUserSettingsDTO } from '$lib/client/DTOs/UserSettings';
 
 export const load: LayoutServerLoad = async ({ locals }) => {
 	const userID = locals.user.id;

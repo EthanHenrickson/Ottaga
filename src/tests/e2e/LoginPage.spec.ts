@@ -10,17 +10,17 @@ const testData = {
 };
 
 test('Should redirect unauthenticated user from protected routes', async ({ page }) => {
-	let BasicPage = new BasicMap(page);
+	const BasicPage = new BasicMap(page);
 
 	await BasicPage.GoTo('/dashboard');
 	expect(page.url()).not.toContain('/dashboard');
 });
 
 test('Should display error message when logging in with invalid credentials', async ({ page }) => {
-	let email = faker.internet.email();
-	let password = faker.internet.password();
+	const email = faker.internet.email();
+	const password = faker.internet.password();
 
-	let LoginPage = new LoginMap(page);
+	const LoginPage = new LoginMap(page);
 
 	await LoginPage.GoTo();
 	await LoginPage.LoginToAccount(email, password);
@@ -31,7 +31,7 @@ test('Should display error message when logging in with invalid credentials', as
 });
 
 test('Should successfully create account and login with new credentials', async ({ page }) => {
-	let LoginPage = new LoginMap(page);
+	const LoginPage = new LoginMap(page);
 
 	await LoginPage.GoTo();
 	await LoginPage.CreateAccount(testData.name, testData.email, testData.password);
@@ -41,8 +41,8 @@ test('Should successfully create account and login with new credentials', async 
 });
 
 test('Should successfully logout and redirect to home page', async ({ page }) => {
-	let BasicPage = new BasicMap(page);
-	let LoginPage = new LoginMap(page);
+	const BasicPage = new BasicMap(page);
+	const LoginPage = new LoginMap(page);
 
 	await LoginPage.GoTo();
 	await LoginPage.LoginToAccount(testData.email, testData.password);
@@ -56,11 +56,11 @@ test('Should successfully logout and redirect to home page', async ({ page }) =>
 });
 
 test('Should prevent account creation with duplicate email address', async ({ page }) => {
-	let LoginPage = new LoginMap(page);
+	const LoginPage = new LoginMap(page);
 
 	await LoginPage.GoTo();
 	await LoginPage.CreateAccount('TestName', 'test@gmail.com', testData.password);
-	expect(page.locator('#error')).toHaveText('An account with that email already exists.');
+	await expect(page.locator('#error')).toHaveText('An account with that email already exists.');
 	expect(page.url()).not.toContain('dashboard');
 	expect(page.url()).toContain('/login');
 });

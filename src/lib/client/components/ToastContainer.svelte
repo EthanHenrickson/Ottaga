@@ -1,6 +1,6 @@
 <script>
-	import ToastMessage from '$lib/components/ToastMessage.svelte';
-	import { Toast } from '$lib/stores/toastClient.svelte';
+	import { Toast } from '$lib/client/stores/toastClient.svelte';
+	import ToastMessage from './ToastMessage.svelte';
 </script>
 
 <div class="toastContainer">

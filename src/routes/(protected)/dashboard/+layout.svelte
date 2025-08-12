@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { UserSettingsDTO } from '$lib/DTOs/UserSettings.js';
-	import { setUserSettings } from '$lib/stores/userSettings.svelte.js';
+	import type { UserSettingsDTO } from '$lib/client/DTOs/UserSettings.js';
+	import { setUserSettings } from '$lib/client/stores/userSettings.svelte.js';
 	import { onMount } from 'svelte';
 	let { data, children } = $props();
 

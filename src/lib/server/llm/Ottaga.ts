@@ -1,4 +1,4 @@
-import { OttagaHealthConfig, OttagaSafeGuardConfig } from '../../../llm.config';
+import { OttagaHealthConfig, OttagaSafeGuardConfig } from '../../../../llm.config';
 import { OttagaOpenAIProvider } from './providers/OttagaOpenAIProvider';
 import { OttagaSafeGuard } from './ottageSafeGuard/OttagaSafeGuard';
 import { OttagaHealth } from './ottagaHealth/OttagaHealth';

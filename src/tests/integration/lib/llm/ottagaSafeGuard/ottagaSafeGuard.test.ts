@@ -1,4 +1,4 @@
-import { OttagaSafeGuardLLM } from '$lib/llm/Ottaga';
+import { OttagaSafeGuardLLM } from '$lib/server/llm/Ottaga';
 import { MaliciousPrompts, GoodPrompts } from './TestPrompts';
 import { describe, it, expect } from 'vitest';
 

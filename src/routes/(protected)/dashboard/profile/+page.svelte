@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Toast } from '$lib/stores/toastClient.svelte';
-	import { getUserSettings, setUserSettings } from '$lib/stores/userSettings.svelte';
+	import { Toast } from '$lib/client/stores/toastClient.svelte';
+	import { getUserSettings, setUserSettings } from '$lib/client/stores/userSettings.svelte';
 
 	let userSettings = getUserSettings();
 

@@ -1,5 +1,5 @@
 <script>
-	import ToastContainer from '$lib/components/ToastContainer.svelte';
+	import ToastContainer from '$lib/client/components/ToastContainer.svelte';
 
 	let { children } = $props();
 </script>

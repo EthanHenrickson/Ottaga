@@ -1,13 +1,13 @@
-import { OttagaHealthLLM, OttagaSafeGuardLLM } from '$lib/llm/Ottaga';
+import { OttagaHealthLLM, OttagaSafeGuardLLM } from '$lib/server/llm/Ottaga';
 import { json, type RequestHandler } from '@sveltejs/kit';
 
 import type { ChatMessage } from '$lib/types';
 import Analytics from '$lib/utility/server/analytics/ServerAnalytics';
 import { EncodeToSSE } from '$lib/utility/server/SSE/SSEHelper';
 import { ChatServiceSingleton } from '$lib/server/Services/ChatService';
-import { CreateMessageDTO } from '$lib/DTOs/Message';
+import { CreateMessageDTO } from '$lib/client/DTOs/Message';
 
-export const POST: RequestHandler = async ({ request, locals }) => {
+export const POST: RequestHandler = async ({ request }) => {
 	//Get data from the request
 	const data = await request.json();
 	const chatID = data.chatID;
@@ -23,9 +23,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	}
 
 	const databaseMessages = databaseResponse.data.messages;
-	let previousMessages: ChatMessage[] = [];
+	const previousMessages: ChatMessage[] = [];
 
-	for (let item of databaseMessages) {
+	for (const item of databaseMessages) {
 		previousMessages.push(item.ToChatMessage());
 	}
 
@@ -39,7 +39,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 				}
 
 				let FinalAssistantGeneratedResponse = '';
-				let OttagaHealthResponse = OttagaHealthLLM.SendMessage([...previousMessages, newMessage]);
+				const OttagaHealthResponse = OttagaHealthLLM.SendMessage([...previousMessages, newMessage]);
 
 				for await (const messageChunk of OttagaHealthResponse) {
 					if (messageChunk.success) {

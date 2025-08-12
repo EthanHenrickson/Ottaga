@@ -3,9 +3,9 @@ import { redirect, type Handle } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const ProtectedRoutes = ['/api', '/dashboard'];
-	let isProtectedRoute = ProtectedRoutes.some((route) => event.url.pathname.startsWith(route));
+	const isProtectedRoute = ProtectedRoutes.some((route) => event.url.pathname.startsWith(route));
 
-	let isAuthRoute =
+	const isAuthRoute =
 		event.url.pathname.startsWith('/api/auth') || event.url.pathname.startsWith('/api/llm');
 
 	if (!isProtectedRoute || isAuthRoute) {

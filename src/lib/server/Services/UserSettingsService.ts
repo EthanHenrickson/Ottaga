@@ -8,7 +8,7 @@ import {
 	CreateUserSettingsDTO,
 	UpdateUserSettingsDTO,
 	UserSettingsDTO
-} from '../../DTOs/UserSettings';
+} from '../../client/DTOs/UserSettings';
 
 /**
  * Service interface for managing user settings operations

@@ -1,9 +1,9 @@
 <script lang="ts">
-	import Error from '$lib/icons/toast/Error.svelte';
-	import Info from '$lib/icons/toast/Info.svelte';
-	import Success from '$lib/icons/toast/Success.svelte';
-	import Warning from '$lib/icons/toast/Warning.svelte';
-	import { Toast } from '$lib/stores/toastClient.svelte';
+	import Error from '$lib/client/icons/toast/Error.svelte';
+	import Info from '$lib/client/icons/toast/Info.svelte';
+	import Success from '$lib/client/icons/toast/Success.svelte';
+	import Warning from '$lib/client/icons/toast/Warning.svelte';
+	import { Toast } from '$lib/client/stores/toastClient.svelte';
 	import { fade, fly } from 'svelte/transition';
 
 	const {

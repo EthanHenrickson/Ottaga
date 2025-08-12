@@ -5,7 +5,7 @@ import {
 } from '$lib/server/db/Repository/CookieRespository';
 import type { ServiceResult } from '$lib/types';
 import { v7 } from 'uuid';
-import { CookieDTO } from '../../DTOs/Cookie';
+import { CookieDTO } from '../../client/DTOs/Cookie';
 
 /**
  * Service interface for managing user authentication cookies

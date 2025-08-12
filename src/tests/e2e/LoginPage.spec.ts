@@ -30,7 +30,10 @@ test('Should display error message when logging in with invalid credentials', as
 	await expect(page.locator('#error')).toContainText('Incorrect email or password');
 });
 
-test('Should successfully create account and login with new credentials', async ({ page }) => {
+test('Should successfully create account and login and then log out with new credentials', async ({
+	page
+}) => {
+	const BasicPage = new BasicMap(page);
 	const LoginPage = new LoginMap(page);
 
 	await LoginPage.GoTo();
@@ -38,14 +41,7 @@ test('Should successfully create account and login with new credentials', async 
 	await LoginPage.LoginToAccount(testData.email, testData.password);
 
 	expect(page.url()).toContain('dashboard');
-});
 
-test('Should successfully logout and redirect to home page', async ({ page }) => {
-	const BasicPage = new BasicMap(page);
-	const LoginPage = new LoginMap(page);
-
-	await LoginPage.GoTo();
-	await LoginPage.LoginToAccount(testData.email, testData.password);
 	await LoginPage.Logout();
 
 	expect(page.url()).not.toContain('dashboard');

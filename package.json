@@ -15,7 +15,8 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
 		"lint": "eslint src/",
-		"pre-commit": "npm run lint && npm run format && npm run test"
+		"lint:fix": "eslint src/ --fix",
+		"pre-commit": "npm run lint:fix && npm run format && npm run test"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.33.0",

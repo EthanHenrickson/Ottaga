@@ -2,13 +2,16 @@ import { CookieServiceSingleton } from '$lib/server/Services/CookieService';
 import { redirect, type Handle } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
+	const isGuestAPIRoute = event.url.pathname.startsWith('/api/guest');
+
+	if (isGuestAPIRoute) {
+		return resolve(event);
+	}
+
 	const ProtectedRoutes = ['/api', '/dashboard'];
 	const isProtectedRoute = ProtectedRoutes.some((route) => event.url.pathname.startsWith(route));
 
-	const isAuthRoute =
-		event.url.pathname.startsWith('/api/auth') || event.url.pathname.startsWith('/api/llm');
-
-	if (!isProtectedRoute || isAuthRoute) {
+	if (!isProtectedRoute) {
 		return resolve(event);
 	}
 

@@ -9,13 +9,11 @@
 	// Props: chatID is used to identify the current chat session
 	let { chatID }: { chatID: string } = $props();
 
-	// References the HTML element containing the chat messages
-	let chatMessageContainer: HTMLElement;
+	let messageContainer: HTMLElement;
 
-	//State variables
-	let chatScrolledToBottom: boolean = $state(false);
-	let isLoading = $state(false);
-	let userMessageInput = $state(''); //References new user message input
+	let isChatScrolledToBottom: boolean = $state(false);
+	let isLLMLoading = $state(false);
+	let userMessageInput = $state('');
 	let messageArray: ChatMessage[] = $state([
 		{
 			role: 'assistant',
@@ -23,32 +21,20 @@
 		}
 	]);
 
-	// Function to scroll to the bottom of the chat container
-	async function scrollToBottom() {
-		await tick();
-		chatMessageContainer.scroll({
-			top: chatMessageContainer.scrollHeight,
-			behavior: 'smooth'
-		});
-	}
 
 	// Handles form submission, sends message to backend and processes streaming response
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
-
-		// Skip empty messages
 		if (!userMessageInput.trim()) return;
 
-		// Set loading state and append message to chat
-		isLoading = true;
+		// Set loading state, append message to chat, await svelte update cycle, scroll to bottom of
 		messageArray.push({ role: 'user', content: userMessageInput });
-
-		await tick();
-		scrollToBottom();
+		isLLMLoading = true;
+		scrollToBottom(true);
 
 		try {
 			// Send messages to LLM API endpoint
-			const response: Response = await fetch('/api/llm', {
+			const response: Response = await fetch('/api/guest/llm', {
 				method: 'POST',
 				body: JSON.stringify({
 					chatID: chatID,
@@ -59,65 +45,78 @@
 				}
 			});
 
-			const reader = response.body?.getReader();
+			isLLMLoading = false;
 
-			if (reader) {
-				messageArray.push({ role: 'assistant', content: '' });
-				isLoading = false;
-
-				// Process the stream
-				let breakLoops = false;
-				while (true) {
-					const { done, value } = await reader.read();
-
-					if (done) break;
-					
-					const decodedSSEArray = DecodeSSE<{
-						content: string;
-					}>(value);
-
-					//Loop through SSE blocks and append chunks to messages
-					for (let dataBlock of decodedSSEArray) {
-						if (dataBlock.content == '[DONE]') {
-							breakLoops = true;
-							break;
-						} else {
-							messageArray[messageArray.length - 1].content += dataBlock.content;
-						}
-					}
-
-					if (chatScrolledToBottom) {
-						scrollToBottom();
-					}
-
-					if (breakLoops) {
+			if (!response.ok) {
+				switch (response.status) {
+					case 404:
+						alert('API not found. Please try again later');
 						break;
+					case 429:
+						alert('Rate Limit Exceeded. Please send messages slower');
+						break;
+					default:
+						alert(`HTTP error! status: ${response.status}`);
+				}
+				messageArray.pop();
+				return;
+			}
+
+			if (!response.body) {
+				throw new Error(`Missing critical LLM data`);
+			}
+
+			userMessageInput = '';
+
+			const reader = response.body.getReader();
+			messageArray.push({ role: 'assistant', content: '' });
+
+			while (true) {
+				const { done, value } = await reader.read();
+				if (done) return;
+
+				const decodedSSEArray = DecodeSSE<{
+					content: string;
+				}>(value);
+
+				//Loop through SSE blocks and append chunks to messages
+				for (const dataBlock of decodedSSEArray) {
+					if (dataBlock.content == '[DONE]') {
+						reader.cancel();
+						return;
+					} else {
+						messageArray[messageArray.length - 1].content += dataBlock.content;
+						scrollToBottom();
 					}
 				}
 			}
 		} catch (error) {
 			console.log(error);
-			// Add error message to chat if request fails
+
 			messageArray.push({
 				role: 'assistant',
 				content: 'Sorry, there was an error processing your request.'
 			});
-		} finally {
-			isLoading = false;
-			userMessageInput = '';
 		}
 	}
 
 	//Checks to see if the user is scrolled to the bottom of the chat window
 	async function handleScroll() {
-		//Get chat window height elements
-		const TotalHeight = chatMessageContainer.scrollHeight;
-		const PixelsScrolled = chatMessageContainer.scrollTop;
-		const DisplayHeight = chatMessageContainer.clientHeight;
+		const { scrollTop, scrollHeight, clientHeight }= messageContainer
 
-		//Total number of pixels from being scrolled to bottom of chat window
-		const PixelsFromBottom = TotalHeight - PixelsScrolled - DisplayHeight;
-		chatScrolledToBottom = Math.abs(PixelsFromBottom) < 50;
+		const PixelsFromBottom = scrollHeight - scrollTop - clientHeight;
+		isChatScrolledToBottom = Math.abs(PixelsFromBottom) < 50;
+	}
+
+	// Scroll to the bottom of the chat container
+	async function scrollToBottom(force: boolean = false) {
+		if (isChatScrolledToBottom || force) {
+			await tick();
+			messageContainer.scroll({
+				top: messageContainer.scrollHeight,
+				behavior: 'smooth'
+			});
+		}
 	}
 </script>
 
@@ -132,12 +131,12 @@
 
 <div class="content">
 	<div class="chat-container">
-		<div class="messages" bind:this={chatMessageContainer} onscroll={handleScroll}>
+		<div class="messages" bind:this={messageContainer} onscroll={handleScroll}>
 			{#each messageArray as message}
 				{@render messageBox(message)}
 			{/each}
 
-			{#if isLoading}
+			{#if isLLMLoading}
 				<div class="loadingMessageContainer">
 					<LoadingMessageContainer />
 				</div>
@@ -149,10 +148,10 @@
 				type="text"
 				bind:value={userMessageInput}
 				placeholder="Send a message"
-				disabled={isLoading}
+				disabled={isLLMLoading}
 			/>
 
-			<button class="sendButton" type="submit" disabled={isLoading}>Send</button>
+			<button class="sendButton" type="submit" disabled={isLLMLoading}>Send</button>
 		</form>
 	</div>
 </div>

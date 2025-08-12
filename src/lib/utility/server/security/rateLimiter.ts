@@ -1,15 +1,15 @@
 export class RateLimiter {
 	private attempts = new Map<string, { count: number; resetTime: number }>();
-	private throttleTime: number;
-	private maxAttempts: number;
+	private timePeriod: number;
+	private maxCalls: number;
 
 	/**
-	 * @param {number} throttleTime Number of milliseconds too throttle a user for
-	 * @param {Number} maxAttempts Number of attempts a user has
+	 * @param {number} timePeriod Number of milliseconds for a time period
+	 * @param {Number} maxCalls Number of calls a user can make in that time period
 	 */
-	constructor(throttleTime: number = 5 * 6 * 1000, maxAttempts: number = 5) {
-		this.throttleTime = throttleTime;
-		this.maxAttempts = maxAttempts;
+	constructor(timePeriod: number = 30 * 1000, maxCalls: number = 5) {
+		this.timePeriod = timePeriod;
+		this.maxCalls = maxCalls;
 	}
 
 	isAllowed(id: string) {
@@ -17,11 +17,11 @@ export class RateLimiter {
 		const record = this.attempts.get(id);
 
 		if (!record || record.resetTime < currentTime) {
-			this.attempts.set(id, { count: 1, resetTime: Date.now() + this.throttleTime });
+			this.attempts.set(id, { count: 1, resetTime: Date.now() + this.timePeriod });
 			return true;
 		}
 
-		if (record.count >= this.maxAttempts) {
+		if (record.count >= this.maxCalls) {
 			return false;
 		}
 
@@ -31,3 +31,4 @@ export class RateLimiter {
 }
 
 export const AuthRateLimiterSingleton = new RateLimiter();
+export const LLMCallRateLimiterSingleton = new RateLimiter(60 * 1000, 6);

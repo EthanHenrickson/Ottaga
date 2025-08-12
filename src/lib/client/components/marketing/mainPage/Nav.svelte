@@ -2,7 +2,6 @@
 	import { page } from '$app/state';
 	import Menu from '$lib/client/icons/menu.svelte';
 	import Close from '$lib/client/icons/close.svelte';
-	import { onMount } from 'svelte';
 
 	let isMobile = $state(false);
 	let isOpen = $state(false);

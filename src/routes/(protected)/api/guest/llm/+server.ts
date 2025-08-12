@@ -31,12 +31,9 @@ export const POST: RequestHandler = async ({ request }) => {
 		throw Error('Failed to retrieve past messages');
 	}
 
-	const databaseMessages = databaseResponse.data.messages;
-	const previousMessages: ChatMessage[] = [];
-
-	for (const item of databaseMessages) {
-		previousMessages.push(item.ToChatMessage());
-	}
+	const previousMessages: ChatMessage[] = databaseResponse.data.messages.map((element) =>
+		element.ToChatMessage()
+	);
 
 	const stream = new ReadableStream({
 		async start(controller) {
@@ -45,16 +42,21 @@ export const POST: RequestHandler = async ({ request }) => {
 				if (maliciousCheck.isMalicious) {
 					const responseMessage = EncodeToSSE(maliciousCheck.messageResponse);
 					controller.enqueue(responseMessage);
+					controller.close();
+					return;
 				}
 
 				let FinalAssistantGeneratedResponse = '';
-				const OttagaHealthResponse = OttagaHealthLLM.SendMessage([...previousMessages, newMessage]);
+				const OttagaHealthResponseStream = OttagaHealthLLM.SendMessage([
+					...previousMessages,
+					newMessage
+				]);
 
-				for await (const messageChunk of OttagaHealthResponse) {
-					if (messageChunk.success) {
-						const responseMessage = EncodeToSSE(messageChunk.data);
-						controller.enqueue(responseMessage);
-						FinalAssistantGeneratedResponse += messageChunk.data;
+				for await (const streamChunk of OttagaHealthResponseStream) {
+					if (streamChunk.success) {
+						const sseData = EncodeToSSE(streamChunk.data);
+						controller.enqueue(sseData);
+						FinalAssistantGeneratedResponse += streamChunk.data;
 					}
 				}
 

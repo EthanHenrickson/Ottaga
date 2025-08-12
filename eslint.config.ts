@@ -29,7 +29,6 @@ export default ts.config(
 		}
 	},
 	{
-		rules: {
-		}
+		rules: {}
 	}
 );

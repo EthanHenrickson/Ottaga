@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
 	plugins: [sveltekit()],
 	test: {
-		maxConcurrency: 8,
+		maxConcurrency: 2,
 		testTimeout: 30000,
 		include: ['src/**/*.test.{js,ts}'],
 		exclude: ['src/**/*.svelte.{test,spec}.{js,ts}', 'src/tests/e2e/*.spec.ts'],

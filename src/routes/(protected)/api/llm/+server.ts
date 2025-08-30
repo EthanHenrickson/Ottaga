@@ -1,72 +1,90 @@
-import { ChatDatabase } from '$lib/db/chat/chat';
-import { OttagaHealthLLM, OttagaSafeGuardLLM } from '$lib/llm/Ottaga';
+import { OttagaHealthLLM, OttagaSafeGuardLLM } from '$lib/server/llm/Ottaga';
 import { json, type RequestHandler } from '@sveltejs/kit';
 
-import type { Message } from '$lib/types';
-import Analytics from '$lib/utility/ServerAnalytics';
-import { EncodeToSSE } from '$lib/utility/SSEHelper';
+import type { ChatMessage } from '$lib/types';
+import Analytics from '$lib/utility/server/analytics/ServerAnalytics';
+import { EncodeToSSE } from '$lib/utility/server/SSE/SSEHelper';
+import { ChatServiceSingleton } from '$lib/server/Services/ChatService';
+import { CreateMessageDTO } from '$lib/client/DTOs/Message';
 
-export const POST: RequestHandler = async ({ request, }) => {
-    //Get data from the request
-    const data = await request.json();
-    const chatID = data.chatID
-    const newMessage: Message = {
-        role: "user",
-        content: data.messageInput
-    }
+export const POST: RequestHandler = async ({ request }) => {
+	//Get data from the request
+	const data = await request.json();
+	const chatID = data.chatID;
+	const newMessage: ChatMessage = {
+		role: 'user',
+		content: data.messageInput
+	};
 
-    //Retrieve all previous messages and add them too the conversation
-    let previousMessages: Message[] = []
-    const databaseResponse = await ChatDatabase.getChatMessagesByID(chatID)
-    if (databaseResponse.success) {
-        previousMessages = [...databaseResponse.data.messages]
-    }
+	//Retrieve all previous messages and add them too the conversation
+	const databaseResponse = await ChatServiceSingleton.GetChatMessagesByID(null, chatID);
+	if (!databaseResponse.success || !databaseResponse.data) {
+		throw Error('Failed to retrieve past messages');
+	}
 
-    const stream = new ReadableStream({
-        async start(controller) {
-            try {
-                //Check to see if users message is malicious
-                const maliciousCheck = await OttagaSafeGuardLLM.CheckUserMessage(newMessage)
+	const databaseMessages = databaseResponse.data.messages;
+	const previousMessages: ChatMessage[] = [];
 
-                if (maliciousCheck.isMalicious) {
-                    const responseMessage = EncodeToSSE(maliciousCheck.messageResponse)
-                    controller.enqueue(responseMessage)
-                } else {
-                    let finalGeneratedResponse = ''
-                    let OttagaHealthResponse = OttagaHealthLLM.SendMessage([...previousMessages, newMessage])
+	for (const item of databaseMessages) {
+		previousMessages.push(item.ToChatMessage());
+	}
 
-                    for await (const messageChunk of OttagaHealthResponse) {
-                        if (messageChunk.success) {
-                            const responseMessage = EncodeToSSE(messageChunk.data)
-                            controller.enqueue(responseMessage);
-                            finalGeneratedResponse += messageChunk.data
-                        }
-                    }
-                    ChatDatabase.addChatMessage(chatID, newMessage)
-                    ChatDatabase.addChatMessage(chatID, { role: 'assistant', content: finalGeneratedResponse })
-                }
+	const stream = new ReadableStream({
+		async start(controller) {
+			try {
+				const maliciousCheck = await OttagaSafeGuardLLM.CheckUserMessage(newMessage);
+				if (maliciousCheck.isMalicious) {
+					const responseMessage = EncodeToSSE(maliciousCheck.messageResponse);
+					controller.enqueue(responseMessage);
+				}
 
-                controller.enqueue(EncodeToSSE("[DONE]"));
-                controller.close();
+				let FinalAssistantGeneratedResponse = '';
+				const OttagaHealthResponse = OttagaHealthLLM.SendMessage([...previousMessages, newMessage]);
 
-                Analytics.capture({ distinctId: "Anon", event: "api/llm called" })
-            } catch (error) {
+				for await (const messageChunk of OttagaHealthResponse) {
+					if (messageChunk.success) {
+						const responseMessage = EncodeToSSE(messageChunk.data);
+						controller.enqueue(responseMessage);
+						FinalAssistantGeneratedResponse += messageChunk.data;
+					}
+				}
 
-                Analytics.captureException({ error: "Failed to get Ottaga response", additionalProperties: { errorMessage: error } })
-                console.error(error);
-                controller.close();
+				const UserMessageDTO = new CreateMessageDTO(chatID, newMessage.role, newMessage.content);
+				ChatServiceSingleton.CreateChatMessage(null, UserMessageDTO);
 
+				const AssistantMessageDTO = new CreateMessageDTO(
+					chatID,
+					'assistant',
+					FinalAssistantGeneratedResponse
+				);
+				ChatServiceSingleton.CreateChatMessage(null, AssistantMessageDTO);
 
-                return json({ success: false, message: `LLM API Server Error - ${error}` }, { status: 500 });
-            }
-        }
-    })
+				controller.enqueue(EncodeToSSE('[DONE]'));
+				controller.close();
 
-    return new Response(stream, {
-        headers: {
-            'Content-Type': 'text/event-stream;',
-            'Cache-Control': 'no-cache',
-            'Connection': 'keep-alive',
-        }
-    })
+				Analytics.capture({ distinctId: 'Anon', event: 'api/llm called' });
+			} catch (error) {
+				Analytics.captureException({
+					error: 'Failed to get Ottaga response',
+					additionalProperties: { errorMessage: error }
+				});
+
+				console.error(error);
+				controller.close();
+
+				return json(
+					{ success: false, message: `LLM API Server Error - ${error}` },
+					{ status: 500 }
+				);
+			}
+		}
+	});
+
+	return new Response(stream, {
+		headers: {
+			'Content-Type': 'text/event-stream;',
+			'Cache-Control': 'no-cache',
+			Connection: 'keep-alive'
+		}
+	});
 };

@@ -5,6 +5,7 @@ A compassionate platform providing AI-powered mental health support through secu
 ## Features
 
 ### Core Functionality
+
 - **AI-Powered Mental Health Support**: Secure chat interface with specialized mental health AI assistance
 - **Safety-First Design**: Built-in safeguards to detect and prevent malicious prompts or harmful interactions
 - **User Authentication**: Secure session management with cookie-based authentication
@@ -12,6 +13,7 @@ A compassionate platform providing AI-powered mental health support through secu
 - **Marketing Pages**: Public-facing pages including legal documentation and educational content
 
 ### Technical Features
+
 - **Streaming Chat Responses**: Real-time AI responses using Server-Sent Events (SSE)
 - **PostgreSQL Database**: Robust data persistence with Kysely query builder
 - **Comprehensive Testing**: Unit tests with Vitest and end-to-end tests with Playwright
@@ -21,6 +23,7 @@ A compassionate platform providing AI-powered mental health support through secu
 ## Architecture
 
 ### Project Structure
+
 ```
 src/
 ├── lib/
@@ -49,18 +52,21 @@ src/
 ## Development Setup
 
 ### Prerequisites
+
 - Node.js (v20+ recommended)
 - npm or pnpm
 
 ### Installation
 
 1. **Clone the repository**
+
 ```bash
 git clone <repository-url>
 cd Ottaga
 ```
 
 2. **Install dependencies**
+
 ```bash
 npm install
 # or
@@ -68,8 +74,9 @@ pnpm install
 ```
 
 3. **Set up environment variables**
-Create a `.env` file in the root directory:
-```env
+   Create a `.env` file in the root directory:
+
+````env
 # Database
 POSTGRES_URL="postgresql://username:password@localhost:5432/ottaga"
 
@@ -82,7 +89,7 @@ OPENAI_API_KEY="your-openai-api-key"
 npm run dev
 # or
 pnpm dev
-```
+````
 
 The application will be available at `http://localhost:5173`
 
@@ -99,6 +106,7 @@ The application will be available at `http://localhost:5173`
 ## Testing
 
 Run tests with:
+
 ```bash
 # All tests
 npm run test
@@ -109,21 +117,25 @@ npm run test:unit
 # E2E tests only
 npm run test:e2e
 ```
+
 ## Technology Stack
 
 ### Frontend
+
 - **SvelteKit**: Full-stack framework with SSR/SPA capabilities
 - **Svelte 5**: Modern reactive UI framework
 - **TypeScript**: Type-safe development
 - **Vite**: Fast build tool and development server
 
 ### Backend
+
 - **SvelteKit API Routes**: Server-side API endpoints
 - **PostgreSQL**: Relational database
 - **Kysely**: Type-safe SQL query builder
 - **Argon2**: Password hashing
 
 ### Testing & Analytics
+
 - **Vitest**: Unit testing framework
 - **Playwright**: End-to-end testing
 - **PostHog**: User analytics and error tracking
@@ -139,6 +151,7 @@ npm run test:e2e
 7. Open a Pull Request
 
 ### Development Guidelines
+
 - Follow TypeScript best practices
 - Write tests for new functionality
 - Ensure all tests pass before submitting PR

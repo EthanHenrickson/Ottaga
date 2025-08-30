@@ -1,77 +1,53 @@
 /** @type {import('./$types').Actions} */
-import { CookieDatabase } from '$lib/db/cookie';
-import { UserDatabase } from '$lib/db/user/user';
 import { fail, redirect } from '@sveltejs/kit';
-import argon2 from 'argon2';
-
-import type { NewUserTableRecord } from '$lib/types';
 import type { Actions } from './$types';
-import Analytics from '$lib/utility/ServerAnalytics';
+import Analytics from '$lib/utility/server/analytics/ServerAnalytics';
+import { AuthRateLimiterSingleton } from '$lib/utility/server/security/rateLimiter';
+import { CookieServiceSingleton } from '$lib/server/Services/CookieService';
+import { AuthServiceSingleton } from '$lib/server/Services/AuthService';
 
 const extractFormData = (data: FormData) => {
 	return {
 		email: data.get('email')?.toString().toLowerCase() as string,
 		password: data.get('password') as string,
 		name: data.get('name') as string
-	}
-}
+	};
+};
 
 export const actions = {
-	/**
-	 * Handles user login attempts
-	 * 
-	 * Process:
-	 * 1. Extracts credentials from form data
-	 * 2. Validates against database records
-	 * 3. Creates session cookie on success
-	 * 4. Returns error on failure
-	 */
-
 	login: async ({ cookies, request }) => {
-		const { email, password } = extractFormData(await request.formData())
-		const user = await UserDatabase.getByEmail(email);
+		const { email, password } = extractFormData(await request.formData());
 
-		if (user.success && await argon2.verify(user.data.userRecord.hashedPassword, password)) {
-			const cookieResponse = await CookieDatabase.createCookie(user.data.userRecord.id);
-
-			if (cookieResponse.success) {
-				cookies.set('sessionID', cookieResponse.data, { path: '/' });
-				redirect(302, '/dashboard');
-			} else {
-				Analytics.captureException("Failed to create cookie in database")
-				throw Error("Couldn't create cookie")
-			}
+		if (!AuthRateLimiterSingleton.isAllowed(email)) {
+			return fail(422, {
+				error: 'Too many incorrect attempts, try again later.'
+			});
 		}
 
-		return fail(422, {
-			error: 'Incorrect username or password'
-		});
-	},
-	
-	/**
-	 * Handles new user registration
-	 * 
-	 * Process:
-	 * 1. Extracts user information from form data
-	 * 2. Securely hashes password using Argon2
-	 * 3. Creates new user record in database
-	 * 4. Returns error if email already exists
-	 */
-	signup: async ({ request }) => {
-		const { email, password, name } = extractFormData(await request.formData())
-		const passwordHash = await argon2.hash(password, { timeCost: 2 });
-
-		const newUserData: NewUserTableRecord = {
-			name: name,
-			email: email,
-			hashedPassword: passwordHash,
-		};
-
-		const result = await UserDatabase.createUser(newUserData);
-
-		if (!result.success) {
+		const AuthServiceResponse = await AuthServiceSingleton.VerifyAccount(email, password);
+		if (!AuthServiceResponse || !AuthServiceResponse.data) {
 			return fail(422, {
-				error: result.message
+				error: 'Incorrect email or password'
+			});
+		}
+
+		const cookieResponse = await CookieServiceSingleton.CreateCookie(AuthServiceResponse.data);
+		if (!cookieResponse.success || !cookieResponse.data) {
+			Analytics.captureException('Failed to create cookie in database');
+			throw Error("Couldn't create cookie");
+		}
+
+		cookies.set('sessionID', cookieResponse.data.cookieID, { path: '/' });
+		redirect(302, '/dashboard');
+	},
+
+	signup: async ({ request }) => {
+		const { email, password, name } = extractFormData(await request.formData());
+
+		const AuthResponse = await AuthServiceSingleton.CreateAccount(email, password, name);
+		if (!AuthResponse.success) {
+			return fail(422, {
+				error: AuthResponse.message
 			});
 		}
 	}

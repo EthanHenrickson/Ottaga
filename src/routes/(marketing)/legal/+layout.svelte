@@ -1,16 +1,16 @@
 <script>
-    let { children } = $props()
+	let { children } = $props();
 </script>
 
 <div class="content">
-    {@render children?.()}
+	{@render children?.()}
 </div>
 
 <style>
-    .content {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 2rem;
-        line-height: 1.6;
-    }
+	.content {
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 2rem;
+		line-height: 1.6;
+	}
 </style>

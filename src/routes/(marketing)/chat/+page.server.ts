@@ -1,25 +1,22 @@
-import type { PageServerLoad } from "./$types";
-import { OttagaHealthLLM } from "$lib/llm/Ottaga";
-import { ChatDatabase } from "$lib/db/chat/chat";
+import type { PageServerLoad } from './$types';
+import { OttagaHealthLLM } from '$lib/server/llm/Ottaga';
+import { ChatServiceSingleton } from '$lib/server/Services/ChatService';
+import { CreateChatDTO } from '$lib/client/DTOs/Chat';
+import { CreateMessageDTO } from '$lib/client/DTOs/Message';
 
 export const load: PageServerLoad = async () => {
-    let chatID: string
+	const chatDBResponse = await ChatServiceSingleton.CreateChat(null, new CreateChatDTO());
+	if (!chatDBResponse.success || !chatDBResponse.data) {
+		throw Error('Failed to create Chat for Ottaga');
+	}
 
-    //Create a new chat save the chat id
-    let chatDBResponse = await ChatDatabase.createChat()
+	const systemMessage = OttagaHealthLLM.llmProviderInstance.SystemPrompt;
+	const MessageDTO = new CreateMessageDTO(chatDBResponse.data.id, 'system', systemMessage);
 
-    if (chatDBResponse.success) {
-        //Generate system prompt
-        const systemMessage = OttagaHealthLLM.llmProviderInstance.SystemPrompt
-        await ChatDatabase.addChatMessage(chatDBResponse.data.uuid, { role: 'system', content: systemMessage })
+	await ChatServiceSingleton.CreateChatMessage(null, MessageDTO);
+	const chatID = chatDBResponse.data.id;
 
-        //Return chatID
-        chatID = chatDBResponse.data.uuid
-    } else {
-        throw Error("Failed to create Chat for Ottaga")
-    }
-
-    return {
-        chatID: chatID
-    }
+	return {
+		chatID: chatID
+	};
 };

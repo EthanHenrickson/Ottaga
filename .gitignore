@@ -32,8 +32,5 @@ mydb.sqlite-wal
 /playwright-report/
 /blob-report/
 /playwright/.cache/
-.idea/.gitignore
-.idea/modules.xml
-.idea/Ottaga.iml
-.idea/vcs.xml
+.idea
 .continue/prompts/new-prompt.yaml

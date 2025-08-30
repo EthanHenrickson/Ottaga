@@ -1,53 +1,48 @@
-
-import { CookieDatabase } from '$lib/db/cookie';
+import { CookieServiceSingleton } from '$lib/server/Services/CookieService';
 import { redirect, type Handle } from '@sveltejs/kit';
 
-/**
- * Server-side authentication hook for handling route access and session management.
- *
- * This hook intercepts server-side route requests and performs the following key functions:
- * - Allows unrestricted access to authentication routes and non-home routes
- * - Validates user sessions using browser cookies
- * - Redirects unauthenticated or expired sessions to the login page
- * - Refreshes valid session cookies to extend their lifetime
- *
- */
 export const handle: Handle = async ({ event, resolve }) => {
-    // Skip authentication for auth routes or non-dashboard routes
-    if (event.url.pathname.startsWith('/api/auth') || !event.url.pathname.startsWith('/dashboard')) {
-        return resolve(event);
-    }
+	const isGuestAPIRoute = event.url.pathname.startsWith('/api/guest');
 
-    const cookieID = event.cookies.get('sessionID');
-    if (!cookieID) {
-        // No session cookie found - redirect to login
-        redirect(302, '/login');
-    }
+	if (isGuestAPIRoute) {
+		return resolve(event);
+	}
 
-    // Fetch the cookie details from the authentication database
-    const databaseCookie = await CookieDatabase.getByID(cookieID);
-    if (!databaseCookie.success) {
-        redirect(302, '/login');
-    }
+	const ProtectedRoutes = ['/api', '/dashboard'];
+	const isProtectedRoute = ProtectedRoutes.some((route) => event.url.pathname.startsWith(route));
 
-    // Check if the session cookie is still valid based on expiration time
-    const cookieValid = databaseCookie.data.cookie.expireTime > Date.now();
-    if (cookieValid) {
-        // Session is valid - refresh the cookie to extend its lifetime
-        await CookieDatabase.updateByID(databaseCookie.data.cookie.id);
+	if (!isProtectedRoute) {
+		return resolve(event);
+	}
 
-        // Attach user information to the request locals for downstream use
-        event.locals.user = {
-            id: databaseCookie.data.cookie.userID
-        };
+	const cookieID = event.cookies.get('sessionID');
+	if (!cookieID) {
+		redirect(303, '/login');
+	}
 
-        // Continue with the request processing
-        return resolve(event);
-    } else {
-        // Session has expired - remove the invalid cookie
-        await CookieDatabase.deleteByID(databaseCookie.data.cookie.id);
+	// Fetch the cookie from database
+	const databaseCookie = await CookieServiceSingleton.GetCookieByID(cookieID);
+	if (!databaseCookie.success || !databaseCookie.data) {
+		redirect(303, '/login');
+	}
 
-        // Redirect to login for expired sessions
-        redirect(302, '/login');
-    }
+	const ExpireTime = databaseCookie.data.expireTime.getTime();
+
+	const cookieValid = ExpireTime > Date.now();
+	if (cookieValid) {
+		// Only update cookie expire time if its less than 5 minutes to expire
+		if (ExpireTime - Date.now() < 5 * 1000 * 60) {
+			await CookieServiceSingleton.UpdateCookieByID(databaseCookie.data.cookieID);
+		}
+
+		event.locals.user = {
+			id: databaseCookie.data.FK_userID
+		};
+
+		return resolve(event);
+	} else {
+		await CookieServiceSingleton.DeleteCookieByID(databaseCookie.data.cookieID);
+
+		redirect(302, '/login');
+	}
 };

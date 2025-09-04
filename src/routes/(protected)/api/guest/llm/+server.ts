@@ -6,7 +6,7 @@ import Analytics from '$lib/utility/server/analytics/ServerAnalytics';
 import { EncodeToSSE } from '$lib/utility/server/SSE/SSEHelper';
 import { ChatServiceSingleton } from '$lib/server/Services/ChatService';
 import { CreateMessageDTO } from '$lib/client/DTOs/Message';
-import { LLMCallRateLimiterSingleton } from '$lib/utility/server/security/rateLimiter';
+import { LLMGuestCallRateLimiterSingleton } from '$lib/utility/server/security/rateLimiter';
 
 export const POST: RequestHandler = async ({ request }) => {
 	//Get data from the request
@@ -17,7 +17,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		content: data.messageInput
 	};
 
-	const isNotRateLimited = LLMCallRateLimiterSingleton.isAllowed(chatID);
+	const isNotRateLimited = LLMGuestCallRateLimiterSingleton.isAllowed(chatID);
 	if (!isNotRateLimited) {
 		return json(
 			{ success: false, message: `LLM Call Rate Limit Exceeded. Please wait and try again later.` },

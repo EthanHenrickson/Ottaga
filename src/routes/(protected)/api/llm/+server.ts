@@ -6,6 +6,7 @@ import Analytics from '$lib/utility/server/analytics/ServerAnalytics';
 import { EncodeToSSE } from '$lib/utility/server/SSE/SSEHelper';
 import { ChatServiceSingleton } from '$lib/server/Services/ChatService';
 import { CreateMessageDTO } from '$lib/client/DTOs/Message';
+import { LLMCallRateLimiterSingleton } from '$lib/utility/server/security/rateLimiter';
 
 export const POST: RequestHandler = async ({ request }) => {
 	//Get data from the request
@@ -15,6 +16,14 @@ export const POST: RequestHandler = async ({ request }) => {
 		role: 'user',
 		content: data.messageInput
 	};
+
+	const isNotRateLimited = LLMCallRateLimiterSingleton.isAllowed(chatID);
+	if (!isNotRateLimited) {
+		return json(
+			{ success: false, message: `LLM Call Rate Limit Exceeded. Please wait and try again later.` },
+			{ status: 429 }
+		);
+	}
 
 	//Retrieve all previous messages and add them too the conversation
 	const databaseResponse = await ChatServiceSingleton.GetChatMessagesByID(null, chatID);

@@ -31,4 +31,5 @@ export class RateLimiter {
 }
 
 export const AuthRateLimiterSingleton = new RateLimiter();
-export const LLMCallRateLimiterSingleton = new RateLimiter(60 * 1000, 6);
+export const LLMCallRateLimiterSingleton = new RateLimiter(60 * 1000, 10);
+export const LLMGuestCallRateLimiterSingleton = new RateLimiter(60 * 1000, 5);

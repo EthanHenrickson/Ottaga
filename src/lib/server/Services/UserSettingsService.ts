@@ -38,8 +38,16 @@ export interface IUserSettingsService {
 	UpdateByUserID(userID: string, userSettings: UpdateUserSettingsDTO): Promise<ServiceResult>;
 }
 
+/**
+ * Service class for managing user settings including theme preferences, notifications, and accessibility options
+ */
 class UserSettingsService implements IUserSettingsService {
 	private UserSettingsRepository: IUserSettingsRepository;
+	
+	/**
+	 * Creates a new UserSettingsService instance
+	 * @param UserSettingsRepository - Repository for user settings data operations
+	 */
 	constructor(UserSettingsRepository: IUserSettingsRepository) {
 		this.UserSettingsRepository = UserSettingsRepository;
 	}

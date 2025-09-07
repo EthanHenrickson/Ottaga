@@ -73,10 +73,18 @@ interface IChatService {
 	): Promise<ServiceResult<{ messages: MessageDTO[] }>>;
 }
 
+/**
+ * Service class for managing chat operations including creation, updates, and message handling
+ */
 class ChatService implements IChatService {
 	private ChatRepository: IChatRepository;
 	private MessageRepository: IMessageRepository;
 
+	/**
+	 * Creates a new ChatService instance
+	 * @param ChatRepository - Repository for chat data operations
+	 * @param MessageRepository - Repository for message data operations
+	 */
 	constructor(ChatRepository: IChatRepository, MessageRepository: IMessageRepository) {
 		this.ChatRepository = ChatRepository;
 		this.MessageRepository = MessageRepository;

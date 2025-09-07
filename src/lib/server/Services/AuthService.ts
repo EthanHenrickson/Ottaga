@@ -5,14 +5,40 @@ import { UserSettingsServiceSingleton, type IUserSettingsService } from './UserS
 import { CreateUserDTO } from '../../client/DTOs/User';
 import { CreateUserSettingsDTO } from '../../client/DTOs/UserSettings';
 
+/**
+ * Interface defining authentication service operations for user account management
+ */
 export interface IAuthService {
+	/**
+	 * Creates a new user account with default settings
+	 * @param email - User's email address
+	 * @param password - User's plain text password (will be hashed)
+	 * @param name - User's display name
+	 * @returns Promise resolving to service result with new user ID
+	 */
 	CreateAccount(email: string, password: string, name: string): Promise<ServiceResult<string>>;
+
+	/**
+	 * Verifies user credentials for authentication
+	 * @param email - User's email address
+	 * @param password - User's plain text password
+	 * @returns Promise resolving to service result with user ID if valid
+	 */
 	VerifyAccount(email: string, password: string): Promise<ServiceResult<string>>;
 }
 
+/**
+ * Service class for authentication operations including account creation and verification
+ */
 class AuthService implements IAuthService {
 	private UserService: IUserService;
 	private UserSettingsService: IUserSettingsService;
+	
+	/**
+	 * Creates a new AuthService instance
+	 * @param userService - Service for user data operations
+	 * @param userSettingsService - Service for user settings operations
+	 */
 	constructor(userService: IUserService, userSettingsService: IUserSettingsService) {
 		this.UserService = userService;
 		this.UserSettingsService = userSettingsService;

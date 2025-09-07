@@ -14,14 +14,13 @@ describe('Check user message', () => {
 
 		// Mock the client
 		// Ensure llmClient is defined before mocking
-		// @ts-ignore - Replace the client with our mock
 		OttagaSafeGuardLLM.llmProviderInstance.callCompletion = mockCallCompletion;
 	});
 
 	it("Should return with default values if it can't connect to API", async () => {
 		mockCallCompletion.mockResolvedValue('');
 
-		let result = await OttagaSafeGuardLLM.CheckUserMessage({ role: 'user', content: 'Hi there' });
+		const result = await OttagaSafeGuardLLM.CheckUserMessage({ role: 'user', content: 'Hi there' });
 		expect(result).toStrictEqual({
 			isMalicious: true,
 			messageResponse: "Sorry that message couldn't be parsed. Please try again."
@@ -32,7 +31,7 @@ describe('Check user message', () => {
 		const consoleMock = vi.spyOn(console, 'log').mockImplementation(() => undefined);
 		mockCallCompletion.mockResolvedValue({ success: true, data: '{' });
 
-		let result = await OttagaSafeGuardLLM.CheckUserMessage({ role: 'user', content: 'Hi there' });
+		const result = await OttagaSafeGuardLLM.CheckUserMessage({ role: 'user', content: 'Hi there' });
 		expect(result).toStrictEqual({
 			isMalicious: true,
 			messageResponse: "Sorry that message couldn't be parsed. Please try again."
@@ -46,7 +45,7 @@ describe('Check user message', () => {
 			data: `{ "isMalicious": true, "messageResponse": "This is a bad message" }`
 		});
 
-		let result = await OttagaSafeGuardLLM.CheckUserMessage({ role: 'user', content: 'Hi there' });
+		const result = await OttagaSafeGuardLLM.CheckUserMessage({ role: 'user', content: 'Hi there' });
 		expect(result).toStrictEqual({
 			isMalicious: true,
 			messageResponse: 'This is a bad message'
@@ -59,7 +58,7 @@ describe('Check user message', () => {
 			data: `{ "isMalicious": false, "messageResponse": "" }`
 		});
 
-		let result = await OttagaSafeGuardLLM.CheckUserMessage({ role: 'user', content: 'Hi there' });
+		const result = await OttagaSafeGuardLLM.CheckUserMessage({ role: 'user', content: 'Hi there' });
 		expect(result).toStrictEqual({
 			isMalicious: false,
 			messageResponse: ''

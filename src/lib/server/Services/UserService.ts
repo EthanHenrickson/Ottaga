@@ -43,8 +43,16 @@ export interface IUserService {
 	Delete(userID: string): Promise<ServiceResult>;
 }
 
+/**
+ * Service class for user management operations including creation, authentication, and CRUD operations
+ */
 class UserService implements IUserService {
 	private UserRepository: IUserRepository;
+	
+	/**
+	 * Creates a new UserService instance
+	 * @param userRepository - Repository for user data operations
+	 */
 	constructor(userRepository: IUserRepository) {
 		this.UserRepository = userRepository;
 	}

@@ -40,8 +40,16 @@ export interface ICookieService {
 	GetCookieByID(cookieID: string): Promise<ServiceResult<CookieDTO>>;
 }
 
+/**
+ * Service class for managing authentication cookies with automatic expiration handling
+ */
 class CookieService implements ICookieService {
 	private CookieRepository: ICookieRepository;
+	
+	/**
+	 * Creates a new CookieService instance
+	 * @param CookieRepository - Repository for cookie data operations
+	 */
 	constructor(CookieRepository: ICookieRepository) {
 		this.CookieRepository = CookieRepository;
 	}

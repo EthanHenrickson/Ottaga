@@ -1,5 +1,5 @@
 import type { ChatMessage, MaliciousLLMResponse } from '$lib/types';
-import Analytics from '$lib/utility/server/analytics/ServerAnalytics';
+import PostHogAnalytics from '$lib/utility/server/analytics/ServerAnalytics';
 import { OttagaAbstractBaseProvider } from '../providers/OttagaAbstractBaseProvider';
 
 export class OttagaSafeGuard {
@@ -25,11 +25,11 @@ export class OttagaSafeGuard {
 			messageResponse: "Sorry that message couldn't be parsed. Please try again."
 		};
 
-		let response = await this.llmProviderInstance.callCompletion([message]);
+		const response = await this.llmProviderInstance.callCompletion([message]);
 
 		//If response failed; return default message and log to analytics
 		if (!response || !response.success) {
-			Analytics.captureException('Call to LLM provider for malicious message failed', 'Anon', {
+			PostHogAnalytics.captureException('Call to LLM provider for malicious message failed', 'Anon', {
 				message: message,
 				responseFromLLM: response
 			});
@@ -37,7 +37,7 @@ export class OttagaSafeGuard {
 		}
 
 		try {
-			let ParseLLMResponse: any = JSON.parse(response.data);
+			const ParseLLMResponse: MaliciousLLMResponse = JSON.parse(response.data);
 
 			if (
 				typeof ParseLLMResponse.isMalicious === 'boolean' &&
@@ -46,7 +46,7 @@ export class OttagaSafeGuard {
 				returnResponse = ParseLLMResponse;
 
 				if (ParseLLMResponse.isMalicious) {
-					Analytics.capture({
+					PostHogAnalytics.capture({
 						distinctId: 'Anon',
 						event: 'User attempted to send malicious message',
 						properties: { message: message }
@@ -55,7 +55,7 @@ export class OttagaSafeGuard {
 			}
 		} catch {
 			console.log('Failed to parse json output - ', response);
-			Analytics.captureException(
+			PostHogAnalytics.captureException(
 				'Failed to parse LLM response in Malicious message checker',
 				'Anon',
 				{ message: message }

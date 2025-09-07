@@ -2,7 +2,7 @@ import { OttagaHealthLLM, OttagaSafeGuardLLM } from '$lib/server/llm/Ottaga';
 import { json, type RequestHandler } from '@sveltejs/kit';
 
 import type { ChatMessage } from '$lib/types';
-import Analytics from '$lib/utility/server/analytics/ServerAnalytics';
+import PostHogAnalytics from '$lib/utility/server/analytics/ServerAnalytics';
 import { EncodeToSSE } from '$lib/utility/server/SSE/SSEHelper';
 import { ChatServiceSingleton } from '$lib/server/Services/ChatService';
 import { CreateMessageDTO } from '$lib/client/DTOs/Message';
@@ -45,6 +45,15 @@ export const POST: RequestHandler = async ({ request }) => {
 				if (maliciousCheck.isMalicious) {
 					const responseMessage = EncodeToSSE(maliciousCheck.messageResponse);
 					controller.enqueue(responseMessage);
+					controller.close();
+
+					PostHogAnalytics.capture({
+						distinctId: 'Anon', event: 'message found too be malicious', properties: {
+							maliciousMessage: newMessage
+						}
+					})
+
+					return;
 				}
 
 				let FinalAssistantGeneratedResponse = '';
@@ -71,9 +80,9 @@ export const POST: RequestHandler = async ({ request }) => {
 				controller.enqueue(EncodeToSSE('[DONE]'));
 				controller.close();
 
-				Analytics.capture({ distinctId: 'Anon', event: 'api/llm called' });
+				PostHogAnalytics.capture({ distinctId: 'Anon', event: 'llm api called' });
 			} catch (error) {
-				Analytics.captureException({
+				PostHogAnalytics.captureException({
 					error: 'Failed to get Ottaga response',
 					additionalProperties: { errorMessage: error }
 				});

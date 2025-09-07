@@ -1,7 +1,7 @@
 /** @type {import('./$types').Actions} */
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
-import Analytics from '$lib/utility/server/analytics/ServerAnalytics';
+import PostHogAnalytics from '$lib/utility/server/analytics/ServerAnalytics';
 import { AuthRateLimiterSingleton } from '$lib/utility/server/security/rateLimiter';
 import { CookieServiceSingleton } from '$lib/server/Services/CookieService';
 import { AuthServiceSingleton } from '$lib/server/Services/AuthService';
@@ -26,6 +26,14 @@ export const actions = {
 
 		const AuthServiceResponse = await AuthServiceSingleton.VerifyAccount(email, password);
 		if (!AuthServiceResponse || !AuthServiceResponse.data) {
+			PostHogAnalytics.capture({
+				distinctId: email,
+				event: 'login_failed',
+				properties: {
+					email: email,
+					reason: 'invalid_credentials'
+				}
+			});
 			return fail(422, {
 				error: 'Incorrect email or password'
 			});
@@ -33,9 +41,17 @@ export const actions = {
 
 		const cookieResponse = await CookieServiceSingleton.CreateCookie(AuthServiceResponse.data);
 		if (!cookieResponse.success || !cookieResponse.data) {
-			Analytics.captureException('Failed to create cookie in database');
+			PostHogAnalytics.captureException('Failed to create cookie in database');
 			throw Error("Couldn't create cookie");
 		}
+
+		PostHogAnalytics.capture({
+			distinctId: AuthServiceResponse.data,
+			event: 'login_success',
+			properties: {
+				email: email
+			}
+		});
 
 		cookies.set('sessionID', cookieResponse.data.cookieID, { path: '/' });
 		redirect(302, '/dashboard');
@@ -46,9 +62,26 @@ export const actions = {
 
 		const AuthResponse = await AuthServiceSingleton.CreateAccount(email, password, name);
 		if (!AuthResponse.success) {
+			PostHogAnalytics.capture({
+				distinctId: email,
+				event: 'signup_failed',
+				properties: {
+					email: email,
+					reason: AuthResponse.message
+				}
+			});
 			return fail(422, {
 				error: AuthResponse.message
 			});
 		}
+
+		PostHogAnalytics.capture({
+			distinctId: email,
+			event: 'signup_success',
+			properties: {
+				email: email,
+				name: name
+			}
+		});
 	}
 } satisfies Actions;

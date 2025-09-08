@@ -17,14 +17,14 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
 	/**
 	 * Calls the OpenAI chat completion API without streaming.
 	 *
-	 * @param {ChatMessage[]} messages - Array of message objects representing the conversation history
-	 * @returns {Promise<CompletionResponse<string>>} Promise resolving to completion response object
+	 * @param messages Array of message objects representing the conversation history
+	 * @returns Promise resolving to completion response object
 	 */
 	async callCompletion(
 		messages: ChatMessage[],
 		showReasoningTokens = false
 	): Promise<CompletionResponse<string>> {
-		let apiMessageArray = [
+		const apiMessageArray = [
 			{ role: 'system', content: this.systemPrompt },
 			...messages
 		] as ChatMessage[];
@@ -56,18 +56,16 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
 	 * Calls the OpenAI chat completion API with streaming enabled.
 	 * Returns an async generator that yields streaming response chunks.
 	 *
-	 * @param {ChatMessage[]} messages - Array of message objects representing the conversation history
-	 * @yields {StreamingResponse<string>} Yields streaming response objects containing either:
-	 *   - Success with partial completion data (string)
-	 *   - Failure indication when no valid chunk is available
-	 * @returns {AsyncGenerator<StreamingResponse<string>>} Async generator for streaming responses
+	 * @param messages Array of message objects representing the conversation history
+	 * @yields Streaming response objects containing either success with partial completion data or failure indication
+	 * @returns Async generator for streaming responses
 	 */
 	async *callStreaming(
 		messages: ChatMessage[],
 		showReasoningTokens = false
 	): AsyncGenerator<StreamingResponse<string>> {
 		let isReasoning = false;
-		let apiMessageArray = [
+		const apiMessageArray = [
 			{ role: 'system', content: this.systemPrompt },
 			...messages
 		] as ChatMessage[];
@@ -88,8 +86,8 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
 			if (done) break;
 
 			//Decode reader stream and extract data out of it. Then yield (return for async generator) it
-			let chunk = decoder.decode(value);
-			let dataChunk = this.extractChunk(chunk);
+			const chunk = decoder.decode(value);
+			const dataChunk = this.extractChunk(chunk);
 
 			if (!showReasoningTokens) {
 				//Skip sending over thinking tokens
@@ -117,9 +115,9 @@ export class OttagaOpenAIProvider extends OttagaAbstractBaseProvider {
 	}
 
 	/**
-	 * Takes in an Open AI Streaming Chunk and returns the message content
-	 * @param {string} chunk OpenAI Streaming Chunk to be processed
-	 * @returns {string | null} Chunk data
+	 * Takes in an OpenAI streaming chunk and returns the message content
+	 * @param chunk OpenAI streaming chunk to be processed
+	 * @returns Chunk data or null if no content available
 	 */
 	private extractChunk(chunk: string): string | null {
 		const data = JSON.parse(chunk) as OpenAI.ChatCompletionChunk;

@@ -1,6 +1,6 @@
 import type { ChatMessage } from '$lib/types';
 import { OttagaHealthLLM } from '../Ottaga';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, expect, it, vi } from 'vitest';
 
 // Mock OpenAI client
 const mockCallStreaming = vi.fn();
@@ -11,7 +11,6 @@ beforeEach(() => {
 
 	// Mock the client
 	// Ensure llmClient is defined before mocking
-	// @ts-ignore - Replace the client with our mock
 	OttagaHealthLLM.llmProviderInstance.callStreaming = mockCallStreaming;
 });
 
@@ -23,8 +22,8 @@ it('Should stream with the correct data', async () => {
 		yield { success: true, data: 'test.' };
 	});
 
-	let newMessage: ChatMessage = { role: 'user', content: 'Hi there' };
-	let OttagaHealthResponse = OttagaHealthLLM.SendMessage([newMessage]);
+	const newMessage: ChatMessage = { role: 'user', content: 'Hi there' };
+	const OttagaHealthResponse = OttagaHealthLLM.SendMessage([newMessage]);
 
 	let resultMessage = '';
 	for await (const messageChunk of OttagaHealthResponse) {

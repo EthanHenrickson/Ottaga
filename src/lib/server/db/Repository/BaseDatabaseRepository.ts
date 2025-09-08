@@ -8,9 +8,7 @@ import type { Database } from '../databaseTypes';
  * Ensures a single database instance is used across all service instances
  */
 export abstract class BaseDatabaseRepository {
-    /** The database connection instance */
     protected db;
-    /** Singleton database instance */
     private static dbInstance: Kysely<Database> | null = null;
 
     constructor() {

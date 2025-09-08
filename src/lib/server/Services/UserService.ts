@@ -48,7 +48,7 @@ export interface IUserService {
  */
 class UserService implements IUserService {
 	private UserRepository: IUserRepository;
-	
+
 	/**
 	 * Creates a new UserService instance
 	 * @param userRepository - Repository for user data operations

@@ -45,10 +45,12 @@ export const POST: RequestHandler = async ({ request }) => {
 					controller.close();
 
 					PostHogAnalytics.capture({
-						distinctId: 'Anon', event: 'message found too be malicious', properties: {
+						distinctId: 'Anon',
+						event: 'message found too be malicious',
+						properties: {
 							maliciousMessage: newMessage
 						}
-					})
+					});
 
 					return;
 				}

@@ -45,7 +45,7 @@ export interface ICookieService {
  */
 class CookieService implements ICookieService {
 	private CookieRepository: ICookieRepository;
-	
+
 	/**
 	 * Creates a new CookieService instance
 	 * @param CookieRepository - Repository for cookie data operations

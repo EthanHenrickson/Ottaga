@@ -33,7 +33,7 @@ export interface IAuthService {
 class AuthService implements IAuthService {
 	private UserService: IUserService;
 	private UserSettingsService: IUserSettingsService;
-	
+
 	/**
 	 * Creates a new AuthService instance
 	 * @param userService - Service for user data operations

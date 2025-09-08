@@ -43,7 +43,7 @@ export interface IUserSettingsService {
  */
 class UserSettingsService implements IUserSettingsService {
 	private UserSettingsRepository: IUserSettingsRepository;
-	
+
 	/**
 	 * Creates a new UserSettingsService instance
 	 * @param UserSettingsRepository - Repository for user settings data operations

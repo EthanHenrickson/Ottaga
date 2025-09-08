@@ -5,10 +5,10 @@ import PostHogAnalytics from '$lib/utility/server/analytics/ServerAnalytics';
 
 export const GET: RequestHandler = async ({ cookies, locals }) => {
 	const cookieID = cookies.get('sessionID');
-	
+
 	if (cookieID) {
 		await CookieServiceSingleton.DeleteCookieByID(cookieID);
-		
+
 		PostHogAnalytics.capture({
 			distinctId: locals.user?.id || 'anonymous',
 			event: 'logout_success'

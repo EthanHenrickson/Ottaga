@@ -94,6 +94,7 @@
 		padding-top: 4rem;
 		padding-left: 1rem;
 		padding-right: 1rem;
+		color: var(--text-primary)
 	}
 
 	.profile {
@@ -115,6 +116,10 @@
 			1 100%;
 	}
 
+	h2 {
+		text-decoration: underline;
+	}
+
 	.setting {
 		display: flex;
 		align-items: center;
@@ -122,11 +127,19 @@
 		padding: 0.25rem;
 	}
 
+	select {
+		color: var(--text-primary)
+	}
+
 	.save {
 		display: flex;
 		justify-content: end;
 		width: 100%;
 		padding-top: 5rem;
+	}
+
+	.save button {
+		color: var(--text-white);
 	}
 
 	@media (width < 800px) {

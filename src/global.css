@@ -1,0 +1,133 @@
+:root {
+	scroll-behavior: smooth;
+
+	--accent-primary: #00a62f;
+	--accent-secondary: #dbffd8;
+
+	--bg-primary: #fdfcf7;
+	--bg-secondary: var(--accent-secondary);
+
+	--message-bg-assistant: #f5f5f5;
+	--message-bg-user: #e4fde3;
+
+	--button-primary: var(--accent-primary);
+	--button-disabled: #cccccc;
+
+	--text-primary: black;
+	--text-inverse: white;
+	--text-muted: gray;
+	--text-white: #ffffff;
+	--text-black: #000000;
+	
+	--text-light: white;
+	--text-dark: black;
+
+	--success: #a1f5af;
+	--info: #a1d6f5;
+	--error: #f5a1a1;
+	--warning: #f5eba1;
+
+	--shadow-sm: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.5);
+	--shadow-md: 0 0.5rem .75rem rgba(0, 0, 0, 0.5);
+	--shadow-lg: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.5);
+}
+
+[data-theme='dark'] {
+	--accent-primary: #17b042;
+	--accent-secondary: #313431;
+
+	--bg-primary: #202020;
+	--bg-secondary: #3b463d;
+
+	--message-bg-assistant: #dadada;
+	--message-bg-user: #9dbd9c;
+
+	--button-primary: var(--accent-primary);
+	--button-disabled: #404040;
+
+	--text-primary: #ffffff;
+	--text-inverse: #1a1a1a;
+	--text-muted: #a0a0a0;
+
+	--text-light: #dadada;
+
+	--success: #4a8f5a;
+	--info: #4a7a8f;
+	--error: #8f4a4a;
+	--warning: #8f7a4a;
+}
+
+body {
+	margin: 0;
+}
+
+h1 {
+	font-size: 2rem;
+	margin-bottom: 1.5rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin: 2rem 0 1rem;
+}
+
+ul {
+	margin: 1rem 0;
+	padding-left: 2rem;
+}
+
+li {
+	margin-bottom: 0.5rem;
+}
+
+strong {
+	font-weight: bold;
+}
+
+p {
+	margin: 0.8rem 0px;
+}
+
+button {
+	padding: 0.7rem 1.5rem;
+	background-color: var(--button-primary);
+	color: var(--text-inverse);
+	border-radius: 0.4rem;
+	cursor: pointer;
+	border: none;
+	font-size: 0.9rem;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+	outline: 2px solid var(--accent-primary) !important;
+	outline-offset: 2px;
+	border-radius: 0.25rem;
+}
+
+button:disabled {
+	background-color: var(--button-disabled);
+}
+
+select {
+	padding: 0.2rem 0.7rem;
+	font-size: 0.9rem;
+
+	outline: none;
+	background-color: transparent;
+
+	border-bottom: 2px solid var(--accent-primary);
+	border-top: none;
+	border-right: none;
+	border-left: none;
+}
+
+input[type='checkbox'] {
+	accent-color: var(--accent-primary);
+}
+
+input[type='text'] {
+	background-color: var(--text-light);
+}

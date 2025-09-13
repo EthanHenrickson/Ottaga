@@ -39,5 +39,6 @@
 
 	p {
 		grid-area: 1/1;
+		color: var(--text-primary)
 	}
 </style>

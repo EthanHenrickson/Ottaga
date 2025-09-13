@@ -38,14 +38,14 @@
 		gap: 2rem;
 		height: 85vh;
 		justify-content: center;
-		background-color: var(--AccentColorSecondary);
+		background-color: var(--bg-secondary);
 	}
 
 	.triangle {
 		height: 6rem;
 		width: 100%;
 		clip-path: polygon(0 0, 100% 100%, 100% 0);
-		background-color: var(--AccentColorSecondary);
+		background-color: var(--bg-secondary);
 	}
 
 	.highlightYou {
@@ -55,7 +55,7 @@
 	.highlightYou::before {
 		content: 'You';
 		text-decoration: underline;
-		text-decoration-color: var(--AccentColorPrimary);
+		text-decoration-color: var(--accent-primary);
 		text-decoration-thickness: 3px;
 		position: absolute;
 		color: transparent;
@@ -80,6 +80,7 @@
 		font-weight: 400;
 		margin: 0rem;
 		text-align: center;
+		color: var(--text-primary);
 	}
 
 	.messaging {
@@ -92,6 +93,7 @@
 		font-weight: 300;
 		font-size: 1.6rem;
 		text-align: center;
+		color: var(--text-primary);
 	}
 
 	.getStarted {
@@ -103,19 +105,20 @@
 	}
 
 	.conversationButton {
-		background-color: var(--AccentColorPrimary);
-		color: white;
+		background-color: var(--accent-primary);
+		color: var(--text-inverse)
 	}
 
 	.learnButton {
-		background-color: white;
-		color: black;
+		background-color: var(--bg-primary);
+		color: var(--text-primary);
 	}
 
 	.noSignUp {
 		transform: translateY(-1rem);
 		font-size: 0.9rem;
 		font-style: italic;
+		color: var(--text-primary)
 	}
 
 	a {
@@ -124,12 +127,12 @@
 		border-radius: 0.75rem;
 		font-size: 1.1rem;
 		font-weight: 400;
-		filter: drop-shadow(rgb(151, 151, 151) 0.4rem 0.5rem 7px);
+		filter: drop-shadow(var(--shadow-sm));
 		transition: all 0.25s;
 	}
 
 	a:hover {
-		filter: drop-shadow(rgb(139, 139, 139) 0.2rem 0.3rem 5px);
+		filter: drop-shadow(var(--shadow-md));
 		transform: translateY(-3px);
 	}
 

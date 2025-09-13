@@ -54,6 +54,7 @@
 		margin-bottom: 1rem;
 		font-weight: 400;
 		text-align: center;
+		color: var(--text-primary);
 	}
 
 	.features {
@@ -68,13 +69,13 @@
 	.feature {
 		padding: 1.5rem;
 		border-radius: 1rem;
-		background-color: #ffffff;
-		box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.5);
+		background-color: var(--bg-primary);
+		box-shadow: var(--shadow-sm);
 		text-align: center;
 	}
 
 	.feature h3 {
-		color: black;
+		color: var(--text-primary);
 		margin-top: 0.5rem;
 		margin-bottom: 1rem;
 		font-size: 1.6rem;
@@ -84,6 +85,7 @@
 	.feature p {
 		font-size: 1rem;
 		font-weight: 300;
+		color: var(--text-primary);
 	}
 
 	@media (max-width: 600px) {

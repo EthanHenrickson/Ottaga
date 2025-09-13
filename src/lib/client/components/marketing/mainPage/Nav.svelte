@@ -77,7 +77,6 @@
 		padding: 0 2rem;
 		display: flex;
 		align-items: center;
-		border-bottom: 1px solid var(--hover-bg);
 
 		position: fixed;
 		top: 0;
@@ -93,7 +92,7 @@
 	.logo {
 		font-size: 1.8rem;
 		font-weight: 400;
-		color: var(--primary-color);
+		color: var(--text-primary);
 		z-index: 101;
 		padding: 0.25rem;
 
@@ -108,7 +107,7 @@
 
 	.mainNav a {
 		text-decoration: none;
-		color: var(--text-color);
+		color: var(--text-primary);
 		font-size: 1.1rem;
 		transition: color 0.2s;
 		font-weight: 400;
@@ -125,7 +124,7 @@
 	.mainNav a.active {
 		text-decoration: underline;
 		text-decoration-thickness: 2px;
-		text-decoration-color: var(--AccentColorPrimary);
+		text-decoration-color: var(--accent-primary);
 	}
 
 	.nav-links {

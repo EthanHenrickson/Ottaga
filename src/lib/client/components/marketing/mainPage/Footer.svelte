@@ -35,8 +35,12 @@
 		gap: 15px;
 	}
 
+	h2 {
+		color: var(--text-primary)
+	}
+
 	a {
-		color: var(--text-color);
+		color: var(--text-primary);
 		text-decoration: none;
 		font-weight: 400;
 		font-size: 1rem;

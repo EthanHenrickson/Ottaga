@@ -21,7 +21,6 @@
 		}
 	]);
 
-
 	// Handles form submission, sends message to backend and processes streaming response
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
@@ -102,7 +101,7 @@
 
 	//Checks to see if the user is scrolled to the bottom of the chat window
 	async function handleScroll() {
-		const { scrollTop, scrollHeight, clientHeight }= messageContainer
+		const { scrollTop, scrollHeight, clientHeight } = messageContainer;
 
 		const PixelsFromBottom = scrollHeight - scrollTop - clientHeight;
 		isChatScrolledToBottom = Math.abs(PixelsFromBottom) < 50;
@@ -179,8 +178,8 @@
 		border-image: linear-gradient(
 				to bottom,
 				transparent 0%,
-				var(--AccentColorPrimary) 10%,
-				var(--AccentColorPrimary) 80%,
+				var(--accent-primary) 10%,
+				var(--accent-primary) 80%,
 				transparent 90%
 			)
 			1 100%;
@@ -211,12 +210,12 @@
 	}
 
 	.message.user {
-		background-color: var(--MessageBackground-User);
+		background-color: var(--message-bg-user);
 		align-self: end;
 	}
 
 	.message.assistant {
-		background-color: var(--MessageBackground-Assistant);
+		background-color: var(--message-bg-assistant);
 	}
 
 	.input-form {
@@ -239,13 +238,9 @@
 		cursor: pointer;
 	}
 
-	button:disabled {
-		background-color: #ccc;
-	}
-
 	.loading {
 		text-align: center;
-		color: #666;
+		color: var(--text-muted);
 		font-style: italic;
 	}
 
@@ -264,5 +259,9 @@
 		width: 100%;
 		text-align: center;
 		font-style: italic;
+	}
+
+	.sendButton {
+		color: var(--text-white)
 	}
 </style>

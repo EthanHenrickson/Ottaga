@@ -5,7 +5,7 @@
 	import { beforeNavigate, afterNavigate } from '$app/navigation';
 	import { dev } from '$app/environment';
 	import posthog from 'posthog-js';
-	import DashboardNav from '$lib/client/components/DashboardNav.svelte';
+	import Nav from '$lib/client/components/general/Nav.svelte';
 
 	if (browser && !dev) {
 		beforeNavigate(() => posthog.capture('$pageleave'));
@@ -13,7 +13,14 @@
 	}
 </script>
 
-<DashboardNav />
+<Nav
+	LogoHref="/dashboard"
+	pageLinks={[
+		{ name: 'Dashboard', href: '/dashboard' },
+		{ name: 'Chat', href: '/dashboard/chat' },
+		{ name: 'Profile', href: '/dashboard/profile' }
+	]}
+/>
 <main>
 	{@render children?.()}
 </main>

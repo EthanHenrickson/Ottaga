@@ -3,15 +3,13 @@
 
 	import { marked } from 'marked';
 	import { DecodeSSE } from '$lib/utility/server/SSE/SSEHelper';
-	import { tick } from 'svelte';
 	import LoadingMessageContainer from './LoadingMessageContainer.svelte';
+	import { ScrollHTMLContainerToBottom } from '$lib/utility/client/scroll';
 
 	// Props: chatID is used to identify the current chat session
 	let { chatID }: { chatID: string } = $props();
 
 	let messageContainer: HTMLElement;
-
-	let isChatScrolledToBottom: boolean = $state(false);
 	let isLLMLoading = $state(false);
 	let userMessageInput = $state('');
 	let messageArray: ChatMessage[] = $state([
@@ -21,15 +19,13 @@
 		}
 	]);
 
-	// Handles form submission, sends message to backend and processes streaming response
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
 		if (!userMessageInput.trim()) return;
 
-		// Set loading state, append message to chat, await svelte update cycle, scroll to bottom of
 		messageArray.push({ role: 'user', content: userMessageInput });
 		isLLMLoading = true;
-		scrollToBottom(true);
+		ScrollHTMLContainerToBottom(messageContainer, true)
 
 		try {
 			// Send messages to LLM API endpoint
@@ -85,7 +81,7 @@
 						return;
 					} else {
 						messageArray[messageArray.length - 1].content += dataBlock.content;
-						scrollToBottom();
+						ScrollHTMLContainerToBottom(messageContainer)
 					}
 				}
 			}
@@ -99,24 +95,6 @@
 		}
 	}
 
-	//Checks to see if the user is scrolled to the bottom of the chat window
-	async function handleScroll() {
-		const { scrollTop, scrollHeight, clientHeight } = messageContainer;
-
-		const PixelsFromBottom = scrollHeight - scrollTop - clientHeight;
-		isChatScrolledToBottom = Math.abs(PixelsFromBottom) < 50;
-	}
-
-	// Scroll to the bottom of the chat container
-	async function scrollToBottom(force: boolean = false) {
-		if (isChatScrolledToBottom || force) {
-			await tick();
-			messageContainer.scroll({
-				top: messageContainer.scrollHeight,
-				behavior: 'smooth'
-			});
-		}
-	}
 </script>
 
 {#snippet messageBox(message: ChatMessage)}
@@ -130,7 +108,7 @@
 
 <div class="content">
 	<div class="chat-container">
-		<div class="messages" bind:this={messageContainer} onscroll={handleScroll}>
+		<div class="messages" bind:this={messageContainer}>
 			{#each messageArray as message}
 				{@render messageBox(message)}
 			{/each}

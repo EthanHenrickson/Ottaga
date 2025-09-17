@@ -2,11 +2,11 @@ import { OttagaHealthLLM, OttagaSafeGuardLLM } from '$lib/server/llm/Ottaga';
 import { json, type RequestHandler } from '@sveltejs/kit';
 
 import type { ChatMessage } from '$lib/types';
-import PostHogAnalytics from '$lib/utility/server/analytics/ServerAnalytics';
-import { EncodeToSSE } from '$lib/utility/server/SSE/SSEHelper';
+import PostHogAnalytics from '$lib/server/utility/analytics/ServerAnalytics';
+import { EncodeToSSE } from '$lib/server/utility/SSE/SSEHelper';
 import { ChatServiceSingleton } from '$lib/server/Services/ChatService';
 import { CreateMessageDTO } from '$lib/client/DTOs/Message';
-import { LLMGuestCallRateLimiterSingleton } from '$lib/utility/server/security/rateLimiter';
+import { LLMGuestCallRateLimiterSingleton } from '$lib/server/utility/security/rateLimiter';
 
 export const POST: RequestHandler = async ({ request }) => {
 	//Get data from the request

@@ -1,8 +1,8 @@
 /** @type {import('./$types').Actions} */
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
-import PostHogAnalytics from '$lib/utility/server/analytics/ServerAnalytics';
-import { AuthRateLimiterSingleton } from '$lib/utility/server/security/rateLimiter';
+import PostHogAnalytics from '$lib/server/utility/analytics/ServerAnalytics';
+import { AuthRateLimiterSingleton } from '$lib/server/utility/security/rateLimiter';
 import { CookieServiceSingleton } from '$lib/server/Services/CookieService';
 import { AuthServiceSingleton } from '$lib/server/Services/AuthService';
 

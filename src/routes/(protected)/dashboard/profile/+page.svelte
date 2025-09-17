@@ -94,7 +94,7 @@
 		padding-top: 4rem;
 		padding-left: 1rem;
 		padding-right: 1rem;
-		color: var(--text-primary)
+		color: var(--text-primary);
 	}
 
 	.profile {
@@ -128,7 +128,7 @@
 	}
 
 	select {
-		color: var(--text-primary)
+		color: var(--text-primary);
 	}
 
 	.save {

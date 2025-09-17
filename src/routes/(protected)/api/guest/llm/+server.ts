@@ -3,7 +3,7 @@ import { json, type RequestHandler } from '@sveltejs/kit';
 
 import type { ChatMessage } from '$lib/types';
 import PostHogAnalytics from '$lib/server/utility/analytics/ServerAnalytics';
-import { EncodeToSSE } from '$lib/server/utility/SSE/SSEHelper';
+import { EncodeToSSE } from '$lib/client/utility/SSE/SSEHelper';
 import { ChatServiceSingleton } from '$lib/server/Services/ChatService';
 import { CreateMessageDTO } from '$lib/client/DTOs/Message';
 import { LLMGuestCallRateLimiterSingleton } from '$lib/server/utility/security/rateLimiter';

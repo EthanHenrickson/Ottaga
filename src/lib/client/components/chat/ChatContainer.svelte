@@ -2,9 +2,10 @@
 	import type { ChatMessage } from '$lib/types';
 
 	import { marked } from 'marked';
-	import { DecodeSSE } from '$lib/utility/server/SSE/SSEHelper';
 	import LoadingMessageContainer from './LoadingMessageContainer.svelte';
-	import { ScrollHTMLContainerToBottom } from '$lib/utility/client/scroll';
+	
+	import { DecodeSSE } from '$lib/client/utility/SSE/SSEHelper';
+	import { ScrollHTMLContainerToBottom } from '$lib/client/utility/scroll';
 
 	// Props: chatID is used to identify the current chat session
 	let { chatID }: { chatID: string } = $props();

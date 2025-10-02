@@ -17,7 +17,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		content: data.messageInput
 	};
 
-	const isNotRateLimited = LLMCallRateLimiterSingleton.isAllowed(chatID);
+	const isNotRateLimited = LLMCallRateLimiterSingleton.tryConsume(chatID);
 	if (!isNotRateLimited) {
 		return json(
 			{ success: false, message: `LLM Call Rate Limit Exceeded. Please wait and try again later.` },

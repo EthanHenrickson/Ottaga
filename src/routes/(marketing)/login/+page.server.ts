@@ -18,7 +18,7 @@ export const actions = {
 	login: async ({ cookies, request }) => {
 		const { email, password } = extractFormData(await request.formData());
 
-		if (!AuthRateLimiterSingleton.isAllowed(email)) {
+		if (!AuthRateLimiterSingleton.tryConsume(email)) {
 			return fail(422, {
 				error: 'Too many incorrect attempts, try again later.'
 			});

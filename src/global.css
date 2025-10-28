@@ -1,11 +1,11 @@
 :root {
 	scroll-behavior: smooth;
 
-	--accent-primary: #00a62f;
+	--accent-primary: #f29202;
 	--accent-secondary: #dbffd8;
 
 	--bg-primary: #fdfcf7;
-	--bg-secondary: var(--accent-secondary);
+	--bg-secondary: #e0eddf;
 
 	--message-bg-assistant: #f5f5f5;
 	--message-bg-user: #e4fde3;
@@ -33,14 +33,14 @@
 }
 
 [data-theme='dark'] {
-	--accent-primary: #17b042;
+	--accent-primary: #f29202;
 	--accent-secondary: #313431;
 
 	--bg-primary: #202020;
-	--bg-secondary: #3b463d;
+	--bg-secondary: #4c544d;
 
-	--message-bg-assistant: #dadada;
-	--message-bg-user: #9dbd9c;
+	--message-bg-assistant: #4c544d;
+	--message-bg-user: #69786b;
 
 	--button-primary: var(--accent-primary);
 	--button-disabled: #404040;
@@ -64,11 +64,13 @@ body {
 h1 {
 	font-size: 2rem;
 	margin-bottom: 1.5rem;
+	color: var(--text-primary);
 }
 
 h2 {
 	font-size: 1.5rem;
 	margin: 2rem 0 1rem;
+	color: var(--text-primary);
 }
 
 ul {
@@ -78,6 +80,8 @@ ul {
 
 li {
 	margin-bottom: 0.5rem;
+	color: var(--text-primary);
+	
 }
 
 strong {
@@ -86,6 +90,7 @@ strong {
 
 p {
 	margin: 0.8rem 0px;
+	color: var(--text-primary)
 }
 
 button {

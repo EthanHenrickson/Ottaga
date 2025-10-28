@@ -40,7 +40,7 @@
 	}
 
 	a {
-		color: var(--text-primary);
+		color: var(--text-primary) !important;
 		text-decoration: none;
 		font-weight: 400;
 		font-size: 1rem;

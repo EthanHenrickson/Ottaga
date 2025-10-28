@@ -187,6 +187,7 @@
 
 	.message strong {
 		font-weight: 600;
+		color: var(--text-primary);
 	}
 
 	.message.user {

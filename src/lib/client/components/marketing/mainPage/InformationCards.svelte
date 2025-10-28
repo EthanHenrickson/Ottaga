@@ -69,7 +69,7 @@
 	.feature {
 		padding: 1.5rem;
 		border-radius: 1rem;
-		background-color: var(--bg-primary);
+		background-color: var(--bg-secondary);
 		box-shadow: var(--shadow-sm);
 		text-align: center;
 	}

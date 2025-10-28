@@ -112,7 +112,7 @@
 		flex-direction: column;
 		padding: 4rem;
 
-		background-color: var(--accent-secondary);
+		background-color: var(--bg-secondary);
 		border-radius: 1rem;
 		box-shadow: var(--shadow-lg);
 	}

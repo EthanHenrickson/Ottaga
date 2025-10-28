@@ -22,7 +22,7 @@
 	<h2>How Ottaga Can Help</h2>
 	<div class="informationBox" role="tablist" aria-label="Help categories">
 		<div class="keyBlock">
-			{#each dataJsonKeys as key, i}
+			{#each dataJsonKeys as key, i (key)}
 				<button
 					role="tab"
 					id={tabIds[i]}
@@ -37,9 +37,11 @@
 					}}
 				>
 					{key}
-					{#if selectedKey == key}
-						&#11208;
-					{/if}
+					<span class="arrow">
+						{#if selectedKey == key}
+							&#11208;
+						{/if}
+					</span>
 				</button>
 			{/each}
 		</div>
@@ -101,7 +103,7 @@
 		align-items: center;
 		justify-content: center;
 		overflow-x: hidden;
-		color: var(--text-primary)
+		color: var(--text-primary);
 	}
 
 	button {
@@ -118,9 +120,13 @@
 	}
 
 	button[aria-selected='true'] {
-		box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.5);
-		background-color: var(--accent-primary);
-		color: var(--text-inverse);
+		box-shadow: 3px 4px 15px rgba(0, 0, 0, 0.5);
+		color: var(--text-primary);
+		text-decoration-color: var(--accent-primary);
+	}
+
+	.arrow {
+		color: var(--accent-primary);
 	}
 
 	@media (max-width: 600px) {

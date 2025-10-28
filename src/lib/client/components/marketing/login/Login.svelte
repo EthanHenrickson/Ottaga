@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Toast } from '$lib/client/stores/toastClient.svelte';
 	import type { ActionData } from '../../../../../routes/(marketing)/login/$types';
 
 	let { form }: { form: ActionData } = $props();
@@ -87,6 +86,16 @@
 				<span id="error" class="error" aria-live="assertive">{form.error}</span>
 			{/if}
 		</div>
+		<br />
+		{#if mode == 'SignUp'}
+			<div id="TOS" class="inputSection">
+				<input type="checkbox" id="TOSCheckBox" aria-required="true" required/>
+				<label for="TOSCheckBox"
+					>I understand and agree the <a href="/legal/tos" target="_blank">terms of service</a></label
+				>
+			</div>
+			<br>
+		{/if}
 		<button
 			type="submit"
 			class="submitButton"
@@ -128,8 +137,7 @@
 	}
 
 	.submitButton {
-		margin-top: 1rem;
-		color: var(--text-white)
+		color: var(--text-white);
 	}
 
 	.error {
@@ -155,8 +163,17 @@
 		background-color: white !important;
 	}
 
+	input[type='checkbox'] {
+		width: auto;
+	}
+
+	#TOS {
+		display: flex;
+		flex-direction: row;
+	}
+
 	label {
-		color: var(--text-primary)
+		color: var(--text-primary);
 	}
 
 	@media only screen and (max-width: 500px) {

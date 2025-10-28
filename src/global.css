@@ -131,3 +131,11 @@ input[type='checkbox'] {
 input[type='text'] {
 	background-color: var(--text-light);
 }
+
+a:link {
+    color: var(--accent-primary);
+}
+
+a:visited {
+	color: var(--accent-primary);
+}

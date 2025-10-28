@@ -12,6 +12,7 @@
 
 	let messageContainer: HTMLElement;
 	let isLLMLoading = $state(false);
+	
 	let userMessageInput = $state('');
 	let messageArray: ChatMessage[] = $state([
 		{

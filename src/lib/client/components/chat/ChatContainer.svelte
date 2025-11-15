@@ -2,6 +2,7 @@
 	import type { ChatMessage } from '$lib/types';
 
 	import { marked } from 'marked';
+	import DOMPurify from "isomorphic-dompurify";
 	import LoadingMessageContainer from './LoadingMessageContainer.svelte';
 	
 	import { DecodeSSE } from '$lib/client/utility/SSE/SSEHelper';
@@ -103,7 +104,7 @@
 	<div class="message {message.role}">
 		<strong>{message.role === 'user' ? 'You' : 'Ottaga'}:</strong>
 		<p>
-			{@html marked.parse(message.content)}
+			{@html DOMPurify.sanitize(marked.parse(message.content, {async: false}))}
 		</p>
 	</div>
 {/snippet}

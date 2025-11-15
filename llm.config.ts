@@ -1,7 +1,7 @@
 import { TOGETHER_API_KEY, CEREBRAS_API_KEY } from '$env/static/private';
 import type { LLMConfig } from '$lib/types';
 
-export let OttagaHealthConfig: LLMConfig = {
+export const OttagaHealthConfig: LLMConfig = {
 	baseUrl: 'https://api.together.xyz/v1',
 	apiKey: TOGETHER_API_KEY,
 	model: 'Qwen/Qwen3-235B-A22B-Instruct-2507-tput',
@@ -103,7 +103,7 @@ export let OttagaHealthConfig: LLMConfig = {
 	maxTokens: 10000
 };
 
-export let OttagaSafeGuardConfig: LLMConfig = {
+export const OttagaSafeGuardConfig: LLMConfig = {
 	baseUrl: 'https://api.cerebras.ai/v1',
 	apiKey: CEREBRAS_API_KEY,
 	model: 'qwen-3-32b',

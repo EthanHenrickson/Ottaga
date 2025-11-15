@@ -27,10 +27,9 @@ export const actions = {
 		const AuthServiceResponse = await AuthServiceSingleton.VerifyAccount(email, password);
 		if (!AuthServiceResponse || !AuthServiceResponse.data) {
 			PostHogAnalytics.capture({
-				distinctId: email,
+				distinctId: "Anon",
 				event: 'login_failed',
 				properties: {
-					email: email,
 					reason: 'invalid_credentials'
 				}
 			});
@@ -46,11 +45,8 @@ export const actions = {
 		}
 
 		PostHogAnalytics.capture({
-			distinctId: AuthServiceResponse.data,
+			distinctId: "Anon",
 			event: 'login_success',
-			properties: {
-				email: email
-			}
 		});
 
 		cookies.set('sessionID', cookieResponse.data.cookieID, { path: '/', sameSite: true, httpOnly: true, secure: true });
@@ -63,12 +59,8 @@ export const actions = {
 		const AuthResponse = await AuthServiceSingleton.CreateAccount(email, password, name);
 		if (!AuthResponse.success) {
 			PostHogAnalytics.capture({
-				distinctId: email,
+				distinctId: "Anon",
 				event: 'signup_failed',
-				properties: {
-					email: email,
-					reason: AuthResponse.message
-				}
 			});
 			return fail(422, {
 				error: AuthResponse.message
@@ -76,12 +68,8 @@ export const actions = {
 		}
 
 		PostHogAnalytics.capture({
-			distinctId: email,
+			distinctId: "Anon",
 			event: 'signup_success',
-			properties: {
-				email: email,
-				name: name
-			}
 		});
 	}
 } satisfies Actions;

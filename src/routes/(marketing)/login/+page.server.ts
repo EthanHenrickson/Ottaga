@@ -53,7 +53,7 @@ export const actions = {
 			}
 		});
 
-		cookies.set('sessionID', cookieResponse.data.cookieID, { path: '/' });
+		cookies.set('sessionID', cookieResponse.data.cookieID, { path: '/', sameSite: true, httpOnly: true, secure: true });
 		redirect(302, '/dashboard');
 	},
 

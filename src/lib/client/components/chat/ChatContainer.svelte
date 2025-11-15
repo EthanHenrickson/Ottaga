@@ -2,17 +2,17 @@
 	import type { ChatMessage } from '$lib/types';
 
 	import { marked } from 'marked';
-	import { DecodeSSE } from '$lib/utility/server/SSE/SSEHelper';
-	import { tick } from 'svelte';
 	import LoadingMessageContainer from './LoadingMessageContainer.svelte';
+	
+	import { DecodeSSE } from '$lib/client/utility/SSE/SSEHelper';
+	import { ScrollHTMLContainerToBottom } from '$lib/client/utility/scroll';
 
 	// Props: chatID is used to identify the current chat session
 	let { chatID }: { chatID: string } = $props();
 
 	let messageContainer: HTMLElement;
-
-	let isChatScrolledToBottom: boolean = $state(false);
 	let isLLMLoading = $state(false);
+	
 	let userMessageInput = $state('');
 	let messageArray: ChatMessage[] = $state([
 		{
@@ -21,16 +21,13 @@
 		}
 	]);
 
-
-	// Handles form submission, sends message to backend and processes streaming response
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
 		if (!userMessageInput.trim()) return;
 
-		// Set loading state, append message to chat, await svelte update cycle, scroll to bottom of
 		messageArray.push({ role: 'user', content: userMessageInput });
 		isLLMLoading = true;
-		scrollToBottom(true);
+		ScrollHTMLContainerToBottom(messageContainer, true)
 
 		try {
 			// Send messages to LLM API endpoint
@@ -86,7 +83,7 @@
 						return;
 					} else {
 						messageArray[messageArray.length - 1].content += dataBlock.content;
-						scrollToBottom();
+						ScrollHTMLContainerToBottom(messageContainer)
 					}
 				}
 			}
@@ -100,24 +97,6 @@
 		}
 	}
 
-	//Checks to see if the user is scrolled to the bottom of the chat window
-	async function handleScroll() {
-		const { scrollTop, scrollHeight, clientHeight }= messageContainer
-
-		const PixelsFromBottom = scrollHeight - scrollTop - clientHeight;
-		isChatScrolledToBottom = Math.abs(PixelsFromBottom) < 50;
-	}
-
-	// Scroll to the bottom of the chat container
-	async function scrollToBottom(force: boolean = false) {
-		if (isChatScrolledToBottom || force) {
-			await tick();
-			messageContainer.scroll({
-				top: messageContainer.scrollHeight,
-				behavior: 'smooth'
-			});
-		}
-	}
 </script>
 
 {#snippet messageBox(message: ChatMessage)}
@@ -131,7 +110,7 @@
 
 <div class="content">
 	<div class="chat-container">
-		<div class="messages" bind:this={messageContainer} onscroll={handleScroll}>
+		<div class="messages" bind:this={messageContainer}>
 			{#each messageArray as message}
 				{@render messageBox(message)}
 			{/each}
@@ -179,8 +158,8 @@
 		border-image: linear-gradient(
 				to bottom,
 				transparent 0%,
-				var(--AccentColorPrimary) 10%,
-				var(--AccentColorPrimary) 80%,
+				var(--accent-primary) 10%,
+				var(--accent-primary) 80%,
 				transparent 90%
 			)
 			1 100%;
@@ -208,15 +187,16 @@
 
 	.message strong {
 		font-weight: 600;
+		color: var(--text-primary);
 	}
 
 	.message.user {
-		background-color: var(--MessageBackground-User);
+		background-color: var(--message-bg-user);
 		align-self: end;
 	}
 
 	.message.assistant {
-		background-color: var(--MessageBackground-Assistant);
+		background-color: var(--message-bg-assistant);
 	}
 
 	.input-form {
@@ -239,13 +219,9 @@
 		cursor: pointer;
 	}
 
-	button:disabled {
-		background-color: #ccc;
-	}
-
 	.loading {
 		text-align: center;
-		color: #666;
+		color: var(--text-muted);
 		font-style: italic;
 	}
 
@@ -264,5 +240,9 @@
 		width: 100%;
 		text-align: center;
 		font-style: italic;
+	}
+
+	.sendButton {
+		color: var(--text-white)
 	}
 </style>

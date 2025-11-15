@@ -10,6 +10,27 @@
 			href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
 			rel="stylesheet"
 		/>
+		<script>
+			try {
+				const savedTheme = localStorage.getItem('theme');
+				if (savedTheme) {
+					document.documentElement.dataset.theme = savedTheme;
+				} else {
+					const systemPreferenceTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+						? 'dark'
+						: 'light';
+					document.documentElement.dataset.theme = systemPreferenceTheme;
+				}
+			} catch (e) {
+				console.error(e);
+			}
+
+			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+				if (!localStorage.getItem('theme')) {
+					document.documentElement.dataset.theme = e.matches ? 'dark' : 'light';
+				}
+			});
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">

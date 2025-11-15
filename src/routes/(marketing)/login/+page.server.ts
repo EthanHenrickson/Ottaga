@@ -1,8 +1,8 @@
 /** @type {import('./$types').Actions} */
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
-import PostHogAnalytics from '$lib/utility/server/analytics/ServerAnalytics';
-import { AuthRateLimiterSingleton } from '$lib/utility/server/security/rateLimiter';
+import PostHogAnalytics from '$lib/server/utility/analytics/ServerAnalytics';
+import { AuthRateLimiterSingleton } from '$lib/server/utility/security/rateLimiter';
 import { CookieServiceSingleton } from '$lib/server/Services/CookieService';
 import { AuthServiceSingleton } from '$lib/server/Services/AuthService';
 
@@ -18,7 +18,7 @@ export const actions = {
 	login: async ({ cookies, request }) => {
 		const { email, password } = extractFormData(await request.formData());
 
-		if (!AuthRateLimiterSingleton.isAllowed(email)) {
+		if (!AuthRateLimiterSingleton.tryConsume(email)) {
 			return fail(422, {
 				error: 'Too many incorrect attempts, try again later.'
 			});
@@ -53,7 +53,7 @@ export const actions = {
 			}
 		});
 
-		cookies.set('sessionID', cookieResponse.data.cookieID, { path: '/' });
+		cookies.set('sessionID', cookieResponse.data.cookieID, { path: '/', sameSite: true, httpOnly: true, secure: true });
 		redirect(302, '/dashboard');
 	},
 

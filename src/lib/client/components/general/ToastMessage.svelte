@@ -46,23 +46,19 @@
 
 <style>
 	.Info {
-		background-color: #a1d6f5;
-		color: black;
+		background-color: var(--info);
 	}
 
 	.Success {
-		background-color: #a1f5af;
-		color: black;
+		background-color: var(--success);
 	}
 
 	.Error {
-		background-color: #f5a1a1;
-		color: black;
+		background-color: var(--error);
 	}
 
 	.Warning {
-		background-color: #f5eba1;
-		color: black;
+		background-color: var(--warning);
 	}
 
 	.toast {
@@ -75,6 +71,8 @@
 		border-radius: 0.5rem;
 		width: 16rem;
 		opacity: 0.95;
+
+		color: var(--text-primary);
 
 		filter: drop-shadow(rgb(154, 154, 154) 0.4rem 0.4rem 0.6rem);
 	}
@@ -94,7 +92,7 @@
 
 	.buttonContainer button {
 		font-size: 1.4rem;
-		color: black;
+		color: var(--text-primary);
 	}
 
 	.icon {

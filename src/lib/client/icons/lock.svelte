@@ -2,7 +2,7 @@
 	xmlns="http://www.w3.org/2000/svg"
 	width="24"
 	height="24"
-	fill="var(--AccentColorPrimary)"
+	fill="var(--accent-primary)"
 	viewBox="0 0 24 24"
 	aria-hidden="true"
 	><path

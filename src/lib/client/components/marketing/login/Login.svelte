@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { Toast } from '$lib/client/stores/toastClient.svelte';
-	import type { ActionData } from '../../../../routes/(marketing)/login/$types';
+	import type { ActionData } from '../../../../../routes/(marketing)/login/$types';
 
 	let { form }: { form: ActionData } = $props();
 
@@ -87,6 +86,16 @@
 				<span id="error" class="error" aria-live="assertive">{form.error}</span>
 			{/if}
 		</div>
+		<br />
+		{#if mode == 'SignUp'}
+			<div id="TOS" class="inputSection">
+				<input type="checkbox" id="TOSCheckBox" aria-required="true" required/>
+				<label for="TOSCheckBox"
+					>I understand and agree the <a href="/legal/tos" target="_blank">terms of service</a></label
+				>
+			</div>
+			<br>
+		{/if}
 		<button
 			type="submit"
 			class="submitButton"
@@ -103,13 +112,13 @@
 		flex-direction: column;
 		padding: 4rem;
 
-		background-color: var(--AccentColorSecondary);
+		background-color: var(--bg-secondary);
 		border-radius: 1rem;
-		filter: drop-shadow(rgb(116, 116, 116) 0.4rem 0.4rem 0.6rem);
+		box-shadow: var(--shadow-lg);
 	}
 
 	.head {
-		color: black;
+		color: var(--text-primary);
 		font-size: 1.2rem;
 	}
 
@@ -122,23 +131,23 @@
 		border: none;
 		outline: none;
 		background-color: transparent;
-		color: rgb(0, 0, 0);
+		color: var(--text-primary);
 		cursor: pointer;
 		padding: 0rem;
 	}
 
 	.submitButton {
-		margin-top: 1rem;
+		color: var(--text-white);
 	}
 
 	.error {
-		color: rgb(248, 131, 131);
+		color: var(--error);
 	}
 
 	.clickHere {
 		text-decoration: underline;
 		text-decoration-thickness: 2px;
-		text-decoration-color: var(--AccentColorPrimary);
+		text-decoration-color: var(--accent-primary);
 	}
 
 	input {
@@ -151,6 +160,20 @@
 		border-radius: 0.5rem;
 		font-size: 1rem;
 		width: 300px;
+		background-color: white !important;
+	}
+
+	input[type='checkbox'] {
+		width: auto;
+	}
+
+	#TOS {
+		display: flex;
+		flex-direction: row;
+	}
+
+	label {
+		color: var(--text-primary);
 	}
 
 	@media only screen and (max-width: 500px) {

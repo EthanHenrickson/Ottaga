@@ -21,7 +21,7 @@ export class RateLimiter {
 	 * @param id - Unique identifier for the caller (e.g., IP address, user ID)
 	 * @returns True if the call is allowed, false if rate limit exceeded
 	 */
-	isAllowed(id: string): boolean {
+	tryConsume(id: string): boolean {
 		const currentTime = Date.now();
 		const record = this.attempts.get(id);
 

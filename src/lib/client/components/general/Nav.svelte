@@ -3,6 +3,11 @@
 	import Menu from '$lib/client/icons/menu.svelte';
 	import Close from '$lib/client/icons/close.svelte';
 
+	let {
+		LogoHref = '/',
+		pageLinks = []
+	}: { LogoHref?: string; pageLinks?: { name: string; href: string }[] } = $props();
+
 	let isMobile = $state(false);
 	let isOpen = $state(false);
 
@@ -26,7 +31,7 @@
 
 <header>
 	<div class="header">
-		<a class="logo" href="/">Ottaga</a>
+		<a class="logo" href={LogoHref}>Ottaga</a>
 
 		<span class="gap"></span>
 
@@ -48,24 +53,14 @@
 
 		<nav class="mainNav" class:open={isOpen} aria-label="Main">
 			<div class="nav-links">
-				<a
-					href="/dashboard"
-					onclick={toggleMenu}
-					class:active={page.url.pathname === '/dashboard'}
-					aria-current={page.url.pathname === '/dashboard' ? 'page' : undefined}>Dashboard</a
-				>
-				<a
-					href="/dashboard/chat"
-					onclick={toggleMenu}
-					class:active={page.url.pathname === '/dashboard/chat'}
-					aria-current={page.url.pathname === '/dashboard/chat' ? 'page' : undefined}>Chat</a
-				>
-				<a
-					href="/dashboard/profile"
-					onclick={toggleMenu}
-					class:active={page.url.pathname === '/dashboard/profile'}
-					aria-current={page.url.pathname === '/dashboard/profile' ? 'page' : undefined}>Profile</a
-				>
+				{#each pageLinks as link}
+					<a
+						href={link.href}
+						onclick={toggleMenu}
+						class:active={page.url.pathname === link.href}
+						aria-current={page.url.pathname === link.href ? 'page' : undefined}>{link.name}</a
+					>
+				{/each}
 			</div>
 		</nav>
 	</div>
@@ -77,7 +72,6 @@
 		padding: 0 2rem;
 		display: flex;
 		align-items: center;
-		border-bottom: 1px solid var(--hover-bg);
 
 		position: fixed;
 		top: 0;
@@ -93,7 +87,7 @@
 	.logo {
 		font-size: 1.8rem;
 		font-weight: 400;
-		color: var(--primary-color);
+		color: var(--text-primary);
 		z-index: 101;
 		padding: 0.25rem;
 
@@ -108,7 +102,7 @@
 
 	.mainNav a {
 		text-decoration: none;
-		color: var(--text-color);
+		color: var(--text-primary);
 		font-size: 1.1rem;
 		transition: color 0.2s;
 		font-weight: 400;
@@ -125,7 +119,7 @@
 	.mainNav a.active {
 		text-decoration: underline;
 		text-decoration-thickness: 2px;
-		text-decoration-color: var(--AccentColorPrimary);
+		text-decoration-color: var(--accent-primary);
 	}
 
 	.nav-links {
@@ -136,6 +130,7 @@
 		width: 100%;
 		height: 100%;
 		gap: 2rem;
+		z-index: 100;
 	}
 
 	.gap {

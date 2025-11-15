@@ -1,4 +1,4 @@
-import { EncodeToSSE, DecodeSSE } from '$lib/utility/server/SSE/SSEHelper';
+import { EncodeToSSE, DecodeSSE } from '$lib/client/utility/SSE/SSEHelper';
 import { describe, expect, it } from 'vitest';
 
 describe('Should encode data', () => {

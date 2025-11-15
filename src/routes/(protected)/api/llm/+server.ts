@@ -2,11 +2,11 @@ import { OttagaHealthLLM, OttagaSafeGuardLLM } from '$lib/server/llm/Ottaga';
 import { json, type RequestHandler } from '@sveltejs/kit';
 
 import type { ChatMessage } from '$lib/types';
-import PostHogAnalytics from '$lib/utility/server/analytics/ServerAnalytics';
-import { EncodeToSSE } from '$lib/utility/server/SSE/SSEHelper';
+import PostHogAnalytics from '$lib/server/utility/analytics/ServerAnalytics';
+import { EncodeToSSE } from '$lib/client/utility/SSE/SSEHelper';
 import { ChatServiceSingleton } from '$lib/server/Services/ChatService';
 import { CreateMessageDTO } from '$lib/client/DTOs/Message';
-import { LLMCallRateLimiterSingleton } from '$lib/utility/server/security/rateLimiter';
+import { LLMCallRateLimiterSingleton } from '$lib/server/utility/security/rateLimiter';
 
 export const POST: RequestHandler = async ({ request }) => {
 	//Get data from the request
@@ -17,7 +17,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		content: data.messageInput
 	};
 
-	const isNotRateLimited = LLMCallRateLimiterSingleton.isAllowed(chatID);
+	const isNotRateLimited = LLMCallRateLimiterSingleton.tryConsume(chatID);
 	if (!isNotRateLimited) {
 		return json(
 			{ success: false, message: `LLM Call Rate Limit Exceeded. Please wait and try again later.` },

@@ -18,15 +18,32 @@
 				href="/chat"
 				class="conversationButton"
 				role="button"
-				aria-label="Start a conversation with Ottaga">Start a conversation</a
+				aria-label="Start a conversation with Ottaga">Start a conversation →</a
 			>
 			<a href="#cards" class="learnButton" role="button" aria-label="Learn more about Ottaga"
 				>Learn More</a
 			>
 		</div>
-		<div class="noSignUp">No Sign Up Required. Get Support Instantly.</div>
+		<div class="features-quick">
+			<div class="feature-item">
+				<span class="icon">✓</span>
+				<span>No Sign Up Required</span>
+			</div>
+			<div class="feature-item">
+				<span class="icon">✓</span>
+				<span>100% Free Forever</span>
+			</div>
+			<div class="feature-item">
+				<span class="icon">✓</span>
+				<span>Completely Private</span>
+			</div>
+		</div>
 	</div>
-	<div class="triangle"></div>
+	<div class="wave-divider">
+		<svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+			<path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+		</svg>
+	</div>
 </header>
 
 <style>
@@ -38,14 +55,7 @@
 		gap: 2rem;
 		height: 85vh;
 		justify-content: center;
-		background-color: var(--AccentColorSecondary);
-	}
-
-	.triangle {
-		height: 6rem;
-		width: 100%;
-		clip-path: polygon(0 0, 100% 100%, 100% 0);
-		background-color: var(--AccentColorSecondary);
+		background-color: var(--bg-secondary);
 	}
 
 	.highlightYou {
@@ -55,7 +65,7 @@
 	.highlightYou::before {
 		content: 'You';
 		text-decoration: underline;
-		text-decoration-color: var(--AccentColorPrimary);
+		text-decoration-color: var(--accent-primary);
 		text-decoration-thickness: 3px;
 		position: absolute;
 		color: transparent;
@@ -80,6 +90,7 @@
 		font-weight: 400;
 		margin: 0rem;
 		text-align: center;
+		color: var(--text-primary);
 	}
 
 	.messaging {
@@ -92,6 +103,7 @@
 		font-weight: 300;
 		font-size: 1.6rem;
 		text-align: center;
+		color: var(--text-primary);
 	}
 
 	.getStarted {
@@ -103,19 +115,30 @@
 	}
 
 	.conversationButton {
-		background-color: var(--AccentColorPrimary);
-		color: white;
+		background-color: var(--accent-primary);
+		color: var(--text-inverse);
 	}
 
 	.learnButton {
-		background-color: white;
-		color: black;
+		background-color: var(--bg-primary);
+		color: var(--text-primary);
 	}
 
-	.noSignUp {
-		transform: translateY(-1rem);
-		font-size: 0.9rem;
-		font-style: italic;
+	.features-quick {
+		position: relative;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 2rem;
+	}
+
+	.feature-item {
+		color: var(--text-primary)
+	}
+
+	.icon {
+		color: var(--accent-primary);
+		font-weight: 600;
 	}
 
 	a {
@@ -124,13 +147,30 @@
 		border-radius: 0.75rem;
 		font-size: 1.1rem;
 		font-weight: 400;
-		filter: drop-shadow(rgb(151, 151, 151) 0.4rem 0.5rem 7px);
+		filter: drop-shadow(var(--shadow-sm));
 		transition: all 0.25s;
 	}
 
 	a:hover {
-		filter: drop-shadow(rgb(139, 139, 139) 0.2rem 0.3rem 5px);
+		filter: drop-shadow(var(--shadow-md));
 		transform: translateY(-3px);
+	}
+
+	.wave-divider {
+		position: relative;
+		width: 100%;
+		height: 100px;
+		overflow: hidden;
+		line-height: 0;
+	}
+
+	.wave-divider svg {
+		position: relative;
+		display: block;
+		width: calc(100% + 1.3px);
+		height: 100%;
+		fill: var(--bg-secondary);
+		transform: rotateY(180deg);
 	}
 
 	@media (max-width: 600px) {
@@ -162,6 +202,11 @@
 			font-size: 1rem;
 			padding: 1rem 2rem;
 			border-radius: 0.75rem;
+		}
+
+		.features-quick {
+			flex-direction: column;
+			gap: .75rem;
 		}
 	}
 </style>

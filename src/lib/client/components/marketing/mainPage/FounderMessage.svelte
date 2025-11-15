@@ -17,7 +17,7 @@
 		flex-direction: column;
 		align-items: center;
 
-		background-color: var(--AccentColorSecondary);
+		background-color: var(--bg-secondary);
 		padding: 5rem 0;
 	}
 	.content {
@@ -32,6 +32,7 @@
 		text-align: center;
 		line-height: 2rem;
 		margin-bottom: 1rem;
+		color: var(--text-primary)
 	}
 
 	.author {
@@ -42,6 +43,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		color: var(--text-primary)
 	}
 
 	@media (max-width: 600px) {

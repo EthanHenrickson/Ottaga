@@ -105,11 +105,11 @@ class UserService implements IUserService {
 	}
 
 	async Update(userID: string | null, updateUserDTO: UpdateUserDTO): Promise<ServiceResult> {
-		const updateData: UpdateUser = {}
-		if (updateUserDTO.email) updateData.email = updateUserDTO.email; 
-		if (updateUserDTO.name) updateData.name = updateUserDTO.name; 
-    if (updateUserDTO.hashedPassword) updateData.hashedPassword = updateUserDTO.hashedPassword; 
-		
+		const updateData: UpdateUser = {};
+		if (updateUserDTO.email) updateData.email = updateUserDTO.email;
+		if (updateUserDTO.name) updateData.name = updateUserDTO.name;
+		if (updateUserDTO.hashedPassword) updateData.hashedPassword = updateUserDTO.hashedPassword;
+
 		const dbResponse = await this.UserRepository.Update(userID, updateData);
 
 		if (dbResponse.success) {

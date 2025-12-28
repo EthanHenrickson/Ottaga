@@ -81,7 +81,6 @@ ul {
 li {
 	margin-bottom: 0.5rem;
 	color: var(--text-primary);
-	
 }
 
 strong {
@@ -90,7 +89,7 @@ strong {
 
 p {
 	margin: 0.8rem 0px;
-	color: var(--text-primary)
+	color: var(--text-primary);
 }
 
 button {
@@ -138,7 +137,7 @@ input[type='text'] {
 }
 
 a:link {
-    color: var(--accent-primary);
+	color: var(--accent-primary);
 }
 
 a:visited {

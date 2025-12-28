@@ -1,7 +1,7 @@
 <script>
-	import { resolve } from "$app/paths";
-
+	import { resolve } from '$app/paths';
 </script>
+
 <svelte:head>
 	<title>Ottaga | Learn</title>
 
@@ -127,8 +127,8 @@
 </p>
 
 <p>
-	<strong>Ready to start?</strong> <a href={resolve("/login")}>Create an account</a> or
-	<a href={resolve("/chat")}>try our service</a> to begin your journey toward better mental health.
+	<strong>Ready to start?</strong> <a href={resolve('/login')}>Create an account</a> or
+	<a href={resolve('/chat')}>try our service</a> to begin your journey toward better mental health.
 </p>
 
 <p>

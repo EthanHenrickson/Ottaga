@@ -7,7 +7,7 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 	const userID = locals.user.id;
 	const preferences = await UserSettingsServiceSingleton.GetByUserID(userID);
 
-	if (!preferences.data || !preferences.success) {
+	if (preferences.success && preferences.data) {
 		const CreateUserSettingsDTOValue = new CreateUserSettingsDTO();
 		await UserSettingsServiceSingleton.Create(userID, CreateUserSettingsDTOValue);
 

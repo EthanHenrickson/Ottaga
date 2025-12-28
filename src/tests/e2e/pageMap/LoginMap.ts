@@ -18,6 +18,7 @@ export class LoginMap extends BaseMap {
 		await this.page.getByLabel('email').fill(email);
 		await this.page.getByLabel('password').fill(password);
 
+		await this.page.getByLabel('I understand and agree the ').setChecked(true);
 		await this.page.getByRole('button', { name: 'Create' }).click();
 		expect(this.page.url()).toContain('login');
 	}

@@ -1,5 +1,6 @@
 <script lang="ts">
-	import type { ActionData } from '../../../../../routes/(marketing)/login/$types';
+	import { resolve } from '$app/paths';
+import type { ActionData } from '../../../../../routes/(marketing)/login/$types';
 
 	let { form }: { form: ActionData } = $props();
 
@@ -91,7 +92,7 @@
 			<div id="TOS" class="inputSection">
 				<input type="checkbox" id="TOSCheckBox" aria-required="true" required/>
 				<label for="TOSCheckBox"
-					>I understand and agree the <a href="/legal/tos" target="_blank">terms of service</a></label
+					>I understand and agree the <a href={resolve("/legal/tos")} target="_blank">terms of service</a></label
 				>
 			</div>
 			<br>

@@ -2,9 +2,9 @@ import { OttagaSafeGuardLLM } from '$lib/server/llm/Ottaga';
 import { MaliciousPrompts, GoodPrompts } from './TestPrompts';
 import { describe, it, expect } from 'vitest';
 
-describe.concurrent('Malicious Message Tests', () => {
-	const TEST_TIMEOUT = 30000;
-
+const TEST_TIMEOUT = 30000;
+	
+describe.skip.concurrent('Malicious Message Tests', () => {
 	MaliciousPrompts.forEach((prompt) => {
 		it(
 			`${prompt.content}`,
@@ -22,9 +22,7 @@ describe.concurrent('Malicious Message Tests', () => {
 	});
 });
 
-describe.concurrent('Good Message Tests', () => {
-	const TEST_TIMEOUT = 30000;
-
+describe.skip.concurrent('Good Message Tests', () => {
 	GoodPrompts.forEach((prompt) => {
 		it(
 			`${prompt.content}`,

@@ -26,7 +26,8 @@ export const actions = {
 		}
 
 		const AuthServiceResponse = await AuthServiceSingleton.VerifyAccount(email, password);
-		if (!AuthServiceResponse || !AuthServiceResponse.data) {
+		console.log(AuthServiceResponse);
+		if (!AuthServiceResponse.success || !AuthServiceResponse.data) {
 			PostHogAnalytics.capture({
 				distinctId: 'Anon',
 				event: 'login_failed',
@@ -63,7 +64,7 @@ export const actions = {
 		const { email, password, name } = extractFormData(await request.formData());
 
 		const AuthResponse = await AuthServiceSingleton.CreateAccount(
-			new CreateUserDTO(email, password, name)
+			new CreateUserDTO(name, email, password)
 		);
 		if (!AuthResponse.success) {
 			PostHogAnalytics.capture({

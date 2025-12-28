@@ -1,6 +1,6 @@
-import { UserSettingsDTO } from '$lib/client/DTOs/UserSettings';
+import { CreateUserSettingsDTO, UserSettingsDTO } from '$lib/client/DTOs/UserSettings';
 
-let userSettings: UserSettingsDTO = $state(new UserSettingsDTO());
+let userSettings: UserSettingsDTO = $state(new CreateUserSettingsDTO());
 
 export function getUserSettings(): UserSettingsDTO {
 	return userSettings;

@@ -25,33 +25,17 @@ export class MessageDTO {
 }
 
 export class CreateMessageDTO {
-	chatID: string = '';
-	role: Role = 'user';
-	content: string = '';
-
-	constructor(chatID: string, role: Role, content: string) {
-		this.chatID = chatID;
-		this.role = role;
-		this.content = content;
-	}
+	constructor(
+		readonly chatID: string,
+		readonly role: Role = 'user',
+		readonly content: string
+	) {}
 }
 
 export class UpdateMessageDTO {
-	messageID: string;
-	role?: Role;
-	content?: string;
-
-	constructor(messageID: string, role?: Role, content?: string) {
-		this.messageID = messageID;
-		if (role !== undefined) this.role = role;
-		if (content !== undefined) this.content = content;
-	}
-}
-
-export class DeleteMessageDTO {
-	id: string = '';
-
-	constructor(id: string) {
-		this.id = id;
-	}
+	constructor(
+		readonly messageID: string,
+		readonly role?: Role,
+		readonly content?: string
+	) {}
 }

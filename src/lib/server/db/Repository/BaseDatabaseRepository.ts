@@ -8,29 +8,32 @@ import type { Database } from '../databaseTypes';
  * Ensures a single database instance is used across all service instances
  */
 export abstract class BaseDatabaseRepository {
-    protected db;
-    private static dbInstance: Kysely<Database> | null = null;
+	protected db;
+	private static dbInstance: Kysely<Database> | null = null;
 
-    constructor() {
-        // Check if database instance is null and create if necessary
-        if (!BaseDatabaseRepository.dbInstance) {
-            const dialect = new PostgresDialect({
-                pool: new Pool({
-                    connectionString: POSTGRES_URL,
-                })
-            })
+	constructor() {
+		// Check if database instance is null and create if necessary
+		if (!BaseDatabaseRepository.dbInstance) {
+			const dialect = new PostgresDialect({
+				pool: new Pool({
+					connectionString: POSTGRES_URL,
+					max: 10,
+					idleTimeoutMillis: 30000,
+					connectionTimeoutMillis: 2000
+				})
+			});
 
-            try {
-                // Create a new database connection
-                BaseDatabaseRepository.dbInstance = new Kysely<Database>({
-                    dialect,
-                })
-            } catch (error) {
-                console.error('Database initialization failed:', error);
-                throw error;
-            }
-        }
-        // Set database to the single db instance
-        this.db = BaseDatabaseRepository.dbInstance;
-    }
+			try {
+				// Create a new database connection
+				BaseDatabaseRepository.dbInstance = new Kysely<Database>({
+					dialect
+				});
+			} catch (error) {
+				console.error('Database initialization failed:', error);
+				throw error;
+			}
+		}
+		// Set database to the single db instance
+		this.db = BaseDatabaseRepository.dbInstance;
+	}
 }

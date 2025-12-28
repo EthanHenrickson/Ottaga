@@ -8,7 +8,7 @@
 	--bg-secondary: #e0eddf;
 
 	--message-bg-assistant: #f5f5f5;
-	--message-bg-user: #e4fde3;
+	--message-bg-user: #ffe8c6;
 
 	--button-primary: var(--accent-primary);
 	--button-disabled: #cccccc;
@@ -33,14 +33,14 @@
 }
 
 [data-theme='dark'] {
-	--accent-primary: #f29202;
+	--accent-primary: #cc7b02;
 	--accent-secondary: #313431;
 
 	--bg-primary: #202020;
 	--bg-secondary: #4c544d;
 
-	--message-bg-assistant: #4c544d;
-	--message-bg-user: #69786b;
+	--message-bg-assistant: #3a3c3b;
+	--message-bg-user: #8a5c17;
 
 	--button-primary: var(--accent-primary);
 	--button-disabled: #404040;

@@ -31,8 +31,8 @@ export const POST: RequestHandler = async ({ request }) => {
 		throw Error('Failed to retrieve past messages');
 	}
 
-	const PreviousChatMessages: ChatMessage[] = ChatServiceDatabaseResponse.data.messages.map((element) =>
-		element.ToChatMessage()
+	const PreviousChatMessages: ChatMessage[] = ChatServiceDatabaseResponse.data.messages.map(
+		(element) => element.ToChatMessage()
 	);
 
 	const stream = new ReadableStream({
@@ -59,7 +59,7 @@ export const POST: RequestHandler = async ({ request }) => {
 					...PreviousChatMessages,
 					NewUserMessage
 				]);
-				
+
 				let LLMGeneratedResponse = '';
 				for await (const streamChunk of OttagaHealthResponseStream) {
 					if (streamChunk.success) {
@@ -69,15 +69,15 @@ export const POST: RequestHandler = async ({ request }) => {
 					}
 				}
 
-				const UserMessageDTO = new CreateMessageDTO(ChatID, NewUserMessage.role, NewUserMessage.content);
-				ChatServiceSingleton.CreateChatMessage(null, UserMessageDTO);
-
-				const AssistantMessageDTO = new CreateMessageDTO(
+				const UserMessageDTO = new CreateMessageDTO(
 					ChatID,
-					'assistant',
-					LLMGeneratedResponse
+					NewUserMessage.role,
+					NewUserMessage.content
 				);
-				ChatServiceSingleton.CreateChatMessage(null, AssistantMessageDTO);
+				await ChatServiceSingleton.CreateChatMessage(null, UserMessageDTO);
+
+				const AssistantMessageDTO = new CreateMessageDTO(ChatID, 'assistant', LLMGeneratedResponse);
+				await ChatServiceSingleton.CreateChatMessage(null, AssistantMessageDTO);
 
 				controller.enqueue(EncodeToSSE('[DONE]'));
 				controller.close();

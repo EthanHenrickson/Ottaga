@@ -1,3 +1,7 @@
+<script>
+	import { resolve } from "$app/paths";
+
+</script>
 <svelte:head>
 	<title>Ottaga | Terms of Service</title>
 
@@ -112,7 +116,7 @@
 <p>
 	We take your privacy seriously. While our Service is not a medical provider and is not
 	HIPAA-compliant, we implement reasonable security measures to protect your information. Please
-	review our Privacy Policy at <a href="/legal/privacy">Ottaga.com/legal/privacy</a> for detailed information
+	review our Privacy Policy at <a href={resolve("/legal/privacy")}>Ottaga.com/legal/privacy</a> for detailed information
 	about how we collect, use, and protect your data.
 </p>
 

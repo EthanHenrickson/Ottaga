@@ -33,7 +33,7 @@ interface IChatService {
 	 * @param chatData - Chat update data including ID
 	 * @returns Promise resolving to service result
 	 */
-	UpdateChatByID(userID: string | null, chatData: UpdateChatDTO): Promise<ServiceResult>;
+	UpdateChatByID(userID: string | null, updateChatDTO: UpdateChatDTO): Promise<ServiceResult>;
 
 	/**
 	 * Retrieves a chat by ID
@@ -57,7 +57,10 @@ interface IChatService {
 	 * @param data - Message creation data
 	 * @returns Promise resolving to service result with message ID
 	 */
-	CreateChatMessage(userID: string, data: CreateMessageDTO): Promise<ServiceResult<{ id: string }>>;
+	CreateChatMessage(
+		userID: string | null,
+		CreateChatMessageDTO: CreateMessageDTO
+	): Promise<ServiceResult<{ id: string }>>;
 
 	/**
 	 * Retrieves messages for a specific chat
@@ -114,8 +117,11 @@ class ChatService implements IChatService {
 		}
 	}
 
-	async UpdateChatByID(userID: string | null, chatData: UpdateChatDTO): Promise<ServiceResult> {
-		const existingChat = await this.ChatRepository.GetByID(chatData.id);
+	async UpdateChatByID(
+		userID: string | null,
+		updateChatDTO: UpdateChatDTO
+	): Promise<ServiceResult> {
+		const existingChat = await this.ChatRepository.GetByID(updateChatDTO.id);
 		if (existingChat.success) {
 			if (existingChat.data.FK_userID !== userID) {
 				return {
@@ -130,7 +136,7 @@ class ChatService implements IChatService {
 			};
 		}
 
-		const dbResponse = await this.ChatRepository.Update(chatData.id, chatData);
+		const dbResponse = await this.ChatRepository.Update(updateChatDTO.id, updateChatDTO);
 
 		if (dbResponse.success) {
 			return {
@@ -199,9 +205,9 @@ class ChatService implements IChatService {
 
 	async CreateChatMessage(
 		userID: string | null,
-		data: CreateMessageDTO
+		createMessageDTO: CreateMessageDTO
 	): Promise<ServiceResult<{ id: string }>> {
-		const existingChat = await this.ChatRepository.GetByID(data.chatID);
+		const existingChat = await this.ChatRepository.GetByID(createMessageDTO.chatID);
 		if (existingChat.success) {
 			if (existingChat.data.FK_userID !== userID) {
 				return {
@@ -219,9 +225,9 @@ class ChatService implements IChatService {
 		const uuid = v7();
 		const dbValues: CreateMessage = {
 			id: uuid,
-			FK_chatID: data.chatID,
-			role: data.role,
-			content: data.content
+			FK_chatID: createMessageDTO.chatID,
+			role: createMessageDTO.role,
+			content: createMessageDTO.content
 		};
 
 		const dbResponse = await this.MessageRepository.Create(dbValues);

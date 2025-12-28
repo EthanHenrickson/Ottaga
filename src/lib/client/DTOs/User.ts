@@ -1,5 +1,7 @@
 import type { User } from '$lib/server/db/databaseTypes';
 
+type PublicUserDTO = Omit<UserDTO, 'hashedPassword' | 'ToClientSafe'>;
+
 export class UserDTO {
 	id: string = '';
 	name: string = '';
@@ -15,37 +17,25 @@ export class UserDTO {
 		this.created_at = data.created_at;
 	}
 
-	ToClientSafe() {
-		this.hashedPassword = '';
+	ToClientSafe(): PublicUserDTO {
+	  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { hashedPassword, ...rest } = this;
+		return rest;
 	}
 }
 
 export class CreateUserDTO {
-	name: string = '';
-	email: string = '';
-	password: string = '';
-
-	constructor(name: string, email: string, password: string) {
-		this.name = name;
-		this.email = email;
-		this.password = password;
-	}
+	constructor(
+		public readonly name: string,
+		public readonly email: string,
+		public readonly password: string
+	) {}
 }
 
 export class UpdateUserDTO {
-	name?: string;
-	email?: string;
-
-	constructor(name?: string, email?: string) {
-		if (name !== undefined) this.name = name;
-		if (email !== undefined) this.email = email;
-	}
-}
-
-export class DeleteUserDTO {
-	id: string = '';
-
-	constructor(id: string) {
-		this.id = id;
-	}
+	constructor(
+		public readonly name?: string,
+		public readonly email?: string,
+		public readonly hashedPassword?: string
+	) {}
 }

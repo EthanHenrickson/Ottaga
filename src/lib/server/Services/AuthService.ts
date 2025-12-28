@@ -16,7 +16,7 @@ export interface IAuthService {
 	 * @param name - User's display name
 	 * @returns Promise resolving to service result with new user ID
 	 */
-	CreateAccount(email: string, password: string, name: string): Promise<ServiceResult<string>>;
+	CreateAccount(data: CreateUserDTO): Promise<ServiceResult<string>>;
 
 	/**
 	 * Verifies user credentials for authentication
@@ -44,12 +44,8 @@ class AuthService implements IAuthService {
 		this.UserSettingsService = userSettingsService;
 	}
 
-	async CreateAccount(
-		email: string,
-		password: string,
-		name: string
-	): Promise<ServiceResult<string>> {
-		const isExistingUser = await this.UserService.GetByEmail(email);
+	async CreateAccount(createUserDTO: CreateUserDTO): Promise<ServiceResult<string>> {
+		const isExistingUser = await this.UserService.GetByEmail(createUserDTO.email);
 		if (isExistingUser.success) {
 			return {
 				success: false,
@@ -57,8 +53,7 @@ class AuthService implements IAuthService {
 			};
 		}
 
-		const CreateUserDTOValue = new CreateUserDTO(name, email, password);
-		const UserServiceCreationResponse = await this.UserService.Create(CreateUserDTOValue);
+		const UserServiceCreationResponse = await this.UserService.Create(createUserDTO);
 		if (!UserServiceCreationResponse.success || !UserServiceCreationResponse.data) {
 			return {
 				success: false,

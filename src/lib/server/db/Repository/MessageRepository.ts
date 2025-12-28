@@ -1,4 +1,4 @@
-import type { DatabaseDataResponse, DatabaseResponse, ChatMessage, Role } from "$lib/types";
+import type { DatabaseDataResponse, DatabaseResponse } from "$lib/types";
 import type { Message, CreateMessage } from "../databaseTypes";
 import { BaseDatabaseRepository } from "./BaseDatabaseRepository";
 

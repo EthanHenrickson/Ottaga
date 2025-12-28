@@ -20,7 +20,7 @@ export interface IUserRepository {
      * @param updatedData - The updated user data
      * @returns Promise resolving to database response indicating success/failure
      */
-    Update(id: string, updatedData: UpdateUser): Promise<DatabaseResponse>
+    Update(userID: string | null, updatedData: UpdateUser): Promise<DatabaseResponse>
     
     /**
      * Deletes a user by ID
@@ -60,7 +60,7 @@ export interface IUserRepository {
 }
 
 
-class UserDBRepository extends BaseDatabaseRepository {
+class UserDBRepository extends BaseDatabaseRepository implements IUserRepository {
     constructor() {
         super()
     }
@@ -103,8 +103,8 @@ class UserDBRepository extends BaseDatabaseRepository {
         }
     }
 
-    async GetByUserID(id: string) : Promise<ServiceResult<User>> {
-        const query = this.db.selectFrom("user").selectAll().where("id", "=", id)
+    async GetByUserID(userID: string) : Promise<ServiceResult<User>> {
+        const query = this.db.selectFrom("user").selectAll().where("id", "=", userID)
         const result = <User | undefined>await query.executeTakeFirst();
         if (result) {
             return {
@@ -121,8 +121,8 @@ class UserDBRepository extends BaseDatabaseRepository {
         }
     }
 
-    async Update(id: string, updatedData: UpdateUser): Promise<DatabaseResponse> {
-        const query = this.db.updateTable("user").set(updatedData).where("id", "=", id)
+    async Update(userID: string | null, updatedData: UpdateUser): Promise<DatabaseResponse> {
+        const query = this.db.updateTable("user").set(updatedData).where("id", "=", userID)
         const result = await query.executeTakeFirst()
 
         if (result.numUpdatedRows > BigInt(0)) {

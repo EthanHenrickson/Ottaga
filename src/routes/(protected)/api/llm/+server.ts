@@ -70,14 +70,14 @@ export const POST: RequestHandler = async ({ request }) => {
 				}
 
 				const UserMessageDTO = new CreateMessageDTO(chatID, newMessage.role, newMessage.content);
-				ChatServiceSingleton.CreateChatMessage(null, UserMessageDTO);
+				await ChatServiceSingleton.CreateChatMessage(null, UserMessageDTO);
 
 				const AssistantMessageDTO = new CreateMessageDTO(
 					chatID,
 					'assistant',
 					FinalAssistantGeneratedResponse
 				);
-				ChatServiceSingleton.CreateChatMessage(null, AssistantMessageDTO);
+				await ChatServiceSingleton.CreateChatMessage(null, AssistantMessageDTO);
 
 				controller.enqueue(EncodeToSSE('[DONE]'));
 				controller.close();

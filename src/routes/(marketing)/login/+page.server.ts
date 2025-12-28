@@ -5,6 +5,7 @@ import PostHogAnalytics from '$lib/server/utility/analytics/ServerAnalytics';
 import { AuthRateLimiterSingleton } from '$lib/server/utility/security/rateLimiter';
 import { CookieServiceSingleton } from '$lib/server/Services/CookieService';
 import { AuthServiceSingleton } from '$lib/server/Services/AuthService';
+import { CreateUserDTO } from '$lib/client/DTOs/User';
 
 const extractFormData = (data: FormData) => {
 	return {
@@ -27,7 +28,7 @@ export const actions = {
 		const AuthServiceResponse = await AuthServiceSingleton.VerifyAccount(email, password);
 		if (!AuthServiceResponse || !AuthServiceResponse.data) {
 			PostHogAnalytics.capture({
-				distinctId: "Anon",
+				distinctId: 'Anon',
 				event: 'login_failed',
 				properties: {
 					reason: 'invalid_credentials'
@@ -45,22 +46,29 @@ export const actions = {
 		}
 
 		PostHogAnalytics.capture({
-			distinctId: "Anon",
-			event: 'login_success',
+			distinctId: 'Anon',
+			event: 'login_success'
 		});
 
-		cookies.set('sessionID', cookieResponse.data.cookieID, { path: '/', sameSite: true, httpOnly: true, secure: true });
+		cookies.set('sessionID', cookieResponse.data.cookieID, {
+			path: '/',
+			sameSite: 'strict',
+			httpOnly: true,
+			secure: true
+		});
 		redirect(302, '/dashboard');
 	},
 
 	signup: async ({ request }) => {
 		const { email, password, name } = extractFormData(await request.formData());
 
-		const AuthResponse = await AuthServiceSingleton.CreateAccount(email, password, name);
+		const AuthResponse = await AuthServiceSingleton.CreateAccount(
+			new CreateUserDTO(email, password, name)
+		);
 		if (!AuthResponse.success) {
 			PostHogAnalytics.capture({
-				distinctId: "Anon",
-				event: 'signup_failed',
+				distinctId: 'Anon',
+				event: 'signup_failed'
 			});
 			return fail(422, {
 				error: AuthResponse.message
@@ -68,8 +76,8 @@ export const actions = {
 		}
 
 		PostHogAnalytics.capture({
-			distinctId: "Anon",
-			event: 'signup_success',
+			distinctId: 'Anon',
+			event: 'signup_success'
 		});
 	}
 } satisfies Actions;

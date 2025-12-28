@@ -11,23 +11,3 @@ export class CookieDTO {
 		this.expireTime = data.expireTime;
 	}
 }
-
-export class CreateCookieDTO {
-	constructor() {}
-}
-
-export class UpdateCookieDTO {
-	cookieID: string = '';
-
-	constructor(cookieID: string) {
-		this.cookieID = cookieID;
-	}
-}
-
-export class DeleteCookieDTO {
-	cookieID: string = '';
-
-	constructor(cookieID: string) {
-		this.cookieID = cookieID;
-	}
-}

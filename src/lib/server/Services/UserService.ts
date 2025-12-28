@@ -1,4 +1,4 @@
-import type { CreateUser } from '$lib/server/db/databaseTypes';
+import type { CreateUser, UpdateUser } from '$lib/server/db/databaseTypes';
 import {
 	UserDatabaseRepository,
 	type IUserRepository
@@ -18,7 +18,7 @@ export interface IUserService {
 	 * @param userData - User data transfer object containing name, email, and password
 	 * @returns Promise resolving to ServiceResult indicating success or failure and new userID
 	 */
-	Create(userData: CreateUserDTO): Promise<ServiceResult<string>>;
+	Create(createUserDTO: CreateUserDTO): Promise<ServiceResult<string>>;
 
 	/**
 	 * Retrieves a user by their email address.
@@ -33,7 +33,7 @@ export interface IUserService {
 	 * @param userData - Updated user data transfer object
 	 * @returns Promise resolving to ServiceResult indicating success or failure
 	 */
-	Update(userID: string, userData: UpdateUserDTO): Promise<ServiceResult>;
+	Update(userID: string | null, updateuserDTO: UpdateUserDTO): Promise<ServiceResult>;
 
 	/**
 	 * Deletes a user from the system.
@@ -104,8 +104,13 @@ class UserService implements IUserService {
 		}
 	}
 
-	async Update(userID: string, userData: UpdateUserDTO): Promise<ServiceResult> {
-		const dbResponse = await this.UserRepository.Update(userID, userData);
+	async Update(userID: string | null, updateUserDTO: UpdateUserDTO): Promise<ServiceResult> {
+		const updateData: UpdateUser = {}
+		if (updateUserDTO.email) updateData.email = updateUserDTO.email; 
+		if (updateUserDTO.name) updateData.name = updateUserDTO.name; 
+    if (updateUserDTO.hashedPassword) updateData.hashedPassword = updateUserDTO.hashedPassword; 
+		
+		const dbResponse = await this.UserRepository.Update(userID, updateData);
 
 		if (dbResponse.success) {
 			return {

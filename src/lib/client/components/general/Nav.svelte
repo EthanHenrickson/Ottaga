@@ -2,6 +2,7 @@
 	import { page } from '$app/state';
 	import Menu from '$lib/client/icons/menu.svelte';
 	import Close from '$lib/client/icons/close.svelte';
+	import { resolve } from '$app/paths';
 
 	let {
 		LogoHref = '/',
@@ -31,7 +32,7 @@
 
 <header>
 	<div class="header">
-		<a class="logo" href={LogoHref}>Ottaga</a>
+		<a class="logo" href={resolve("/")}>Ottaga</a>
 
 		<span class="gap"></span>
 
@@ -53,9 +54,9 @@
 
 		<nav class="mainNav" class:open={isOpen} aria-label="Main">
 			<div class="nav-links">
-				{#each pageLinks as link}
+				{#each pageLinks as link (link)}
 					<a
-						href={link.href}
+						href={resolve(link.href)}
 						onclick={toggleMenu}
 						class:active={page.url.pathname === link.href}
 						aria-current={page.url.pathname === link.href ? 'page' : undefined}>{link.name}</a

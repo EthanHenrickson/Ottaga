@@ -2,9 +2,9 @@
 	import type { ChatMessage } from '$lib/types';
 
 	import { marked } from 'marked';
-	import DOMPurify from "isomorphic-dompurify";
+	import DOMPurify from 'isomorphic-dompurify';
 	import LoadingMessageContainer from './LoadingMessageContainer.svelte';
-	
+
 	import { DecodeSSE } from '$lib/client/utility/SSE/SSEHelper';
 	import { ScrollHTMLContainerToBottom } from '$lib/client/utility/scroll';
 
@@ -13,7 +13,7 @@
 
 	let messageContainer: HTMLElement;
 	let isLLMLoading = $state(false);
-	
+
 	let userMessageInput = $state('');
 	let messageArray: ChatMessage[] = $state([
 		{
@@ -28,7 +28,7 @@
 
 		messageArray.push({ role: 'user', content: userMessageInput });
 		isLLMLoading = true;
-		ScrollHTMLContainerToBottom(messageContainer, true)
+		ScrollHTMLContainerToBottom(messageContainer, true);
 
 		try {
 			// Send messages to LLM API endpoint
@@ -84,7 +84,7 @@
 						return;
 					} else {
 						messageArray[messageArray.length - 1].content += dataBlock.content;
-						ScrollHTMLContainerToBottom(messageContainer)
+						ScrollHTMLContainerToBottom(messageContainer);
 					}
 				}
 			}
@@ -97,14 +97,13 @@
 			});
 		}
 	}
-
 </script>
 
 {#snippet messageBox(message: ChatMessage)}
 	<div class="message {message.role}">
 		<strong>{message.role === 'user' ? 'You' : 'Ottaga'}:</strong>
 		<p>
-			{@html DOMPurify.sanitize(marked.parse(message.content, {async: false}))}
+			{@html DOMPurify.sanitize(marked.parse(message.content, { async: false }))}
 		</p>
 	</div>
 {/snippet}
@@ -112,7 +111,7 @@
 <div class="content">
 	<div class="chat-container">
 		<div class="messages" bind:this={messageContainer}>
-			{#each messageArray as message}
+			{#each messageArray as message (message)}
 				{@render messageBox(message)}
 			{/each}
 
@@ -244,6 +243,6 @@
 	}
 
 	.sendButton {
-		color: var(--text-white)
+		color: var(--text-white);
 	}
 </style>

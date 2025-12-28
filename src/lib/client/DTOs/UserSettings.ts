@@ -7,8 +7,7 @@ export class UserSettingsDTO {
 	simplifiedLanguage: boolean = false;
 	reduceMotion: boolean = false;
 
-	constructor(data?: UserSettings) {
-		if (!data) return;
+	constructor(data: UserSettings) {
 		this.theme = data.theme;
 		this.receiveCommunityDigest = data.receiveCommunityDigest;
 		this.saveConversations = data.saveConversations;
@@ -18,45 +17,21 @@ export class UserSettingsDTO {
 }
 
 export class CreateUserSettingsDTO {
-	theme: string;
-	receiveCommunityDigest: boolean;
-	saveConversations: boolean;
-	simplifiedLanguage: boolean;
-	reduceMotion: boolean;
-
 	constructor(
-		theme: string = 'light',
-		receiveCommunityDigest: boolean = true,
-		saveConversations: boolean = true,
-		simplifiedLanguage: boolean = false,
-		reduceMotion: boolean = false
-	) {
-		this.theme = theme;
-		this.receiveCommunityDigest = receiveCommunityDigest;
-		this.saveConversations = saveConversations;
-		this.simplifiedLanguage = simplifiedLanguage;
-		this.reduceMotion = reduceMotion;
-	}
+		readonly theme: string = 'light',
+		readonly receiveCommunityDigest: boolean = true,
+		readonly saveConversations: boolean = true,
+		readonly simplifiedLanguage: boolean = false,
+		readonly reduceMotion: boolean = false
+	) {}
 }
 
 export class UpdateUserSettingsDTO {
-	theme?: string;
-	receiveCommunityDigest?: boolean;
-	saveConversations?: boolean;
-	simplifiedLanguage?: boolean;
-	reduceMotion?: boolean;
-
 	constructor(
-		theme?: string,
-		receiveCommunityDigest?: boolean,
-		saveConversations?: boolean,
-		simplifiedLanguage?: boolean,
-		reduceMotion?: boolean
-	) {
-		if (theme !== undefined) this.theme = theme;
-		if (receiveCommunityDigest !== undefined) this.receiveCommunityDigest = receiveCommunityDigest;
-		if (saveConversations !== undefined) this.saveConversations = saveConversations;
-		if (simplifiedLanguage !== undefined) this.simplifiedLanguage = simplifiedLanguage;
-		if (reduceMotion !== undefined) this.reduceMotion = reduceMotion;
-	}
+		readonly theme?: string,
+		readonly receiveCommunityDigest?: boolean,
+		readonly saveConversations?: boolean,
+		readonly simplifiedLanguage?: boolean,
+		readonly reduceMotion?: boolean
+	) {}
 }

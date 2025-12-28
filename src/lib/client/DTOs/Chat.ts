@@ -15,31 +15,17 @@ export class ChatDTO {
 }
 
 export class CreateChatDTO {
-	title?: string;
-	description?: string;
-
-	constructor(title?: string, description?: string) {
-		this.title = title;
-		this.description = description;
-	}
+	constructor(
+		readonly title?: string,
+		readonly description?: string,
+		readonly created_at: Date = new Date()
+	) {}
 }
 
 export class UpdateChatDTO {
-	id: string = '';
-	title?: string;
-	description?: string;
-
-	constructor(id: string, title?: string, description?: string) {
-		this.id = id;
-		if (title !== undefined) this.title = title;
-		if (description !== undefined) this.description = description;
-	}
-}
-
-export class DeleteChatDTO {
-	id: string = '';
-
-	constructor(id: string) {
-		this.id = id;
-	}
+	constructor(
+		readonly id: string,
+		readonly title?: string,
+		readonly description?: string
+	) {}
 }

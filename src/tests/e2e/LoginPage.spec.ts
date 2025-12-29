@@ -4,8 +4,8 @@ import { faker } from '@faker-js/faker';
 import { BasicMap } from './pageMap/BasicMap';
 
 const testData = {
-	name: faker.person.firstName(),
-	email: faker.internet.email(),
+	name: "testgenerated_" + faker.person.firstName(),
+	email: "testgenerated_" + faker.internet.email(),
 	password: faker.internet.password()
 };
 

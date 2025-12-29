@@ -21,14 +21,4 @@
 		{ name: 'Profile', href: '/dashboard/profile' }
 	]}
 />
-<main>
-	{@render children?.()}
-</main>
-
-<style>
-	main {
-		width: 100%;
-		min-height: 100vh;
-		background-color: var(--bg-primary);
-	}
-</style>
+{@render children?.()}

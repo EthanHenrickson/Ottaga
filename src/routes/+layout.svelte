@@ -5,4 +5,17 @@
 </script>
 
 <ToastContainer />
-{@render children?.()}
+
+<main>
+	{@render children?.()}
+</main>
+
+<style>
+	main {
+		display: flex;
+		min-height: 100vh;
+		width: 100%;
+
+		background-color: var(--bg-primary);
+	}
+</style>

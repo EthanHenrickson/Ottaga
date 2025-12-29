@@ -1,16 +1,20 @@
+<script>
+	import { resolve } from "$app/paths";
+
+</script>
 <footer aria-label="Site footer">
 	<div class="footer">
 		<div class="content">
 			<nav aria-label="About Information" class="section">
 				<h2 class="sr-only">About Ottaga</h2>
-				<a href="/learn" aria-label="Learn about Ottaga">Who are we?</a>
-				<a href="/contact" aria-label="Contact Ottaga">Contact Info</a>
+				<a href={resolve("/learn")} aria-label="Learn about Ottaga">Who are we?</a>
+				<a href={resolve("/contact")} aria-label="Contact Ottaga">Contact Info</a>
 			</nav>
 			<nav aria-label="Legal information" class="section">
 				<h2 class="sr-only">Legal</h2>
-				<a href="/legal/tos" aria-label="Terms of Service">Terms of Service</a>
-				<a href="/legal/privacy" aria-label="Privacy Policy">Privacy Policy</a>
-				<a href="/legal/cookie" aria-label="Cookie Policy">Cookie Policy</a>
+				<a href={resolve("/legal/tos")} aria-label="Terms of Service">Terms of Service</a>
+				<a href={resolve("/legal/privacy")} aria-label="Privacy Policy">Privacy Policy</a>
+				<a href={resolve("/legal/cookie")} aria-label="Cookie Policy">Cookie Policy</a>
 			</nav>
 		</div>
 	</div>
@@ -25,7 +29,7 @@
 		justify-content: center;
 		gap: 50px;
 
-		padding: 1rem 0rem;
+		padding: 2rem 0rem;
 	}
 
 	.section {

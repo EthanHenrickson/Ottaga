@@ -8,5 +8,6 @@
 		align-items: center;
 		justify-content: center;
 		height: 90vh;
+		width: 100%;
 	}
 </style>

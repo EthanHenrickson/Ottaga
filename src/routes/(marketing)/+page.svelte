@@ -1,9 +1,10 @@
 <script lang="ts">
-	import Footer from '$lib/client/components/marketing/mainPage/Footer.svelte';
-	import FounderMessage from '$lib/client/components/marketing/mainPage/FounderMessage.svelte';
-	import InformationCards from '$lib/client/components/marketing/mainPage/InformationCards.svelte';
-	import InformationSelectBox from '$lib/client/components/marketing/mainPage/InformationSelectBox.svelte';
 	import MainHeadingBox from '$lib/client/components/marketing/mainPage/MainHeadingBox.svelte';
+	import InformationCards from '$lib/client/components/marketing/mainPage/InformationCards.svelte';
+	import FounderMessage from '$lib/client/components/marketing/mainPage/FounderMessage.svelte';
+	import InformationSelectBox from '$lib/client/components/marketing/mainPage/InformationSelectBox.svelte';
+	import LearnMore from '$lib/client/components/marketing/mainPage/LearnMore.svelte'
+	import Footer from '$lib/client/components/marketing/mainPage/Footer.svelte';
 </script>
 
 <svelte:head>
@@ -22,5 +23,11 @@
 	<InformationCards />
 	<FounderMessage />
 	<InformationSelectBox />
+	<LearnMore />
 	<Footer />
 </div>
+<style>
+    .content {
+        width: 100%;
+    }
+</style>

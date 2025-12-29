@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { resolve } from "$app/paths";
+
 </script>
 
 <header aria-label="Main page header">
@@ -15,7 +17,7 @@
 		</div>
 		<div class="getStarted">
 			<a
-				href="/chat"
+				href={resolve("/chat")}
 				class="conversationButton"
 				role="button"
 				aria-label="Start a conversation with Ottaga">Start a conversation →</a
@@ -63,7 +65,7 @@
 	}
 
 	.highlightYou::before {
-		content: 'You';
+		content: 'you';
 		text-decoration: underline;
 		text-decoration-color: var(--accent-primary);
 		text-decoration-thickness: 3px;

@@ -30,15 +30,15 @@
 <style>
 	.content {
 		width: 100%;
-		min-height: 100vh;
-
+		height: 100%;
+		
 		display: flex;
-		align-items: center;
+		align-self: center;
 		justify-content: center;
 	}
 
 	.chat {
-		margin-top: 3rem;
+		width: 100%;
 	}
 
 	@media (width < 800px) {

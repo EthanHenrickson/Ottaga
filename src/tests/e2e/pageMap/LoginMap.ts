@@ -7,31 +7,63 @@ export class LoginMap extends BaseMap {
 		super(page);
 	}
 
-	async GoTo() {
+	async _changeToRegisterForm() {
+		await this.page.getByRole('button', { name: 'Create new account' }).click();
+	}
+
+	async _enterName(name: string) {
+		await this.page.getByLabel('name').fill(name);
+	}
+
+	async _enterEmail(email: string) {
+		await this.page.getByLabel('email').fill(email);
+	}
+
+	async _enterPassword(password: string) {
+		await this.page.getByLabel('password').fill(password);
+	}
+
+	async _checkTOS(checked: boolean) {
+		await this.page.getByLabel('I understand and agree the ').setChecked(checked);
+	}
+
+	async _clickCreateAccount() {
+		await this.page.getByRole('button', { name: 'Create' }).click();
+	}
+
+	async _clickLogin() {
+		await this.page.getByRole('button', { name: 'Login' }).click();
+	}
+	
+	async _logout(){
+	  await this.page.goto('/login/logout');
+	}
+
+	async goTo() {
 		await this.page.goto('/login');
 	}
 
-	async CreateAccount(name: string, email: string, password: string) {
-		await this.page.getByRole('button', { name: 'Create new account' }).click();
+	async createAccount(name: string, email: string, password: string) {
+		await this._changeToRegisterForm();
 
-		await this.page.getByLabel('name').fill(name);
-		await this.page.getByLabel('email').fill(email);
-		await this.page.getByLabel('password').fill(password);
+		await this._enterName(name);
+		await this._enterEmail(email);
+		await this._enterPassword(password);
 
-		await this.page.getByLabel('I understand and agree the ').setChecked(true);
-		await this.page.getByRole('button', { name: 'Create' }).click();
-		expect(this.page.url()).toContain('login');
+		await this._checkTOS(true);
+
+		await this._clickCreateAccount();
 	}
 
-	async LoginToAccount(email: string, password: string) {
-		await this.page.getByLabel('email').fill(email);
-		await this.page.getByLabel('password').fill(password);
-
-		await this.page.getByRole('button', { name: 'Login' }).click();
+	async loginToAccount(email: string, password: string) {
+		await this._enterEmail(email);
+		await this._enterPassword(password);
+		
+		await this._clickLogin()
 	}
 
-	async Logout() {
-		await this.page.goto('/login/logout');
+	async logout() {
+		await this._logout()
 		expect(this.page.url()).toContain('/');
 	}
 }

@@ -22,8 +22,8 @@ test('Should display error message when logging in with invalid credentials', as
 
 	const LoginPage = new LoginMap(page);
 
-	await LoginPage.GoTo();
-	await LoginPage.LoginToAccount(email, password);
+	await LoginPage.goTo();
+	await LoginPage.loginToAccount(email, password);
 
 	expect(page.url()).not.toContain('dashboard');
 	expect(page.url()).toContain('login');
@@ -36,13 +36,13 @@ test('Should successfully create account and login and then log out with new cre
 	const BasicPage = new BasicMap(page);
 	const LoginPage = new LoginMap(page);
 
-	await LoginPage.GoTo();
-	await LoginPage.CreateAccount(testData.name, testData.email, testData.password);
-	await LoginPage.LoginToAccount(testData.email, testData.password);
+	await LoginPage.goTo();
+	await LoginPage.createAccount(testData.name, testData.email, testData.password);
+	await LoginPage.loginToAccount(testData.email, testData.password);
 
 	expect(page.url()).toContain('dashboard');
 
-	await LoginPage.Logout();
+	await LoginPage.logout();
 
 	expect(page.url()).not.toContain('dashboard');
 	expect(page.url()).toContain('/');
@@ -54,8 +54,8 @@ test('Should successfully create account and login and then log out with new cre
 test('Should prevent account creation with duplicate email address', async ({ page }) => {
 	const LoginPage = new LoginMap(page);
 
-	await LoginPage.GoTo();
-	await LoginPage.CreateAccount('TestName', 'test@gmail.com', testData.password);
+	await LoginPage.goTo();
+	await LoginPage.createAccount('TestName', 'test@gmail.com', testData.password);
 	await expect(page.locator('#error')).toHaveText('An account with that email already exists.');
 	expect(page.url()).not.toContain('dashboard');
 	expect(page.url()).toContain('/login');
